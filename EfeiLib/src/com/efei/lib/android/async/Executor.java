@@ -1,7 +1,6 @@
 package com.efei.lib.android.async;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -13,8 +12,6 @@ public enum Executor {
 	private static final int DEFAULT_THREAD_NUM = 3;
 	private ExecutorService threadPool = Executors
 			.newFixedThreadPool(DEFAULT_THREAD_NUM);
-
-	// private Handler handler = new Handler(Looper.getMainLooper());
 
 	public <T> IJob execute(final JobAsyncTask<T> task) {
 		Future<T> future = threadPool.submit(new Callable<T>() {
