@@ -55,12 +55,12 @@ public class JobAsyncTask<Result> implements IJob {
 	@RunOnUIThread
 	final void cancel() {
 		if (Looper.myLooper() == Looper.getMainLooper())
-			uiCallBack.onCancelled();
+			uiCallBack.onCanceled();
 		else
 			handler.post(new Runnable() {
 				@Override
 				public void run() {
-					uiCallBack.onCancelled();
+					uiCallBack.onCanceled();
 				}
 			});
 	}

@@ -7,5 +7,5 @@ public interface IUICallback<Result> {
 
 	void onProgressUpdate(int percent, Object... params);
 
-	void onCancelled();
+	void onCanceled();
 }

@@ -1,16 +1,7 @@
 package com.efei.lib.android.bean.net;
 
-public final class RespLogin {
-	private int code;
+public final class RespLogin extends ABaseRespBean{
 	private String auth_key;
-
-	public int getCode() {
-		return code;
-	}
-
-	void setCode(int code) {
-		this.code = code;
-	}
 
 	public String getAuth_key() {
 		return auth_key;
