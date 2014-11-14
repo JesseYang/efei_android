@@ -17,40 +17,21 @@ public class SplashActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-//		ReqRegister reqRegister = new ReqRegister();
-//		reqRegister.setEmail_mobile("642209019@qq.com");
-//		reqRegister.setPassword("123456");
-//		new LoginServiceImpl().register(reqRegister);
-		
+		// ReqRegister reqRegister = new ReqRegister();
+		// reqRegister.setEmail_mobile("642209019@qq.com");
+		// reqRegister.setPassword("123456");
+		// new LoginServiceImpl().register(reqRegister);
+
 		ReqLogin reqLogin = new ReqLogin();
 		reqLogin.setEmail_mobile("642209019@qq.com");
 		reqLogin.setPassword("123456");
-		new LoginServiceImpl().login(reqLogin , new IUICallback<RespLogin>() {
-			
-			@Override
-			public void onProgressUpdate(int percent, Object... params) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onPreExecute() {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onPostExecute(RespLogin result) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onCancelled() {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+		new LoginServiceImpl().login(reqLogin,
+				new IUICallback.Adapter<RespLogin>() {
+					@Override
+					public void onPostExecute(RespLogin result) {
+						System.out.println(result);
+					}
+				});
 	}
 
 	@Override
