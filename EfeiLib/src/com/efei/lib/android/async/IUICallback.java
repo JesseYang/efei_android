@@ -7,7 +7,7 @@ public interface IUICallback<Result> {
 
 	void onProgressUpdate(int percent, Object... params);
 
-	void onCanceled();
+	void onCancelled();
 
 	public static class Adapter<Result> implements IUICallback<Result> {
 
@@ -24,7 +24,7 @@ public interface IUICallback<Result> {
 		}
 
 		@Override
-		public void onCanceled() {
+		public void onCancelled() {
 		}
 
 	}
