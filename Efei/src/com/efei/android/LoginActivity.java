@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.efei.lib.android.async.IJob;
-import com.efei.lib.android.async.IUICallback;
+import com.efei.lib.android.async.IUICallback.Adapter;
 import com.efei.lib.android.bean.net.ReqLogin;
 import com.efei.lib.android.bean.net.RespLogin;
 import com.efei.lib.android.engine.impl.LoginServiceImpl;
@@ -190,15 +190,8 @@ public class LoginActivity extends Activity
 		}
 	}
 
-	private class LoginUICallback implements IUICallback<RespLogin>
+	private class LoginUICallback extends Adapter<RespLogin>
 	{
-
-		@Override
-		public void onPreExecute()
-		{
-			// TODO Auto-generated method stub
-
-		}
 
 		@Override
 		public void onPostExecute(RespLogin result)
@@ -213,13 +206,6 @@ public class LoginActivity extends Activity
 				mPasswordView.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
 			}
-		}
-
-		@Override
-		public void onProgressUpdate(int percent, Object... params)
-		{
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override

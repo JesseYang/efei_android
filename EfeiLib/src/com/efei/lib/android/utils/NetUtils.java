@@ -26,7 +26,6 @@ public final class NetUtils {
 			Class<T> respClazz) {
 		HttpClient client = newClient();
 		HttpPost post = new HttpPost(Constants.Net.HOST_URL + urlApi);
-		// HttpPost post = new HttpPost("baidu.com");
 		post.setHeader("Content-Type", "application/json");
 		post.setHeader("Accept", "application/json");
 		try {

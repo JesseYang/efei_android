@@ -1,6 +1,7 @@
 package com.efei.lib.android.async;
 
-public interface IUICallback<Result> {
+public interface IUICallback<Result>
+{
 	void onPreExecute();
 
 	void onPostExecute(Result result);
@@ -9,22 +10,34 @@ public interface IUICallback<Result> {
 
 	void onCancelled();
 
-	public static class Adapter<Result> implements IUICallback<Result> {
+	void onError(Throwable e);
+
+	public static class Adapter<Result> implements IUICallback<Result>
+	{
 
 		@Override
-		public void onPreExecute() {
+		public void onPreExecute()
+		{
 		}
 
 		@Override
-		public void onPostExecute(Result result) {
+		public void onPostExecute(Result result)
+		{
 		}
 
 		@Override
-		public void onProgressUpdate(int percent, Object... params) {
+		public void onProgressUpdate(int percent, Object... params)
+		{
 		}
 
 		@Override
-		public void onCancelled() {
+		public void onCancelled()
+		{
+		}
+
+		@Override
+		public void onError(Throwable e)
+		{
 		}
 
 	}
