@@ -5,33 +5,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.efei.lib.android.async.IUICallback;
-import com.efei.lib.android.bean.net.ReqLogin;
-import com.efei.lib.android.bean.net.ReqRegister;
-import com.efei.lib.android.bean.net.RespLogin;
-import com.efei.lib.android.engine.impl.LoginServiceImpl;
-
 public class SplashActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-		// ReqRegister reqRegister = new ReqRegister();
-		// reqRegister.setEmail_mobile("642209019@qq.com");
-		// reqRegister.setPassword("123456");
-		// new LoginServiceImpl().register(reqRegister);
-
-		ReqLogin reqLogin = new ReqLogin();
-		reqLogin.setEmail_mobile("642209019@qq.com");
-		reqLogin.setPassword("123456");
-		new LoginServiceImpl().login(reqLogin,
-				new IUICallback.Adapter<RespLogin>() {
-					@Override
-					public void onPostExecute(RespLogin result) {
-						System.out.println(result);
-					}
-				});
 	}
 
 	@Override
@@ -51,5 +30,17 @@ public class SplashActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private class TestRunner implements Runnable {
+
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
