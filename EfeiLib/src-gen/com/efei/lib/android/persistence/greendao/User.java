@@ -23,6 +23,7 @@ public class User {
     private String name;
     private String email;
     private String mobile;
+    private java.util.Date lastLoginDate;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -42,7 +43,7 @@ public class User {
         this.id = id;
     }
 
-    public User(Long id, String account, String password, String authKey, String name, String email, String mobile) {
+    public User(Long id, String account, String password, String authKey, String name, String email, String mobile, java.util.Date lastLoginDate) {
         this.id = id;
         this.account = account;
         this.password = password;
@@ -50,6 +51,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.mobile = mobile;
+        this.lastLoginDate = lastLoginDate;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -112,6 +114,14 @@ public class User {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public java.util.Date getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(java.util.Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */

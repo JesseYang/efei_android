@@ -1,5 +1,7 @@
 package com.efei.android;
 
+import java.util.Date;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -17,7 +19,12 @@ import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback.Adapter;
 import com.efei.lib.android.bean.net.ReqLogin;
 import com.efei.lib.android.bean.net.RespLogin;
-import com.efei.lib.android.engine.impl.LoginServiceImpl;
+import com.efei.lib.android.engine.ILoginService;
+import com.efei.lib.android.engine.ServiceFactory;
+import com.efei.lib.android.persistence.greendao.DBManager;
+import com.efei.lib.android.persistence.greendao.User;
+import com.efei.lib.android.persistence.greendao.dao.DaoSession;
+import com.efei.lib.android.persistence.greendao.dao.UserDao.Properties;
 
 /**
  * A login screen that offers login via email/password.
@@ -117,8 +124,8 @@ public class LoginActivity extends Activity
 			ReqLogin reqLogin = new ReqLogin();
 			reqLogin.setEmail_mobile(email);
 			reqLogin.setPassword(password);
-			jobLogin = new LoginServiceImpl().login(reqLogin,
-					new LoginUICallback());
+			ILoginService loginService = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
+			jobLogin = loginService.login(reqLogin, new LoginUICallback(reqLogin));
 		}
 	}
 
@@ -145,53 +152,44 @@ public class LoginActivity extends Activity
 		// to fade-in the progress spinner.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
 		{
-			int shortAnimTime = getResources().getInteger(
-					android.R.integer.config_shortAnimTime);
+			int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-			mLoginFormView.setVisibility(show ? View.GONE
-					: View.VISIBLE);
-			mLoginFormView.animate()
-					.setDuration(shortAnimTime)
-					.alpha(show ? 0 : 1)
-					.setListener(new AnimatorListenerAdapter()
-					{
-						@Override
-						public void onAnimationEnd(
-								Animator animation)
-						{
-							mLoginFormView.setVisibility(show ? View.GONE
-									: View.VISIBLE);
-						}
-					});
+			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+			mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter()
+			{
+				@Override
+				public void onAnimationEnd(Animator animation)
+				{
+					mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+				}
+			});
 
-			mProgressView.setVisibility(show ? View.VISIBLE
-					: View.GONE);
-			mProgressView.animate()
-					.setDuration(shortAnimTime)
-					.alpha(show ? 1 : 0)
-					.setListener(new AnimatorListenerAdapter()
-					{
-						@Override
-						public void onAnimationEnd(
-								Animator animation)
-						{
-							mProgressView.setVisibility(show ? View.VISIBLE
-									: View.GONE);
-						}
-					});
+			mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter()
+			{
+				@Override
+				public void onAnimationEnd(Animator animation)
+				{
+					mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+				}
+			});
 		} else
 		{
 			// The ViewPropertyAnimator APIs are not available, so
 			// simply show and hide the relevant UI components.
-			mProgressView.setVisibility(show ? View.VISIBLE
-					: View.GONE);
-			mLoginFormView.setVisibility(show ? View.GONE
-					: View.VISIBLE);
+			mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
 
 	private class LoginUICallback extends Adapter<RespLogin>
 	{
+		private ReqLogin reqLogin;
+
+		public LoginUICallback(ReqLogin reqLogin)
+		{
+			this.reqLogin = reqLogin;
+		}
 
 		@Override
 		public void onPostExecute(RespLogin result)
@@ -200,12 +198,31 @@ public class LoginActivity extends Activity
 			showProgress(false);
 
 			if (result.isSuccess())
+			{
 				finish();
-			else
+				createOrUpdateUser(reqLogin, result);
+			} else
 			{
 				mPasswordView.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
 			}
+		}
+
+		private void createOrUpdateUser(ReqLogin reqLogin, RespLogin respLogin)
+		{
+			DaoSession session = DBManager.beginSession(LoginActivity.this);
+			User user = session.getUserDao().queryBuilder().where(Properties.Account.eq(reqLogin.getEmail_mobile())).unique();
+			if (null == user)
+			{
+				user = new User();
+				user.setAccount(reqLogin.getEmail_mobile());
+				user.setPassword(reqLogin.getPassword());
+				user.setAuthKey(respLogin.getAuth_key());
+				user.setLastLoginDate(new Date());
+			} else
+				user.setLastLoginDate(new Date());
+			session.insertOrReplace(user);
+			DBManager.endSession(session);
 		}
 
 		@Override

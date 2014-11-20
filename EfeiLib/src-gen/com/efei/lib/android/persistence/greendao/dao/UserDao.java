@@ -30,6 +30,7 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property Name = new Property(4, String.class, "name", false, "NAME");
         public final static Property Email = new Property(5, String.class, "email", false, "EMAIL");
         public final static Property Mobile = new Property(6, String.class, "mobile", false, "MOBILE");
+        public final static Property LastLoginDate = new Property(7, java.util.Date.class, "lastLoginDate", false, "LAST_LOGIN_DATE");
     };
 
     private DaoSession daoSession;
@@ -54,7 +55,8 @@ public class UserDao extends AbstractDao<User, Long> {
                 "'AUTH_KEY' TEXT," + // 3: authKey
                 "'NAME' TEXT," + // 4: name
                 "'EMAIL' TEXT," + // 5: email
-                "'MOBILE' TEXT);"); // 6: mobile
+                "'MOBILE' TEXT," + // 6: mobile
+                "'LAST_LOGIN_DATE' INTEGER);"); // 7: lastLoginDate
     }
 
     /** Drops the underlying database table. */
@@ -102,6 +104,11 @@ public class UserDao extends AbstractDao<User, Long> {
         if (mobile != null) {
             stmt.bindString(7, mobile);
         }
+ 
+        java.util.Date lastLoginDate = entity.getLastLoginDate();
+        if (lastLoginDate != null) {
+            stmt.bindLong(8, lastLoginDate.getTime());
+        }
     }
 
     @Override
@@ -126,7 +133,8 @@ public class UserDao extends AbstractDao<User, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // authKey
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // name
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // email
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // mobile
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // mobile
+            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)) // lastLoginDate
         );
         return entity;
     }
@@ -141,6 +149,7 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setName(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setEmail(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setMobile(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setLastLoginDate(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
      }
     
     /** @inheritdoc */

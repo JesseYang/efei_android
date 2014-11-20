@@ -14,6 +14,10 @@ import com.efei.lib.android.utils.NetUtils;
 public class LoginServiceImpl implements ILoginService {
 	private static final String URL_API_LOGIN = "account/sessions";
 	private static final String URL_API_REGISTER = "account/registrations";
+	
+	LoginServiceImpl()
+	{
+	}
 
 	@Override
 	public IJob login(final ReqLogin reqLogin, IUICallback<RespLogin> uiCallback) {
