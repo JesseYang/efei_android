@@ -1,6 +1,7 @@
 package com.efei.lib.android.engine;
 
 import java.lang.ref.SoftReference;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,9 @@ public enum ServiceFactory
 	{
 		try
 		{
-			return (ILoginService) Class.forName("com.efei.lib.android.engine.impl.LoginServiceImpl").newInstance();
+			Constructor<?> constructor = Class.forName("com.efei.lib.android.engine.impl.LoginServiceImpl").getDeclaredConstructor();
+			constructor.setAccessible(true);
+			return (ILoginService) constructor.newInstance();
 		} catch (Exception e)
 		{
 			throw new EfeiException(e);

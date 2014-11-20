@@ -1,14 +1,11 @@
 package com.efei.android;
 
-import java.util.Date;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
@@ -21,10 +18,8 @@ import com.efei.lib.android.bean.net.ReqLogin;
 import com.efei.lib.android.bean.net.RespLogin;
 import com.efei.lib.android.engine.ILoginService;
 import com.efei.lib.android.engine.ServiceFactory;
-import com.efei.lib.android.persistence.greendao.DBManager;
 import com.efei.lib.android.persistence.greendao.User;
-import com.efei.lib.android.persistence.greendao.dao.DaoSession;
-import com.efei.lib.android.persistence.greendao.dao.UserDao.Properties;
+import com.efei.lib.android.utils.TextUtils;
 
 /**
  * A login screen that offers login via email/password.
@@ -47,7 +42,13 @@ public class LoginActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		setupViews();
+
+		ILoginService loginService = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
+		User defaultUser = loginService.getDefaultUser();
+		if (null == defaultUser)
+			setupViews();
+		else
+			finish();
 	}
 
 	private void setupViews()
@@ -71,9 +72,8 @@ public class LoginActivity extends Activity
 	}
 
 	/**
-	 * Attempts to sign in or register the account specified by the login
-	 * form. If there are form errors (invalid email, missing fields, etc.),
-	 * the errors are presented and no actual login attempt is made.
+	 * Attempts to sign in or register the account specified by the login form. If there are form errors (invalid email, missing fields, etc.), the errors
+	 * are presented and no actual login attempt is made.
 	 */
 	public void attemptLogin()
 	{
@@ -125,7 +125,7 @@ public class LoginActivity extends Activity
 			reqLogin.setEmail_mobile(email);
 			reqLogin.setPassword(password);
 			ILoginService loginService = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
-			jobLogin = loginService.login(reqLogin, new LoginUICallback(reqLogin));
+			jobLogin = loginService.login(reqLogin, new LoginUICallback());
 		}
 	}
 
@@ -184,13 +184,6 @@ public class LoginActivity extends Activity
 
 	private class LoginUICallback extends Adapter<RespLogin>
 	{
-		private ReqLogin reqLogin;
-
-		public LoginUICallback(ReqLogin reqLogin)
-		{
-			this.reqLogin = reqLogin;
-		}
-
 		@Override
 		public void onPostExecute(RespLogin result)
 		{
@@ -198,31 +191,12 @@ public class LoginActivity extends Activity
 			showProgress(false);
 
 			if (result.isSuccess())
-			{
 				finish();
-				createOrUpdateUser(reqLogin, result);
-			} else
+			else
 			{
 				mPasswordView.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
 			}
-		}
-
-		private void createOrUpdateUser(ReqLogin reqLogin, RespLogin respLogin)
-		{
-			DaoSession session = DBManager.beginSession(LoginActivity.this);
-			User user = session.getUserDao().queryBuilder().where(Properties.Account.eq(reqLogin.getEmail_mobile())).unique();
-			if (null == user)
-			{
-				user = new User();
-				user.setAccount(reqLogin.getEmail_mobile());
-				user.setPassword(reqLogin.getPassword());
-				user.setAuthKey(respLogin.getAuth_key());
-				user.setLastLoginDate(new Date());
-			} else
-				user.setLastLoginDate(new Date());
-			session.insertOrReplace(user);
-			DBManager.endSession(session);
 		}
 
 		@Override
