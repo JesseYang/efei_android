@@ -56,6 +56,7 @@ public class LoginServiceImpl implements ILoginService
 			@Override
 			public RespLogin onBusinessLogic(IJob job)
 			{
+				//TODO yunzhong: maybe cache in local
 				return NetUtils.postObjectAsJson(URL_API_REGISTER, reqRegister, RespLogin.class);
 			}
 		}, uiCallback));
