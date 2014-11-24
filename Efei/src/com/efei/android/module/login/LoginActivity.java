@@ -1,4 +1,4 @@
-package com.efei.android;
+package com.efei.android.module.login;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -12,10 +12,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.efei.android.R;
+import com.efei.android.module.question.QueListActivity;
 import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback.Adapter;
 import com.efei.lib.android.bean.net.ReqLogin;
 import com.efei.lib.android.bean.net.RespLogin;
+import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
 import com.efei.lib.android.engine.ServiceFactory;
 import com.efei.lib.android.persistence.greendao.User;
@@ -50,7 +53,7 @@ public class LoginActivity extends Activity
 		else
 		{
 			finish();
-			QueListActivity.forward();
+			EfeiApplication.switchToActivity(QueListActivity.class);
 		}
 	}
 
@@ -196,7 +199,7 @@ public class LoginActivity extends Activity
 			if (result.isSuccess())
 			{
 				finish();
-				QueListActivity.forward();
+				EfeiApplication.switchToActivity(QueListActivity.class);
 			} else
 			{
 				mPasswordView.setError(getString(R.string.error_incorrect_password));

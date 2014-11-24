@@ -6,6 +6,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.efei.android.module.login.LoginActivity;
+
 public class SplashActivity extends ActionBarActivity {
 
 	@Override

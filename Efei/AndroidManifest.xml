@@ -9,6 +9,10 @@
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:name="com.efei.lib.android.common.EfeiApplication"
@@ -33,6 +37,8 @@
         <activity
             android:name=".QueListActivity"
             android:label="@string/title_activity_que_list" >
+        </activity>
+        <activity android:name=".ScanActivity" >
         </activity>
     </application>
 

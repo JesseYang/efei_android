@@ -1,12 +1,13 @@
-package com.efei.android;
+package com.efei.android.module.question;
 
-import com.efei.lib.android.common.EfeiApplication;
-
-import android.support.v7.app.ActionBarActivity;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.efei.android.R;
+import com.efei.android.module.scan.ScanActivity;
+import com.efei.lib.android.common.EfeiApplication;
 
 public class QueListActivity extends ActionBarActivity
 {
@@ -35,15 +36,11 @@ public class QueListActivity extends ActionBarActivity
 		int id = item.getItemId();
 		if (id == R.id.action_settings)
 		{
+			// TODO yunzhong:test tmp code
+			EfeiApplication.switchToActivity(ScanActivity.class);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	public static void forward()
-	{
-		Intent intent = new Intent(EfeiApplication.getContext(), QueListActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		EfeiApplication.getContext().startActivity(intent);
-	}
 }
