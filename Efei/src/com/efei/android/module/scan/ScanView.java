@@ -1,8 +1,3 @@
-/*
- * Barebones implementation of displaying camera preview.
- * 
- * Created by lisah0 on 2012-02-24
- */
 package com.efei.android.module.scan;
 
 import java.io.IOException;

@@ -12,10 +12,10 @@ import com.efei.lib.android.bean.net.ReqLogin;
 import com.efei.lib.android.bean.net.ReqRegister;
 import com.efei.lib.android.bean.net.RespLogin;
 import com.efei.lib.android.engine.ILoginService;
-import com.efei.lib.android.persistence.greendao.DBManager;
-import com.efei.lib.android.persistence.greendao.User;
+import com.efei.lib.android.persistence.greendao.Account;
+import com.efei.lib.android.persistence.greendao.dao.AccountDao.Properties;
 import com.efei.lib.android.persistence.greendao.dao.DaoSession;
-import com.efei.lib.android.persistence.greendao.dao.UserDao.Properties;
+import com.efei.lib.android.repository.DBManager;
 import com.efei.lib.android.utils.CollectionUtils;
 import com.efei.lib.android.utils.NetUtils;
 import com.efei.lib.android.utils.TextUtils;
@@ -56,20 +56,20 @@ public class LoginServiceImpl implements ILoginService
 			@Override
 			public RespLogin onBusinessLogic(IJob job)
 			{
-				//TODO yunzhong: maybe cache in local
+				// TODO yunzhong: maybe cache in local
 				return NetUtils.postObjectAsJson(URL_API_REGISTER, reqRegister, RespLogin.class);
 			}
 		}, uiCallback));
 	}
 
 	@Override
-	public User getDefaultUser()
+	public Account getDefaultUser()
 	{
 		DaoSession session = DBManager.beginSession();
-		List<User> users = session.getUserDao().queryBuilder().orderDesc(Properties.LastLoginDate).list();
-		if (!CollectionUtils.isEmpty(users) && !TextUtils.isBlank(users.get(0).getAuthKey()))
+		List<Account> accounts = session.getAccountDao().queryBuilder().orderDesc(Properties.LastLoginDate).list();
+		if (!CollectionUtils.isEmpty(accounts) && !TextUtils.isBlank(accounts.get(0).getAuthKey()))
 			// last login user regard as default user
-			return users.get(0);
+			return accounts.get(0);
 		// no user in local or empty auth_key, we have to show login form to make user fill in login info;
 		// if login succeeds , we will record the user locally as default_user;
 		return null;
@@ -79,17 +79,17 @@ public class LoginServiceImpl implements ILoginService
 	private void createOrUpdateDefaultUser(ReqLogin reqLogin, RespLogin respLogin)
 	{
 		DaoSession session = DBManager.beginSession();
-		User user = session.getUserDao().queryBuilder().where(Properties.Account.eq(reqLogin.getEmail_mobile())).unique();
-		if (null == user)
+		Account account = session.getAccountDao().queryBuilder().where(Properties.Email_mobile.eq(reqLogin.getEmail_mobile())).unique();
+		if (null == account)
 		{
-			user = new User();
-			user.setAccount(reqLogin.getEmail_mobile());
-			user.setPassword(reqLogin.getPassword());
-			user.setAuthKey(respLogin.getAuth_key());
-			user.setLastLoginDate(new Date());
+			account = new Account();
+			account.setEmail_mobile(reqLogin.getEmail_mobile());
+			account.setPassword(reqLogin.getPassword());
+			account.setAuthKey(respLogin.getAuth_key());
+			account.setLastLoginDate(new Date());
 		} else
-			user.setLastLoginDate(new Date());
-		session.insertOrReplace(user);
+			account.setLastLoginDate(new Date());
+		session.insertOrReplace(account);
 		DBManager.endSession(session);
 	}
 

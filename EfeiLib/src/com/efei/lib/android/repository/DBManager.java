@@ -1,4 +1,4 @@
-package com.efei.lib.android.persistence.greendao;
+package com.efei.lib.android.repository;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.efei.android.module.login;
+package com.efei.android.module.account;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -21,7 +21,7 @@ import com.efei.lib.android.bean.net.RespLogin;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
 import com.efei.lib.android.engine.ServiceFactory;
-import com.efei.lib.android.persistence.greendao.User;
+import com.efei.lib.android.persistence.greendao.Account;
 import com.efei.lib.android.utils.TextUtils;
 
 /**
@@ -47,7 +47,7 @@ public class LoginActivity extends Activity
 		setContentView(R.layout.activity_login);
 
 		ILoginService loginService = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
-		User defaultUser = loginService.getDefaultUser();
+		Account defaultUser = loginService.getDefaultUser();
 		if (null == defaultUser)
 			setupViews();
 		else

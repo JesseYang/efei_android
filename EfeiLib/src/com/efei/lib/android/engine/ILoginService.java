@@ -5,7 +5,7 @@ import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.bean.net.ReqLogin;
 import com.efei.lib.android.bean.net.ReqRegister;
 import com.efei.lib.android.bean.net.RespLogin;
-import com.efei.lib.android.persistence.greendao.User;
+import com.efei.lib.android.persistence.greendao.Account;
 
 public interface ILoginService
 {
@@ -13,5 +13,5 @@ public interface ILoginService
 
 	IJob login(ReqLogin reqLogin, IUICallback<RespLogin> uiCallback);
 
-	User getDefaultUser();
+	Account getDefaultUser();
 }
