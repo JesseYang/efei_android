@@ -18,10 +18,10 @@ import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback.Adapter;
 import com.efei.lib.android.bean.net.ReqLogin;
 import com.efei.lib.android.bean.net.RespLogin;
+import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
 import com.efei.lib.android.engine.ServiceFactory;
-import com.efei.lib.android.persistence.greendao.Account;
 import com.efei.lib.android.utils.TextUtils;
 
 /**

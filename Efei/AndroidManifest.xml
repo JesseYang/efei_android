@@ -30,21 +30,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="com.efei.android.module.account.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
-            android:name=".QueListActivity"
+            android:name="com.efei.android.module.question.QueListActivity"
             android:label="@string/title_activity_que_list" >
         </activity>
-        <activity android:name=".ScanActivity" >
+        <activity android:name="com.efei.android.module.scan.ScanActivity" >
         </activity>
     </application>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
 </manifest>

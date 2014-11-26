@@ -1,42 +1,72 @@
 package com.efei.lib.android.repository;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLException;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
+import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.common.EfeiApplication;
-import com.efei.lib.android.persistence.greendao.dao.DaoMaster;
-import com.efei.lib.android.persistence.greendao.dao.DaoMaster.DevOpenHelper;
-import com.efei.lib.android.persistence.greendao.dao.DaoMaster.OpenHelper;
-import com.efei.lib.android.persistence.greendao.dao.DaoSession;
+import com.efei.lib.android.exception.EfeiException;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 
-public final class DBManager
+final class DBManager
 {
-	private static Map<DaoSession, OpenHelper> openedSessions = new HashMap<DaoSession, DaoMaster.OpenHelper>();
-
 	private DBManager()
 	{
 	}
 
-	public static OpenHelper getDaoMaster(Context context)
+	static <T> Dao<T, Long> beginSession(Class<T> beanClazz)
 	{
-		return new DevOpenHelper(context, "efei-db", null);
+		ConnectionSource connectionSource = OpenHelperManager.getHelper(EfeiApplication.getContext(), EfeiSqliteOpenHelper.class).getConnectionSource();
+
+		try
+		{
+			// instantiate the DAO to handle beanClazz with Long id
+			return DaoManager.createDao(connectionSource, beanClazz);
+		} catch (SQLException e)
+		{
+			endSession();
+			throw new EfeiException(e);
+		}
 	}
 
-	public static DaoSession beginSession()
+	static void endSession()
 	{
-		DevOpenHelper dbHelper = new DevOpenHelper(EfeiApplication.getContext(), "efei-db", null);
-		DaoMaster daoMaster = new DaoMaster(dbHelper.getWritableDatabase());
-		DaoSession newSession = daoMaster.newSession();
-		openedSessions.put(newSession, dbHelper);
-		return newSession;
+		OpenHelperManager.releaseHelper();
 	}
 
-	public static void endSession(DaoSession session)
+	private static class EfeiSqliteOpenHelper extends OrmLiteSqliteOpenHelper
 	{
-		OpenHelper dbHelper = openedSessions.remove(session);
-		if (null != dbHelper)
-			dbHelper.close();
+
+		public EfeiSqliteOpenHelper(Context context)
+		{
+			super(context, "efei-db", null, 1);
+		}
+
+		@Override
+		public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource)
+		{
+			try
+			{
+				TableUtils.createTableIfNotExists(connectionSource, Account.class);
+			} catch (SQLException e)
+			{
+				throw new EfeiException(e);
+			}
+		}
+
+		@Override
+		public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion)
+		{
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 }

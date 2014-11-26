@@ -11,11 +11,9 @@ import com.efei.lib.android.async.JobAsyncTask;
 import com.efei.lib.android.bean.net.ReqLogin;
 import com.efei.lib.android.bean.net.ReqRegister;
 import com.efei.lib.android.bean.net.RespLogin;
+import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.engine.ILoginService;
-import com.efei.lib.android.persistence.greendao.Account;
-import com.efei.lib.android.persistence.greendao.dao.AccountDao.Properties;
-import com.efei.lib.android.persistence.greendao.dao.DaoSession;
-import com.efei.lib.android.repository.DBManager;
+import com.efei.lib.android.repository.AccountLocalRepo;
 import com.efei.lib.android.utils.CollectionUtils;
 import com.efei.lib.android.utils.NetUtils;
 import com.efei.lib.android.utils.TextUtils;
@@ -65,8 +63,8 @@ public class LoginServiceImpl implements ILoginService
 	@Override
 	public Account getDefaultUser()
 	{
-		DaoSession session = DBManager.beginSession();
-		List<Account> accounts = session.getAccountDao().queryBuilder().orderDesc(Properties.LastLoginDate).list();
+		AccountLocalRepo repo = AccountLocalRepo.getInstance();
+		List<Account> accounts = repo.loadAllOrderBy(Account.Properties.LastLoginTime, false);
 		if (!CollectionUtils.isEmpty(accounts) && !TextUtils.isBlank(accounts.get(0).getAuthKey()))
 			// last login user regard as default user
 			return accounts.get(0);
@@ -78,19 +76,18 @@ public class LoginServiceImpl implements ILoginService
 	// regard the user who logged in latest as default user
 	private void createOrUpdateDefaultUser(ReqLogin reqLogin, RespLogin respLogin)
 	{
-		DaoSession session = DBManager.beginSession();
-		Account account = session.getAccountDao().queryBuilder().where(Properties.Email_mobile.eq(reqLogin.getEmail_mobile())).unique();
+		AccountLocalRepo repo = AccountLocalRepo.getInstance();
+		Account account = repo.queryForEq(Account.Properties.Email_Mobile, reqLogin.getEmail_mobile());
 		if (null == account)
 		{
 			account = new Account();
 			account.setEmail_mobile(reqLogin.getEmail_mobile());
 			account.setPassword(reqLogin.getPassword());
 			account.setAuthKey(respLogin.getAuth_key());
-			account.setLastLoginDate(new Date());
+			account.setLastLoginTime(new Date());
 		} else
-			account.setLastLoginDate(new Date());
-		session.insertOrReplace(account);
-		DBManager.endSession(session);
+			account.setLastLoginTime(new Date());
+		repo.createOrUpdate(account);
 	}
 
 }
