@@ -1,10 +1,10 @@
-package com.efei.lib.android.bean.net;
+package com.efei.lib.android.bean.persistance;
 
 import java.util.List;
-
-public class RespQueOrNote extends ABaseRespBean
+//TODO
+public class QueOrNote
 {
-	private String id;
+	private long id;
 	private int subject;
 	private String type;
 	private List<String> content;
@@ -16,12 +16,12 @@ public class RespQueOrNote extends ABaseRespBean
 	private String topics;
 	private String tag;
 
-	public String getId()
+	public long getId()
 	{
 		return id;
 	}
 
-	void setId(String id)
+	void setId(long id)
 	{
 		this.id = id;
 	}
@@ -115,5 +115,4 @@ public class RespQueOrNote extends ABaseRespBean
 	{
 		this.tag = tag;
 	}
-
 }

@@ -18,7 +18,7 @@ import com.efei.lib.android.utils.CollectionUtils;
 import com.efei.lib.android.utils.NetUtils;
 import com.efei.lib.android.utils.TextUtils;
 
-public class LoginServiceImpl implements ILoginService
+class LoginServiceImpl implements ILoginService
 {
 	private static final String URL_API_LOGIN = "account/sessions";
 	private static final String URL_API_REGISTER = "account/registrations";
@@ -63,6 +63,7 @@ public class LoginServiceImpl implements ILoginService
 	@Override
 	public Account getDefaultUser()
 	{
+		//TODO the default user may be cached in memory
 		AccountLocalRepo repo = AccountLocalRepo.getInstance();
 		List<Account> accounts = repo.loadAllOrderBy(Account.Properties.LastLoginTime, false);
 		if (!CollectionUtils.isEmpty(accounts) && !TextUtils.isBlank(accounts.get(0).getAuthKey()))

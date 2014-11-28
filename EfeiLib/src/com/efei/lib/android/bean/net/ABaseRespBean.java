@@ -1,5 +1,8 @@
 package com.efei.lib.android.bean.net;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public abstract class ABaseRespBean
 {
 	private boolean success;
@@ -35,4 +38,18 @@ public abstract class ABaseRespBean
 	{
 		this.auth_key = auth_key;
 	}
+
+	public static <T> T toObject(String json, Class<T> clazz)
+	{
+		try
+		{
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			return mapper.readValue(json, clazz);
+		} catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
 }

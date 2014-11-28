@@ -5,6 +5,9 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
 public class EfeiApplication extends Application
 {
 	private static EfeiApplication application;
@@ -14,6 +17,8 @@ public class EfeiApplication extends Application
 	{
 		super.onCreate();
 		application = this;
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+		ImageLoader.getInstance().init(config);
 	}
 
 	@Override

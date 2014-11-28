@@ -6,7 +6,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "T_ACCOUNT")
-public class Account
+public final class Account
 {
 	public static final class Properties
 	{

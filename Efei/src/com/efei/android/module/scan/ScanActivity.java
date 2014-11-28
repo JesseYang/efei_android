@@ -21,6 +21,14 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.efei.android.R;
+import com.efei.lib.android.async.Executor;
+import com.efei.lib.android.async.IBusinessCallback;
+import com.efei.lib.android.async.IJob;
+import com.efei.lib.android.async.IUICallback;
+import com.efei.lib.android.async.JobAsyncTask;
+import com.efei.lib.android.bean.net.RespQueOrNote;
+import com.efei.lib.android.grammar.RichText;
+import com.efei.lib.android.repository.QuestionNoteRepo;
 
 public class ScanActivity extends Activity
 {
@@ -126,7 +134,7 @@ public class ScanActivity extends Activity
 		}
 	};
 
-	PreviewCallback previewCb = new PreviewCallback()
+	private PreviewCallback previewCb = new PreviewCallback()
 	{
 		public void onPreviewFrame(byte[] data, Camera camera)
 		{
@@ -148,14 +156,38 @@ public class ScanActivity extends Activity
 				for (Symbol sym : syms)
 				{
 					scanText.setText("barcode result " + sym.getData());
+					testGet(sym.getData());
 					barcodeScanned = true;
 				}
 			}
 		}
 	};
 
+	// TODO yunzhong: test tmp code
+	private void testGet(final String shortLink)
+	{
+		Executor.INSTANCE.execute(new JobAsyncTask<RichText>(new IBusinessCallback<RichText>()
+		{
+
+			@Override
+			public RichText onBusinessLogic(IJob job)
+			{
+				RespQueOrNote respQueOrNote = QuestionNoteRepo.getInstance().queryByShortLink(shortLink);
+				return new RichText(respQueOrNote.getContent());
+			}
+		}, new IUICallback.Adapter<RichText>()
+		{
+			@Override
+			public void onPostExecute(RichText result)
+			{
+				TextView tv = (TextView) findViewById(R.id.ivTest);
+				tv.setText(result.getReformatText());
+			}
+		}));
+	}
+
 	// Mimic continuous auto-focusing
-	AutoFocusCallback autoFocusCB = new AutoFocusCallback()
+	private AutoFocusCallback autoFocusCB = new AutoFocusCallback()
 	{
 		public void onAutoFocus(boolean success, Camera camera)
 		{
