@@ -5,6 +5,7 @@ import net.sourceforge.zbar.Image;
 import net.sourceforge.zbar.ImageScanner;
 import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
@@ -106,7 +107,13 @@ public class ScanActivity extends Activity
 	{
 		try
 		{
-			return Camera.open();
+			Camera camera = Camera.open();
+			// Parameters param = camera.getParameters();
+			// if (param.isSmoothZoomSupported())
+			// param.setZoom(0);
+			camera.getParameters().setZoom(0);
+			camera.getParameters().setPreviewSize(900, 900);
+			return camera;
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -136,10 +143,27 @@ public class ScanActivity extends Activity
 
 	private PreviewCallback previewCb = new PreviewCallback()
 	{
+		@SuppressLint("NewApi")
 		public void onPreviewFrame(byte[] data, Camera camera)
 		{
 			Camera.Parameters parameters = camera.getParameters();
 			Size size = parameters.getPreviewSize();
+
+			// YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), size.width, size.height, null);
+			// ByteArrayOutputStream out = new ByteArrayOutputStream();
+			// yuv.(new Rect(0, 0, size.width, size.height), 100, out);
+			// byte[] bytes = out.toByteArray();
+			// final Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+			// Bitmap bmpBig = Bitmap.createScaledBitmap(bmp, bmp.getWidth() * 3, bmp.getHeight() * 3, false);
+			// bmp.recycle();
+			// // calculate how many bytes our image consists of.
+			// int bytesNew = bmpBig.getByteCount();
+			// // or we can calculate bytes this way. Use a different value than 4 if you don't use 32bit images.
+			// // int bytes = b.getWidth()*b.getHeight()*4;
+			// ByteBuffer buffer = ByteBuffer.allocate(bytesNew); // Create a new buffer
+			// bmpBig.copyPixelsToBuffer(buffer); // Move the byte data to the buffer
+			// data = buffer.array(); // Get the underlying array containing the data.
+			// bmpBig.recycle();
 
 			Image barcode = new Image(size.width, size.height, "Y800");
 			barcode.setData(data);
@@ -182,6 +206,12 @@ public class ScanActivity extends Activity
 			{
 				TextView tv = (TextView) findViewById(R.id.ivTest);
 				tv.setText(result.getReformatText());
+			}
+			
+			@Override
+			public void onError(Throwable e)
+			{
+				super.onError(e);
 			}
 		}));
 	}
