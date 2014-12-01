@@ -14,15 +14,12 @@ public final class Account
 		{
 		};
 
-		public static final String Id = "id";
 		public static final String Email_Mobile = "email_mobile";
 		public static final String AuthKey = "auth_key";
 		public static final String LastLoginTime = "last_login_time";
 	}
 
-	@DatabaseField(generatedId = true, columnName = Properties.Id)
-	private Long id;
-	@DatabaseField(canBeNull = true, columnName = Properties.Email_Mobile)
+	@DatabaseField(id = true, canBeNull = true, columnName = Properties.Email_Mobile)
 	private String email_mobile;
 	@DatabaseField(columnName = Properties.AuthKey)
 	private String authKey;
@@ -31,8 +28,13 @@ public final class Account
 
 	private transient String password;
 
-	public Account()
+	Account()
 	{
+	}
+
+	public Account(String emailMobile)
+	{
+		this.email_mobile = emailMobile;
 	}
 
 	public String getEmail_mobile()

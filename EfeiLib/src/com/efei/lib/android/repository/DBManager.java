@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.efei.lib.android.bean.persistance.Account;
+import com.efei.lib.android.bean.persistance.QuestionOrNote;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.exception.EfeiException;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -21,7 +22,7 @@ final class DBManager
 	{
 	}
 
-	static <T> Dao<T, Long> beginSession(Class<T> beanClazz)
+	static <T> Dao<T, String> beginSession(Class<T> beanClazz)
 	{
 		ConnectionSource connectionSource = OpenHelperManager.getHelper(EfeiApplication.getContext(), EfeiSqliteOpenHelper.class).getConnectionSource();
 
@@ -55,6 +56,7 @@ final class DBManager
 			try
 			{
 				TableUtils.createTableIfNotExists(connectionSource, Account.class);
+				TableUtils.createTableIfNotExists(connectionSource, QuestionOrNote.class);
 			} catch (SQLException e)
 			{
 				throw new EfeiException(e);
@@ -65,7 +67,14 @@ final class DBManager
 		public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion)
 		{
 			// TODO Auto-generated method stub
-
+			try
+			{
+				TableUtils.dropTable(connectionSource, Account.class, false);
+				TableUtils.dropTable(connectionSource, QuestionOrNote.class, false);
+			} catch (SQLException e)
+			{
+				throw new EfeiException(e);
+			}
 		}
 
 	}

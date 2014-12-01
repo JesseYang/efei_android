@@ -81,8 +81,7 @@ class LoginServiceImpl implements ILoginService
 		Account account = repo.queryForEq(Account.Properties.Email_Mobile, reqLogin.getEmail_mobile());
 		if (null == account)
 		{
-			account = new Account();
-			account.setEmail_mobile(reqLogin.getEmail_mobile());
+			account = new Account(reqLogin.getEmail_mobile());
 			account.setPassword(reqLogin.getPassword());
 			account.setAuthKey(respLogin.getAuth_key());
 			account.setLastLoginTime(new Date());

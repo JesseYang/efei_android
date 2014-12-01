@@ -16,6 +16,7 @@ import android.text.style.UnderlineSpan;
 
 import com.efei.lib.android.common.Constants;
 import com.efei.lib.android.common.EfeiApplication;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class RichText
@@ -47,13 +48,8 @@ public class RichText
 	// ● equ_{name}*{width}*{height}：表示一个公式图片，其中name为该公式图片的文件名，width为图片宽度，height为图片高度。该图片的下载地址为“#{image server}/public/download/#{name}.png”
 	// ● math_{name}*{width}*{height}：和equ_{name}*{width}*{height}完全一致
 	// ● fig_{name}*{width}*{height}：表示一张图片，具体解释同上
-	public RichText(List<String> textLines)
+	public RichText(String text)
 	{
-		// link all lines as a string,then parse the string;
-		StringBuilder sb = new StringBuilder();
-		for (String line : textLines)
-			sb.append(line).append('\n');
-		String text = sb.toString();
 		reformatText = toSpannable(text);
 	}
 
@@ -109,7 +105,7 @@ public class RichText
 		String[] txtsByStar = txtImage.split("\\*");
 		String imageFile = txtsByStar[0].substring(startPrompt.length());
 		final String link = Constants.Net.IMAGE_SERVER_URL + URL_API_IMAGE + imageFile + ".png";
-		Bitmap bmp = ImageLoader.getInstance().loadImageSync(link);
+		Bitmap bmp = ImageLoader.getInstance().loadImageSync(link, new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).build());
 		BitmapDrawable bmpDrawable = new BitmapDrawable(EfeiApplication.getContext().getResources(), bmp);
 		final float fRadio = 0.8f;
 		bmpDrawable.setBounds(0, 0, (int) (bmp.getWidth() * fRadio), (int) (bmp.getHeight() * fRadio));

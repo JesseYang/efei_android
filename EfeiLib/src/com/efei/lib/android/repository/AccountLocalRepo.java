@@ -9,7 +9,7 @@ import com.efei.lib.android.exception.EfeiException;
 import com.efei.lib.android.utils.CollectionUtils;
 import com.j256.ormlite.dao.Dao;
 
-public final class AccountLocalRepo
+public final class AccountLocalRepo extends ABaseRepo<Account>
 {
 	private static final String TAG = AccountLocalRepo.class.getSimpleName();
 
@@ -19,63 +19,46 @@ public final class AccountLocalRepo
 
 	public void createOrUpdate(final Account account)
 	{
-		execute(new DBExecutor<Void>()
+		execute(new DBExecutor<Void, Account>()
 		{
+
 			@Override
-			public Void execute(Dao<Account, Long> dao) throws SQLException
+			public Void execute(Dao<Account, String> dao) throws SQLException
 			{
 				if (dao.createOrUpdate(account).getNumLinesChanged() != 1)
 					throw new EfeiException("create " + account + "in " + TAG + "failed");
 				return null;
 			}
-		});
+		}, Account.class);
 	}
 
-	public Account queryForEq(final String accountProperties , final Object value)
+	public Account queryForEq(final String accountProperties, final Object value)
 	{
-		return execute(new DBExecutor<Account>()
+		return execute(new DBExecutor<Account, Account>()
 		{
+
 			@Override
-			public Account execute(Dao<Account, Long> dao) throws SQLException
+			public Account execute(Dao<Account, String> dao) throws SQLException
 			{
 				List<Account> accounts = dao.queryForEq(accountProperties, value);
 				if (CollectionUtils.isEmpty(accounts))
 					return null;
 				return accounts.get(0);
 			}
-		});
+		}, Account.class);
 	}
 
 	public List<Account> loadAllOrderBy(final String accountProperties, final boolean ascending)
 	{
-		return execute(new DBExecutor<List<Account>>()
+		return execute(new DBExecutor<List<Account>, Account>()
 		{
+
 			@Override
-			public List<Account> execute(Dao<Account, Long> dao) throws SQLException
+			public List<Account> execute(Dao<Account, String> dao) throws SQLException
 			{
 				return dao.queryBuilder().orderBy(accountProperties, ascending).query();
 			}
-		});
-	}
-
-	private <T> T execute(DBExecutor<T> executor)
-	{
-		Dao<Account, Long> dao = DBManager.beginSession(Account.class);
-		try
-		{
-			return executor.execute(dao);
-		} catch (SQLException e)
-		{
-			throw new EfeiException(e);
-		} finally
-		{
-			DBManager.endSession();
-		}
-	}
-
-	private static interface DBExecutor<T>
-	{
-		T execute(Dao<Account, Long> dao) throws SQLException;
+		}, Account.class);
 	}
 
 	private static SoftReference<AccountLocalRepo> repo;

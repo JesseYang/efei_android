@@ -1,5 +1,7 @@
 package com.efei.lib.android.utils;
 
+import java.util.List;
+
 public final class TextUtils
 {
 	private TextUtils()
@@ -32,5 +34,13 @@ public final class TextUtils
 			return true;
 		else
 			return false;
+	}
+
+	public static String concat(List<String> subStrings)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (String string : subStrings)
+			sb.append(string);
+		return sb.toString();
 	}
 }

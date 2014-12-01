@@ -27,8 +27,7 @@ import com.efei.lib.android.async.IBusinessCallback;
 import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.JobAsyncTask;
-import com.efei.lib.android.bean.net.RespQueOrNote;
-import com.efei.lib.android.grammar.RichText;
+import com.efei.lib.android.bean.persistance.QuestionOrNote;
 import com.efei.lib.android.repository.QuestionNoteRepo;
 
 public class ScanActivity extends Activity
@@ -143,7 +142,6 @@ public class ScanActivity extends Activity
 
 	private PreviewCallback previewCb = new PreviewCallback()
 	{
-		@SuppressLint("NewApi")
 		public void onPreviewFrame(byte[] data, Camera camera)
 		{
 			Camera.Parameters parameters = camera.getParameters();
@@ -164,7 +162,6 @@ public class ScanActivity extends Activity
 			// bmpBig.copyPixelsToBuffer(buffer); // Move the byte data to the buffer
 			// data = buffer.array(); // Get the underlying array containing the data.
 			// bmpBig.recycle();
-
 			Image barcode = new Image(size.width, size.height, "Y800");
 			barcode.setData(data);
 
@@ -190,22 +187,21 @@ public class ScanActivity extends Activity
 	// TODO yunzhong: test tmp code
 	private void testGet(final String shortLink)
 	{
-		Executor.INSTANCE.execute(new JobAsyncTask<RichText>(new IBusinessCallback<RichText>()
+		Executor.INSTANCE.execute(new JobAsyncTask<QuestionOrNote>(new IBusinessCallback<QuestionOrNote>()
 		{
 
 			@Override
-			public RichText onBusinessLogic(IJob job)
+			public QuestionOrNote onBusinessLogic(IJob job)
 			{
-				RespQueOrNote respQueOrNote = QuestionNoteRepo.getInstance().queryByShortLink(shortLink);
-				return new RichText(respQueOrNote.getContent());
+				return QuestionNoteRepo.getInstance().queryByShortLink(shortLink);
 			}
-		}, new IUICallback.Adapter<RichText>()
+		}, new IUICallback.Adapter<QuestionOrNote>()
 		{
 			@Override
-			public void onPostExecute(RichText result)
+			public void onPostExecute(QuestionOrNote result)
 			{
 				TextView tv = (TextView) findViewById(R.id.ivTest);
-				tv.setText(result.getReformatText());
+				tv.setText(result.getFormattedContent());
 			}
 			
 			@Override
