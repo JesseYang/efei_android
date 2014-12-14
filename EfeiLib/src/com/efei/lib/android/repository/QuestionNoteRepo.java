@@ -59,7 +59,8 @@ public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 
 	private String encodeShortLink(String shortLink)
 	{
-		return "~" + shortLink;
+		// http://dev.efei.org/~hJzX4
+		return shortLink.substring(shortLink.indexOf("~"));
 	}
 
 	private static SoftReference<QuestionNoteRepo> repo;

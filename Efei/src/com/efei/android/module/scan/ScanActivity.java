@@ -5,7 +5,6 @@ import net.sourceforge.zbar.Image;
 import net.sourceforge.zbar.ImageScanner;
 import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
@@ -69,7 +68,7 @@ public class ScanActivity extends Activity
 		FrameLayout preview = (FrameLayout) findViewById(R.id.cameraPreview);
 
 		// TODO yunzhong:
-		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(600, 600, Gravity.CENTER);
+		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 		mPreview.setLayoutParams(params);
 
 		preview.addView(mPreview);
@@ -207,7 +206,8 @@ public class ScanActivity extends Activity
 			@Override
 			public void onError(Throwable e)
 			{
-				super.onError(e);
+				TextView tv = (TextView) findViewById(R.id.ivTest);
+				tv.setText(e.getMessage());
 			}
 		}));
 	}
