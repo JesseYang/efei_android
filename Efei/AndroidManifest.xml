@@ -39,7 +39,9 @@
             android:name="com.efei.android.module.question.QueListActivity"
             android:label="@string/title_activity_que_list" >
         </activity>
-        <activity android:name="com.efei.android.module.scan.ScanActivity" >
+        <activity
+            android:name="com.efei.android.module.scan.ScanActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
     </application>
 

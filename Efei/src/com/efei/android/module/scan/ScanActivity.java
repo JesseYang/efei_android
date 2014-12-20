@@ -3,7 +3,6 @@ package com.efei.android.module.scan;
 import net.sourceforge.zbar.Config;
 import net.sourceforge.zbar.Image;
 import net.sourceforge.zbar.ImageScanner;
-import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -16,7 +15,6 @@ import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -28,6 +26,7 @@ import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.JobAsyncTask;
 import com.efei.lib.android.bean.persistance.QuestionOrNote;
 import com.efei.lib.android.repository.QuestionNoteRepo;
+import com.efei.lib.android.utils.CollectionUtils;
 
 public class ScanActivity extends Activity
 {
@@ -35,8 +34,7 @@ public class ScanActivity extends Activity
 	private ScanView mPreview;
 	private Handler autoFocusHandler;
 
-	private TextView scanText;
-	private Button scanButton;
+	private View scanButton;
 
 	private ImageScanner scanner;
 
@@ -68,14 +66,14 @@ public class ScanActivity extends Activity
 		FrameLayout preview = (FrameLayout) findViewById(R.id.cameraPreview);
 
 		// TODO yunzhong:
-		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER);
+		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT,
+				Gravity.CENTER);
 		mPreview.setLayoutParams(params);
 
 		preview.addView(mPreview);
 
-		scanText = (TextView) findViewById(R.id.scanText);
-
-		scanButton = (Button) findViewById(R.id.ScanButton);
+		scanButton = findViewById(R.id.tv_scan_continue);
+		scanButton.setSelected(true);
 
 		scanButton.setOnClickListener(new OnClickListener()
 		{
@@ -84,7 +82,6 @@ public class ScanActivity extends Activity
 				if (barcodeScanned)
 				{
 					barcodeScanned = false;
-					scanText.setText("Scanning...");
 					mCamera.setPreviewCallback(previewCb);
 					mCamera.startPreview();
 					previewing = true;
@@ -146,21 +143,6 @@ public class ScanActivity extends Activity
 			Camera.Parameters parameters = camera.getParameters();
 			Size size = parameters.getPreviewSize();
 
-			// YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), size.width, size.height, null);
-			// ByteArrayOutputStream out = new ByteArrayOutputStream();
-			// yuv.(new Rect(0, 0, size.width, size.height), 100, out);
-			// byte[] bytes = out.toByteArray();
-			// final Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-			// Bitmap bmpBig = Bitmap.createScaledBitmap(bmp, bmp.getWidth() * 3, bmp.getHeight() * 3, false);
-			// bmp.recycle();
-			// // calculate how many bytes our image consists of.
-			// int bytesNew = bmpBig.getByteCount();
-			// // or we can calculate bytes this way. Use a different value than 4 if you don't use 32bit images.
-			// // int bytes = b.getWidth()*b.getHeight()*4;
-			// ByteBuffer buffer = ByteBuffer.allocate(bytesNew); // Create a new buffer
-			// bmpBig.copyPixelsToBuffer(buffer); // Move the byte data to the buffer
-			// data = buffer.array(); // Get the underlying array containing the data.
-			// bmpBig.recycle();
 			Image barcode = new Image(size.width, size.height, "Y800");
 			barcode.setData(data);
 
@@ -173,18 +155,16 @@ public class ScanActivity extends Activity
 				mCamera.stopPreview();
 
 				SymbolSet syms = scanner.getResults();
-				for (Symbol sym : syms)
-				{
-					scanText.setText("barcode result " + sym.getData());
-					testGet(sym.getData());
-					barcodeScanned = true;
-				}
+				if (CollectionUtils.isEmpty(syms))
+					return;
+				queryQuestionInRepo(syms.iterator().next().getData());
+				barcodeScanned = true;
 			}
 		}
 	};
 
 	// TODO yunzhong: test tmp code
-	private void testGet(final String shortLink)
+	private void queryQuestionInRepo(final String shortLink)
 	{
 		Executor.INSTANCE.execute(new JobAsyncTask<QuestionOrNote>(new IBusinessCallback<QuestionOrNote>()
 		{
@@ -199,14 +179,16 @@ public class ScanActivity extends Activity
 			@Override
 			public void onPostExecute(QuestionOrNote result)
 			{
-				TextView tv = (TextView) findViewById(R.id.ivTest);
+				findViewById(R.id.question_scan_result_panel).setVisibility(View.VISIBLE);
+				TextView tv = (TextView) findViewById(R.id.tv_question_scan_result);
 				tv.setText(result.getFormattedContent());
 			}
-			
+
 			@Override
 			public void onError(Throwable e)
 			{
-				TextView tv = (TextView) findViewById(R.id.ivTest);
+				findViewById(R.id.question_scan_result_panel).setVisibility(View.VISIBLE);
+				TextView tv = (TextView) findViewById(R.id.tv_question_scan_result);
 				tv.setText(e.getMessage());
 			}
 		}));

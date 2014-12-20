@@ -6,33 +6,134 @@
     <FrameLayout
         android:id="@+id/cameraPreview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_height="match_parent" />
 
     <LinearLayout
+        android:id="@+id/scan_top_panel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="160dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/transparent_33"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/scan_action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <TextView
+                android:id="@+id/tv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:drawableLeft="@drawable/back"
+                android:gravity="center"
+                android:text="返回"
+                android:textColor="@android:color/white"
+                android:textSize="15dp" />
+
+            <ImageView
+                android:id="@+id/iv_flash_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="25dp"
+                android:background="@drawable/btn_flash_light" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/scan_mode_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_scan_single_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_left_scan"
+                android:padding="5dp"
+                android:text="单题扫描"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/tv_scan_continue_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_right_scan"
+                android:padding="5dp"
+                android:text="连续扫描"
+                android:textSize="15dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/scan_bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/transparent_33"
+        android:gravity="center_horizontal"
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/scanText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Scanning..." >
-        </TextView>
-
-        <Button
-            android:id="@+id/ScanButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Scan" />
-
-        <TextView
-            android:id="@+id/ivTest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_marginTop="18dp"
+            android:drawableLeft="@drawable/icon_qr_code"
+            android:gravity="center"
+            android:text="\t将题目二维码放入框内，即可自动扫描"
+            android:textSize="15dp" />
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/scan_top_panel"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/border_left_top" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/scan_top_panel"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/border_right_top" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/scan_bottom_panel"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/border_left_bottom" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/scan_bottom_panel"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/border_right_bottom" />
+
+    <include
+        android:id="@+id/question_scan_result_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        layout="@layout/question_scan_result_panel"
+        android:visibility="gone" />
 
 </RelativeLayout>
