@@ -62,7 +62,7 @@ public class QuestionOrNote
 
 	public QuestionOrNote(RespQueOrNote resp, Account account)
 	{
-		setId(resp.getId());
+		setId(resp.get_id());
 		setSubjectIndex(resp.getSubject());
 		setType(resp.getType());
 		setContent(TextUtils.concat(resp.getContent()));
@@ -176,7 +176,7 @@ public class QuestionOrNote
 		this.subjectIndex = subjectIndex;
 	}
 
-	void setAccount(Account account)
+	public void setAccount(Account account)
 	{
 		this.account = account;
 	}

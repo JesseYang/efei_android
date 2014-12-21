@@ -3,8 +3,12 @@ package com.efei.lib.android.repository;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.efei.lib.android.bean.net.ABaseRespBean;
+import com.efei.lib.android.bean.net.ReqNotesBatch;
+import com.efei.lib.android.bean.net.RespNotesBatch;
 import com.efei.lib.android.bean.net.RespQueOrNote;
 import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.bean.persistance.QuestionOrNote;
@@ -17,8 +21,10 @@ import com.j256.ormlite.dao.Dao;
 
 public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 {
+	private static final String TAG = QuestionNoteRepo.class.getSimpleName();
 	private final static String URL_API_QUE = "student/questions/";
-	protected static final String TAG = QuestionNoteRepo.class.getSimpleName();
+	// private final static String URL_API_CREATE_NOTE = "student/notes/";
+	private final static String URL_API_CREATE_NOTES_BATCH = "student/notes/batch/";
 
 	private QuestionNoteRepo()
 	{
@@ -93,18 +99,38 @@ public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 		}
 	}
 
-	private void createOrUpdateInLocal(final QuestionOrNote queOrNote)
+	private void createOrUpdateInLocal(final QuestionOrNote... queOrNotes)
 	{
 		execute(new DBExecutor<Void, QuestionOrNote>()
 		{
 			@Override
 			public Void execute(Dao<QuestionOrNote, String> dao) throws SQLException
 			{
-				if (dao.createOrUpdate(queOrNote).getNumLinesChanged() != 1)
-					throw new EfeiException("create " + queOrNote + "in " + TAG + "failed");
+				ILoginService service = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
+				Account defaultUser = service.getDefaultUser();
+				if (null == defaultUser)
+					throw new EfeiException("no default user!");
+				for (QuestionOrNote queOrNote : queOrNotes)
+				{
+					queOrNote.setAccount(defaultUser);
+					if (dao.createOrUpdate(queOrNote).getNumLinesChanged() != 1)
+						throw new EfeiException("create " + queOrNote + "in " + TAG + "failed");
+				}
 				return null;
 			}
 		}, QuestionOrNote.class);
 	}
 
+	public void createOrUpdate(final List<QuestionOrNote> queOrNotes)
+	{
+		List<String> queIds = new ArrayList<String>();
+		for (QuestionOrNote queOrNote : queOrNotes)
+			queIds.add(queOrNote.getId());
+		ReqNotesBatch req = new ReqNotesBatch();
+		req.setQuestion_ids(queIds);
+		RespNotesBatch resp = NetUtils.postObjectAsJson(URL_API_CREATE_NOTES_BATCH, req, RespNotesBatch.class);
+		if (!resp.isSuccess())
+			throw new EfeiException("post question or notes failed");
+		createOrUpdateInLocal(queOrNotes.toArray(new QuestionOrNote[0]));
+	}
 }

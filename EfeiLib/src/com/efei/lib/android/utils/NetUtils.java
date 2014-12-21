@@ -36,8 +36,8 @@ public final class NetUtils
 		post.setHeader("Accept", "application/json");
 		try
 		{
-			byte[] bytes = reqBean.toJson().getBytes(HTTP.UTF_8);
-			String jsonPost = new String(bytes, HTTP.UTF_8);
+			byte[] postBytes = reqBean.toJson().getBytes(HTTP.UTF_8);
+			String jsonPost = new String(postBytes, HTTP.UTF_8);
 			HttpEntity entity = new StringEntity(jsonPost, HTTP.UTF_8);
 			post.setEntity(entity);
 			HttpResponse response = client.execute(post);

@@ -90,6 +90,52 @@
             android:gravity="center"
             android:text="\t将题目二维码放入框内，即可自动扫描"
             android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/tv_scanned_que_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:text="已扫描：0道题"
+            android:textSize="13dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent" />
+
+        <LinearLayout
+            android:visibility="invisible"
+            android:id="@+id/ll_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tv_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="完成"
+                android:textSize="15dp" />
+
+            <View
+                android:layout_width="150dp"
+                android:layout_height="1dp"
+                android:background="@android:color/transparent" />
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="取消"
+                android:textSize="15dp" />
+        </LinearLayout>
     </LinearLayout>
 
     <ImageView

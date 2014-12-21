@@ -4,7 +4,7 @@ import java.util.List;
 
 public class RespQueOrNote extends ABaseRespBean
 {
-	private String id;
+	private String _id;
 	private int subject;
 	private String type;
 	private List<String> content;
@@ -16,14 +16,14 @@ public class RespQueOrNote extends ABaseRespBean
 	private String topics;
 	private String tag;
 
-	public String getId()
+	public String get_id()
 	{
-		return id;
+		return _id;
 	}
 
-	void setId(String id)
+	void set_id(String _id)
 	{
-		this.id = id;
+		this._id = _id;
 	}
 
 	public int getSubject()
