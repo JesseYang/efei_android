@@ -162,27 +162,32 @@ public class ScanActivity extends Activity
 		{
 			@Override
 			public void onClick(View v)
-			{
+			{// TODO yunhun:save
 				ILoginService service = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
 				Account defaultUser = service.getDefaultUser();
 				if (null == defaultUser)
 					throw new EfeiException("undo");
 				else
 				{
-					Executor.INSTANCE.execute(new JobAsyncTask<Void>(new IBusinessCallback<Void>()
+					Executor.INSTANCE.execute(new JobAsyncTask<Boolean>(new IBusinessCallback<Boolean>()
 					{
 						@Override
-						public Void onBusinessLogic(IJob job)
+						public Boolean onBusinessLogic(IJob job)
 						{
+							boolean result = false;
 							QuestionNoteRepo.getInstance().createOrUpdate(queOrNotes);
-							return null;
+							result = true;
+							return result;
 						}
-					}, new IUICallback.Adapter<Void>()
+					}, new IUICallback.Adapter<Boolean>()
 					{
-						public void onPostExecute(Void result)
+						public void onPostExecute(Boolean result)
 						{
-							finish();
-							startActivity(new Intent(ScanActivity.this, QueListActivity.class));
+							if (result)
+							{
+								finish();
+								startActivity(new Intent(ScanActivity.this, QueListActivity.class));
+							}
 						};
 
 						public void onError(Throwable e)

@@ -3,9 +3,16 @@ package com.efei.android.module.account;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
@@ -14,6 +21,7 @@ import android.widget.EditText;
 
 import com.efei.android.R;
 import com.efei.android.module.question.QueListActivity;
+import com.efei.android.module.scan.ScanActivity;
 import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback.Adapter;
 import com.efei.lib.android.bean.net.ReqLogin;
@@ -27,7 +35,7 @@ import com.efei.lib.android.utils.TextUtils;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends Activity
+public class LoginActivity extends ActionBarActivity
 {
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -44,6 +52,14 @@ public class LoginActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setBackgroundDrawable(new ColorDrawable(0xff4388ff));
+
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setLogo(new ColorDrawable(0));
+
+		actionBar.setTitle("µÇÂ¼");
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_login);
 
 		ILoginService loginService = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
@@ -62,6 +78,7 @@ public class LoginActivity extends Activity
 		// Set up the login form.
 		mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 		mPasswordView = (EditText) findViewById(R.id.password);
+
 		mLoginFormView = findViewById(R.id.login_form);
 		mProgressView = findViewById(R.id.login_progress);
 
@@ -75,6 +92,15 @@ public class LoginActivity extends Activity
 			}
 		});
 
+		findViewById(R.id.tv_scan_direct).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				finish();
+				startActivity(new Intent(LoginActivity.this, ScanActivity.class));
+			}
+		});
 	}
 
 	/**
@@ -213,5 +239,25 @@ public class LoginActivity extends Activity
 			jobLogin = null;
 			showProgress(false);
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		String sp = new String("Ãâ·Ñ×¢²á");
+		// sp.setSpan(new AbsoluteSizeSpan(30 , true), 0, sp.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+		MenuItem item = menu.add(sp);
+		item.setOnMenuItemClickListener(new OnMenuItemClickListener()
+		{
+
+			@Override
+			public boolean onMenuItemClick(MenuItem item)
+			{
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
+		MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_ALWAYS | MenuItemCompat.SHOW_AS_ACTION_WITH_TEXT);
+		return super.onCreateOptionsMenu(menu);
 	}
 }
