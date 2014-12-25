@@ -133,4 +133,29 @@ public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 			throw new EfeiException("post question or notes failed");
 		createOrUpdateInLocal(queOrNotes.toArray(new QuestionOrNote[0]));
 	}
+
+	/**
+	 * load all que or note for default user
+	 * 
+	 * @return
+	 */
+	public List<QuestionOrNote> loadAll()
+	{
+		return execute(new DBExecutor<List<QuestionOrNote>, QuestionOrNote>()
+		{
+			@Override
+			public List<QuestionOrNote> execute(Dao<QuestionOrNote, String> dao) throws SQLException
+			{
+				ILoginService service = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
+				Account defaultUser = service.getDefaultUser();
+				if (null == defaultUser)
+					throw new EfeiException("no default user!");
+				List<QuestionOrNote> results = dao.queryForEq(QuestionOrNote.Properties.AccountId, defaultUser.getEmail_mobile());
+				for (QuestionOrNote result : results)
+					result.setFormattedContent(new RichText(result.getContent()).getReformatText());
+
+				return results;
+			}
+		}, QuestionOrNote.class);
+	}
 }

@@ -8,10 +8,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.efei.android.QueListActivity" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:text="que_list" />
+        android:id="@+id/lv_que_or_note"/>
 
 </RelativeLayout>

@@ -1,13 +1,23 @@
 package com.efei.android.module.question;
 
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import com.efei.android.R;
 import com.efei.android.module.scan.ScanActivity;
+import com.efei.lib.android.async.Executor;
+import com.efei.lib.android.async.IBusinessCallback;
+import com.efei.lib.android.async.IJob;
+import com.efei.lib.android.async.IUICallback;
+import com.efei.lib.android.async.JobAsyncTask;
+import com.efei.lib.android.bean.persistance.QuestionOrNote;
 import com.efei.lib.android.common.EfeiApplication;
+import com.efei.lib.android.repository.QuestionNoteRepo;
 
 public class QueListActivity extends ActionBarActivity
 {
@@ -17,6 +27,29 @@ public class QueListActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_que_list);
+
+		ListView lv = (ListView) findViewById(R.id.lv_que_or_note);
+		final QueListAdapter adapter = new QueListAdapter();
+		lv.setAdapter(adapter);
+
+		Executor.INSTANCE.execute(new JobAsyncTask<List<QuestionOrNote>>(new IBusinessCallback<List<QuestionOrNote>>()
+		{
+
+			@Override
+			public List<QuestionOrNote> onBusinessLogic(IJob job)
+			{
+				return QuestionNoteRepo.getInstance().loadAll();
+			}
+		}, new IUICallback.Adapter<List<QuestionOrNote>>()
+		{
+			@Override
+			public void onPostExecute(List<QuestionOrNote> result)
+			{
+				adapter.content.addAll(result);
+				adapter.notifyDataSetChanged();
+			}
+		}));
+
 	}
 
 	@Override
