@@ -20,7 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.efei.android.R;
-import com.efei.android.module.question.QueListActivity;
+import com.efei.android.module.MainActivity;
 import com.efei.android.module.scan.ScanActivity;
 import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback.Adapter;
@@ -69,7 +69,7 @@ public class LoginActivity extends ActionBarActivity
 		else
 		{
 			finish();
-			EfeiApplication.switchToActivity(QueListActivity.class);
+			EfeiApplication.switchToActivity(MainActivity.class);
 		}
 	}
 
@@ -225,7 +225,7 @@ public class LoginActivity extends ActionBarActivity
 			if (result.isSuccess())
 			{
 				finish();
-				EfeiApplication.switchToActivity(QueListActivity.class);
+				EfeiApplication.switchToActivity(MainActivity.class);
 			} else
 			{
 				mPasswordView.setError(getString(R.string.error_incorrect_password));

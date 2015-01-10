@@ -24,7 +24,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.efei.android.R;
-import com.efei.android.module.question.QueListActivity;
+import com.efei.android.module.MainActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IBusinessCallback;
 import com.efei.lib.android.async.IJob;
@@ -186,7 +186,7 @@ public class ScanActivity extends Activity
 							if (result)
 							{
 								finish();
-								startActivity(new Intent(ScanActivity.this, QueListActivity.class));
+								startActivity(new Intent(ScanActivity.this, MainActivity.class));
 							}
 						};
 

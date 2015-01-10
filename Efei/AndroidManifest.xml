@@ -37,8 +37,8 @@
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
-            android:name="com.efei.android.module.question.QueListActivity"
-            android:label="@string/title_activity_que_list" >
+            android:name="com.efei.android.module.MainActivity"
+            android:theme="@style/AppTheme.NoAcionBar" >
         </activity>
         <activity
             android:name="com.efei.android.module.scan.ScanActivity"

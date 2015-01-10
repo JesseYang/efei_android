@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#ff4388ff"
+    android:gravity="center"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        android:text="易"
+        android:textColor="@android:color/white"
+        android:textSize="19dp" />
+
+    <AutoCompleteTextView
+        android:id="@+id/email"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_weight="1"
+        android:background="#ff2a6af2"
+        android:drawableLeft="@drawable/icon_search"
+        android:gravity="center_vertical"
+        android:inputType="textEmailAddress"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textColor="@android:color/black"
+        android:textCursorDrawable="@null" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:drawableTop="@drawable/icon_select"
+        android:gravity="center"
+        android:text="选择"
+        android:textColor="@android:color/white"
+        android:textSize="10dp" />
+
+</LinearLayout>
