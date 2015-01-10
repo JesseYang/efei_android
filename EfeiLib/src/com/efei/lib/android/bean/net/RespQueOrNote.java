@@ -2,7 +2,7 @@ package com.efei.lib.android.bean.net;
 
 import java.util.List;
 
-public class RespQueOrNote extends ABaseRespBean
+public class RespQueOrNote extends BaseRespBean
 {
 	private String _id;
 	private int subject;

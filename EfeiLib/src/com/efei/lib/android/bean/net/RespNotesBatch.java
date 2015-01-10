@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.efei.lib.android.bean.net.common_data.Teacher;
 
-public class RespNotesBatch extends ABaseRespBean
+public class RespNotesBatch extends BaseRespBean
 {
 	private Map<Integer, Long> note_update_time;
 	private List<Teacher> teachers;

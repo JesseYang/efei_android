@@ -3,7 +3,7 @@ package com.efei.lib.android.bean.net;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class ABaseRespBean
+public class BaseRespBean
 {
 	private boolean success;
 	private int code;

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.efei.lib.android.bean.net.ABaseRespBean;
+import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.net.ReqNotesBatch;
 import com.efei.lib.android.bean.net.RespNotesBatch;
 import com.efei.lib.android.bean.net.RespQueOrNote;
@@ -34,8 +34,8 @@ public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 	{
 		try
 		{
-			String jsonQueNoteId = NetUtils.getAsString(encodeShortLink(shortLink), null);
-			RespQueNoteId respQueId = ABaseRespBean.toObject(jsonQueNoteId, RespQueNoteId.class);
+			String jsonQueNoteId = NetUtils.get(encodeShortLink(shortLink), null);
+			RespQueNoteId respQueId = BaseRespBean.toObject(jsonQueNoteId, RespQueNoteId.class);
 			if (!respQueId.isSuccess())
 				throw new EfeiException("get question id by short url--" + shortLink + " failed");
 			QuestionOrNote queOrNoteLocal = execute(
@@ -47,8 +47,8 @@ public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 				return queOrNoteLocal;
 			}
 
-			String json = NetUtils.getAsString(URL_API_QUE + respQueId.getQuestion_id(), null);
-			RespQueOrNote resp = ABaseRespBean.toObject(json, RespQueOrNote.class);
+			String json = NetUtils.get(URL_API_QUE + respQueId.getQuestion_id(), null);
+			RespQueOrNote resp = BaseRespBean.toObject(json, RespQueOrNote.class);
 			ILoginService loginService = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
 			Account defaultUser = loginService.getDefaultUser();
 			QuestionOrNote queOrNote = new QuestionOrNote(resp, defaultUser);
@@ -83,7 +83,7 @@ public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 		return repo.get();
 	}
 
-	private static final class RespQueNoteId extends ABaseRespBean
+	private static final class RespQueNoteId extends BaseRespBean
 	{
 		private String question_id;
 
@@ -158,4 +158,5 @@ public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 			}
 		}, QuestionOrNote.class);
 	}
+	
 }
