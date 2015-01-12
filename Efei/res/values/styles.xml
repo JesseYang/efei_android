@@ -2,13 +2,13 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
@@ -20,5 +20,21 @@
     <style name="AppTheme.NoAcionBar" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
     </style>
-    
+
+    <!-- the theme applied to the application or activity -->
+    <style name="AppTheme.EfeiActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/EfeiActionBar</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/EfeiActionBar</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="EfeiActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/action_bar_blue</item>
+        <item name="android:icon">@android:color/transparent</item>
+        <!-- Support library compatibility -->
+        <item name="background">@color/action_bar_blue</item>
+        <item name="icon">@android:color/transparent</item>
+    </style>
+
 </resources>

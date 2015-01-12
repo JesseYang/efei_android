@@ -9,11 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.efei.android.R;
-import com.efei.lib.android.bean.persistance.QuestionOrNote;
+import com.efei.lib.android.bean.net.RespQueOrNote;
+import com.efei.lib.android.utils.UiUtils;
 
 public class QueListAdapter extends BaseAdapter
 {
-	final List<QuestionOrNote> content = new ArrayList<QuestionOrNote>();
+	final List<RespQueOrNote> content = new ArrayList<RespQueOrNote>();
 
 	@Override
 	public int getCount()
@@ -48,12 +49,12 @@ public class QueListAdapter extends BaseAdapter
 		return convertView;
 	}
 
-	private void view_itemMap(QuestionOrNote questionOrNote, QueViewHolder holder)
+	private void view_itemMap(RespQueOrNote questionOrNote, QueViewHolder holder)
 	{
 		holder.tvTag.setText(questionOrNote.getTag_set());
 		holder.tvPoint.setText(questionOrNote.getTopics());
 		holder.tvNote.setText(questionOrNote.getSummary());
-		holder.tvQue.setText(questionOrNote.getFormattedContent());
+		holder.tvQue.setText(UiUtils.richTextToSpannable(questionOrNote.getContent()));
 	}
 
 	private static class QueViewHolder

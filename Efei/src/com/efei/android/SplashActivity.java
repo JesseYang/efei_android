@@ -49,20 +49,6 @@ public class SplashActivity extends ActionBarActivity
 		{
 			try
 			{
-				// Thread.sleep(1000);
-				// RespQueId id = (RespQueId) IQueScanService.Factory.getService().get("~L7Yrv");
-				// // RespQueId que = (RespQueId) IQueScanService.Factory.getService().get0student$questions(id.getQuestion_id());
-				// IQueScanService.Factory.getService().post0student$note(id.getQuestion_id(), "≤‚ ‘tag", "≤‚ ‘topics", "≤‚ ‘summary");
-
-				// IQueScanService service = IQueScanService.Factory.getService();
-				// RespQueId id1 = service.get("~cYB88");
-				// RespQueId id2 = service.get("~v6OjH");
-				// RespAddBatchQues ques = service.post0student$notes$batch(id1.getQuestion_id() , id2.getQuestion_id());
-
-				// IAccountService service = IAccountService.Factory.getService();
-				// BaseRespBean post0account$registrations = service.put0account$passwords("654321",
-				// "78r-fgbTE87WlsOk7tB9uidat_3onbU-Hw5tmVg5Gp2LlL02l90MsRyt0xQ-i7C-");
-
 				Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 				startActivity(intent);
 				finish();

@@ -1,5 +1,8 @@
 package com.efei.lib.android.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -11,6 +14,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 public class EfeiApplication extends Application
 {
 	private static EfeiApplication application;
+	
+	private Map<String, Object> map = new HashMap<String, Object>();
 
 	@Override
 	public void onCreate()
@@ -38,5 +43,16 @@ public class EfeiApplication extends Application
 		Intent intent = new Intent(EfeiApplication.getContext(), clazz);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		EfeiApplication.getContext().startActivity(intent);
+	}
+	
+	public void addTemporary(String key , Object objTmp)
+	{
+		map.put(key, objTmp);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T removeTemporary(String key)
+	{
+		return (T) map.get(key);
 	}
 }

@@ -5,12 +5,14 @@
     android:orientation="vertical" >
 
     <include
-        android:id="@+id/actionbar"
+        android:id="@+id/bar_action"
         layout="@layout/bar_action" />
 
     <FrameLayout
+        android:background="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
         <fragment
             android:id="@+id/frag_que"
@@ -18,5 +20,9 @@
             android:layout_height="match_parent"
             class="com.efei.android.module.question.QueFragment" />
     </FrameLayout>
+
+    <include
+        android:id="@+id/bar_indicator"
+        layout="@layout/bar_indicator" />
 
 </LinearLayout>

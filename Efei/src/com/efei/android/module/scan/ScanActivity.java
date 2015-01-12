@@ -24,18 +24,27 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.efei.android.R;
+import com.efei.android.module.Constants;
 import com.efei.android.module.MainActivity;
+import com.efei.android.module.edit.QuestiontEditActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IBusinessCallback;
 import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.JobAsyncTask;
+import com.efei.lib.android.bean.net.BaseRespBean;
+import com.efei.lib.android.bean.net.RespQueOrNote;
 import com.efei.lib.android.bean.persistance.Account;
-import com.efei.lib.android.bean.persistance.QuestionOrNote;
+import com.efei.lib.android.bean.persistance.QuestionOrNote2;
+import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService;
+import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService.RespNestNote;
+import com.efei.lib.android.biz_remote_interface.IQueScanService;
+import com.efei.lib.android.biz_remote_interface.IQueScanService.RespNoteId;
+import com.efei.lib.android.biz_remote_interface.IQueScanService.RespQueId;
+import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
 import com.efei.lib.android.engine.ServiceFactory;
 import com.efei.lib.android.exception.EfeiException;
-import com.efei.lib.android.repository.QuestionNoteRepo;
 import com.efei.lib.android.utils.CollectionUtils;
 
 public class ScanActivity extends Activity
@@ -47,6 +56,8 @@ public class ScanActivity extends Activity
 
 	private boolean barcodeScanned = false;
 	private boolean previewing = true;
+
+	private ScanMode mode = ScanMode.Multi;
 
 	static
 	{
@@ -87,6 +98,7 @@ public class ScanActivity extends Activity
 			{
 				boolean selected = v.isSelected();
 				v.setSelected(!selected);
+				mode = v.isSelected() ? ScanMode.Multi : ScanMode.Single;
 				findViewById(R.id.tv_scan_single_mode).setSelected(selected);
 			}
 		});
@@ -100,6 +112,7 @@ public class ScanActivity extends Activity
 			{
 				boolean selected = v.isSelected();
 				v.setSelected(!selected);
+				mode = v.isSelected() ? ScanMode.Single : ScanMode.Multi;
 				findViewById(R.id.tv_scan_continue_mode).setSelected(selected);
 			}
 		});
@@ -119,7 +132,7 @@ public class ScanActivity extends Activity
 
 					findViewById(R.id.question_scan_result_panel).setVisibility(View.GONE);
 					findViewById(R.id.scan_bottom_panel).setVisibility(View.VISIBLE);
-					QuestionOrNote queOrNote = (QuestionOrNote) findViewById(R.id.tv_question_scan_result).getTag();
+					QuestionOrNote2 queOrNote = (QuestionOrNote2) findViewById(R.id.tv_question_scan_result).getTag();
 					if (null == queOrNote)
 						return;
 					queOrNotes.add(queOrNote);
@@ -175,7 +188,8 @@ public class ScanActivity extends Activity
 						public Boolean onBusinessLogic(IJob job)
 						{
 							boolean result = false;
-							QuestionNoteRepo.getInstance().createOrUpdate(queOrNotes);
+							// TODO
+							// QuestionNoteRepo.getInstance().createOrUpdate(queOrNotes);
 							result = true;
 							return result;
 						}
@@ -200,7 +214,7 @@ public class ScanActivity extends Activity
 		});
 	}
 
-	private List<QuestionOrNote> queOrNotes = new ArrayList<QuestionOrNote>();
+	private List<QuestionOrNote2> queOrNotes = new ArrayList<QuestionOrNote2>();
 
 	public void onPause()
 	{
@@ -264,7 +278,7 @@ public class ScanActivity extends Activity
 
 	private void queryQuestionInRepo(final String shortLink)
 	{
-		Executor.INSTANCE.execute(new JobAsyncTask<QuestionOrNote>(new QueFromShortLinkTask(shortLink), new QueFromShortLinkCallBack()));
+		Executor.INSTANCE.execute(new JobAsyncTask<QuestionOrNote2>(new QueFromShortLinkTask(shortLink), new QueFromShortLinkCallBack()));
 	}
 
 	// Mimic continuous auto-focusing
@@ -286,16 +300,25 @@ public class ScanActivity extends Activity
 		}
 	};
 
-	private class QueFromShortLinkCallBack extends IUICallback.Adapter<QuestionOrNote>
+	private class QueFromShortLinkCallBack extends IUICallback.Adapter<QuestionOrNote2>
 	{
 		@Override
-		public void onPostExecute(QuestionOrNote result)
+		public void onPostExecute(QuestionOrNote2 result)
 		{
-			findViewById(R.id.question_scan_result_panel).setVisibility(View.VISIBLE);
-			findViewById(R.id.scan_bottom_panel).setVisibility(View.INVISIBLE);
-			TextView tv = (TextView) findViewById(R.id.tv_question_scan_result);
-			tv.setTag(result);
-			tv.setText(result.getFormattedContent());
+			if (ScanMode.Multi == mode)
+			{
+				findViewById(R.id.question_scan_result_panel).setVisibility(View.VISIBLE);
+				findViewById(R.id.scan_bottom_panel).setVisibility(View.INVISIBLE);
+				TextView tv = (TextView) findViewById(R.id.tv_question_scan_result);
+				tv.setTag(result);
+				tv.setText(result.content);
+			} else
+			{
+				EfeiApplication app = (EfeiApplication) getApplication();
+				app.addTemporary(Constants.TMP_QUE, result);
+				EfeiApplication.switchToActivity(QuestiontEditActivity.class);
+				finish();
+			}
 		}
 
 		@Override
@@ -307,7 +330,7 @@ public class ScanActivity extends Activity
 		}
 	}
 
-	private class QueFromShortLinkTask implements IBusinessCallback<QuestionOrNote>
+	private class QueFromShortLinkTask implements IBusinessCallback<QuestionOrNote2>
 	{
 		private String shortLink;
 
@@ -317,9 +340,26 @@ public class ScanActivity extends Activity
 		}
 
 		@Override
-		public QuestionOrNote onBusinessLogic(IJob job)
+		public QuestionOrNote2 onBusinessLogic(IJob job)
 		{
-			return QuestionNoteRepo.getInstance().queryByShortLink(shortLink);
+			IQueScanService scanService = IQueScanService.Factory.getService();
+			RespQueId queId = scanService.get(encodeShortLink(shortLink));
+			BaseRespBean respBean = scanService.get0student$questions(queId.getQuestion_id());
+			if (respBean instanceof RespNoteId)
+			{
+				String note_id = ((RespNoteId) respBean).getNote_id();
+				RespNestNote nestNote = IQueOrNoteLookUpService.Factory.getService().get0student$notes(note_id);
+				return new QuestionOrNote2(nestNote.getNote());
+			} else if (respBean instanceof RespQueOrNote)
+				return new QuestionOrNote2((RespQueOrNote) respBean);
+			else
+				throw new EfeiException("can't resovle resp type");
+		}
+
+		private String encodeShortLink(String shortLink)
+		{
+			// http://dev.efei.org/~hJzX4
+			return shortLink.substring(shortLink.indexOf("~"));
 		}
 	}
 }

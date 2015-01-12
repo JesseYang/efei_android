@@ -1,4 +1,4 @@
-package com.efei.lib.android.grammar;
+package com.efei.lib.android.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import com.efei.lib.android.common.EfeiApplication;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class RichText
+public final class UiUtils
 {
 	private static final char IMG_PLACE_HOLDER = 'F';
 	private static final String START_PROMPT_MATH = "math_";
@@ -32,28 +32,23 @@ public class RichText
 
 	private static final String URL_API_IMAGE = "public/download/";
 
-	private Spannable reformatText;
-
-	// private List<String>
-
-	// content、items以及answer_content会以双美元符号（$$）作为起始和终止：
-	// 1.嵌入公式；
-	// 2.图片；
-	// 3.带有格式的文字
-	// 具体地，
-	// ● und_blabla：表示blabla是带有下划线的
-	// ● sub_blabla：表示blabla是下标
-	// ● sup_blabla：表示blabla是上标
-	// ● ita_blabla：表示blabla是斜体
-	// ● equ_{name}*{width}*{height}：表示一个公式图片，其中name为该公式图片的文件名，width为图片宽度，height为图片高度。该图片的下载地址为“#{image server}/public/download/#{name}.png”
-	// ● math_{name}*{width}*{height}：和equ_{name}*{width}*{height}完全一致
-	// ● fig_{name}*{width}*{height}：表示一张图片，具体解释同上
-	public RichText(String text)
+	private UiUtils()
 	{
-		reformatText = toSpannable(text);
 	}
 
-	public static SpannableString toSpannable(final String txt)
+	/** content、items以及answer_content会以双美元符号（$$）作为起始和终止：</br>
+	 1.嵌入公式；</br>
+	 2.图片；</br>
+	 3.带有格式的文字</br>
+	 具体地，
+	 <li> und_blabla：表示blabla是带有下划线的
+	 <li> sub_blabla：表示blabla是下标
+	 <li> sup_blabla：表示blabla是上标
+	 <li> ita_blabla：表示blabla是斜体
+	 <li> equ_{name}*{width}*{height}：表示一个公式图片，其中name为该公式图片的文件名，width为图片宽度，height为图片高度。该图片的下载地址为“#{image server}/public/download/#{name}.png”
+	 <li> math_{name}*{width}*{height}：和equ_{name}*{width}*{height}完全一致
+	 <li> fig_{name}*{width}*{height}：表示一张图片，具体解释同上*/
+	public static SpannableString richTextToSpannable(final String txt)
 	{
 		final StringBuilder sbTmp = new StringBuilder();
 		List<CharacterStyleInfo> csis = new ArrayList<CharacterStyleInfo>();
@@ -85,6 +80,27 @@ public class RichText
 			ss.setSpan(info.imgSpan, info.posStart, info.posEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		return ss;
 	}
+	
+	/** content、items以及answer_content会以双美元符号（$$）作为起始和终止：</br>
+	 1.嵌入公式；</br>
+	 2.图片；</br>
+	 3.带有格式的文字</br>
+	 具体地，
+	 <li> und_blabla：表示blabla是带有下划线的
+	 <li> sub_blabla：表示blabla是下标
+	 <li> sup_blabla：表示blabla是上标
+	 <li> ita_blabla：表示blabla是斜体
+	 <li> equ_{name}*{width}*{height}：表示一个公式图片，其中name为该公式图片的文件名，width为图片宽度，height为图片高度。该图片的下载地址为“#{image server}/public/download/#{name}.png”
+	 <li> math_{name}*{width}*{height}：和equ_{name}*{width}*{height}完全一致
+	 <li> fig_{name}*{width}*{height}：表示一张图片，具体解释同上*/
+	public static SpannableString richTextToSpannable(final List<String> lines)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (String line : lines)
+			sb.append(line).append('\n');
+		sb.replace(sb.length() - 1, sb.length(), "");
+		return richTextToSpannable(sb.toString());
+	}
 
 	private static void parseImgAndConstructTmpText(final StringBuilder newSb, List<CharacterStyleInfo> smis, String txtBy$, String startPrompt)
 	{
@@ -111,13 +127,6 @@ public class RichText
 		bmpDrawable.setBounds(0, 0, (int) (bmp.getWidth() * fRadio), (int) (bmp.getHeight() * fRadio));
 		ImageSpan img = new ImageSpan(bmpDrawable, ImageSpan.ALIGN_BOTTOM);
 		return new CharacterStyleInfo(imgPos, img);
-	}
-
-	public Spannable getReformatText()
-	{
-		// if (null == reformatText)
-		// reformatText = toSpannable(text);
-		return reformatText;
 	}
 
 	private static class CharacterStyleInfo

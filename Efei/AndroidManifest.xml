@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -43,6 +43,10 @@
         <activity
             android:name="com.efei.android.module.scan.ScanActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="com.efei.android.module.edit.QuestiontEditActivity"
+            android:theme="@style/AppTheme.EfeiActionBar" >
         </activity>
     </application>
 
