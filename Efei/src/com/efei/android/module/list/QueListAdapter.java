@@ -1,4 +1,4 @@
-package com.efei.android.module.question;
+package com.efei.android.module.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.efei.android.R;
-import com.efei.lib.android.bean.net.RespQueOrNote;
-import com.efei.lib.android.utils.UiUtils;
+import com.efei.lib.android.bean.persistance.QuestionOrNote2;
+import com.efei.lib.android.utils.TextUtils;
 
 public class QueListAdapter extends BaseAdapter
 {
-	final List<RespQueOrNote> content = new ArrayList<RespQueOrNote>();
+	final List<QuestionOrNote2> content = new ArrayList<QuestionOrNote2>();
 
 	@Override
 	public int getCount()
@@ -49,12 +49,20 @@ public class QueListAdapter extends BaseAdapter
 		return convertView;
 	}
 
-	private void view_itemMap(RespQueOrNote questionOrNote, QueViewHolder holder)
+	private void view_itemMap(QuestionOrNote2 note, QueViewHolder holder)
 	{
-		holder.tvTag.setText(questionOrNote.getTag_set());
-		holder.tvPoint.setText(questionOrNote.getTopics());
-		holder.tvNote.setText(questionOrNote.getSummary());
-		holder.tvQue.setText(UiUtils.richTextToSpannable(questionOrNote.getContent()));
+		setTextContent(holder.tvTag, note.metaData.getTag());
+		setTextContent(holder.tvPoint, note.metaData.getTopics());
+		setTextContent(holder.tvNote, note.metaData.getSummary());
+		setTextContent(holder.tvQue, note.content);
+	}
+
+	private void setTextContent(TextView tv, CharSequence text)
+	{
+		if (TextUtils.isEmpty(text))
+			return;
+		else
+			tv.setText(text);
 	}
 
 	private static class QueViewHolder

@@ -91,7 +91,7 @@ public class RespQueOrNote extends BaseRespBean
 		return summary;
 	}
 
-	void setSummary(String summary)
+	public void setSummary(String summary)
 	{
 		this.summary = summary;
 	}
@@ -101,7 +101,7 @@ public class RespQueOrNote extends BaseRespBean
 		return topics;
 	}
 
-	void setTopics(String topics)
+	public void setTopics(String topics)
 	{
 		this.topics = topics;
 	}
@@ -111,7 +111,7 @@ public class RespQueOrNote extends BaseRespBean
 		return tag;
 	}
 
-	void setTag(String tag)
+	public void setTag(String tag)
 	{
 		this.tag = tag;
 	}

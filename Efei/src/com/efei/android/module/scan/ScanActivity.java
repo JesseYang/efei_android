@@ -22,10 +22,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.efei.android.R;
 import com.efei.android.module.Constants;
 import com.efei.android.module.MainActivity;
+import com.efei.android.module.account.LoginActivity;
 import com.efei.android.module.edit.QuestiontEditActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IBusinessCallback;
@@ -39,6 +41,7 @@ import com.efei.lib.android.bean.persistance.QuestionOrNote2;
 import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService;
 import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService.RespNestNote;
 import com.efei.lib.android.biz_remote_interface.IQueScanService;
+import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddBatchQues;
 import com.efei.lib.android.biz_remote_interface.IQueScanService.RespNoteId;
 import com.efei.lib.android.biz_remote_interface.IQueScanService.RespQueId;
 import com.efei.lib.android.common.EfeiApplication;
@@ -175,40 +178,33 @@ public class ScanActivity extends Activity
 		{
 			@Override
 			public void onClick(View v)
-			{// TODO yunhun:save
+			{
 				ILoginService service = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
 				Account defaultUser = service.getDefaultUser();
 				if (null == defaultUser)
-					throw new EfeiException("undo");
-				else
 				{
-					Executor.INSTANCE.execute(new JobAsyncTask<Boolean>(new IBusinessCallback<Boolean>()
-					{
-						@Override
-						public Boolean onBusinessLogic(IJob job)
-						{
-							boolean result = false;
-							// TODO
-							// QuestionNoteRepo.getInstance().createOrUpdate(queOrNotes);
-							result = true;
-							return result;
-						}
-					}, new IUICallback.Adapter<Boolean>()
-					{
-						public void onPostExecute(Boolean result)
-						{
-							if (result)
+					EfeiApplication app = (EfeiApplication) getApplication();
+					app.addTemporary(Constants.TMP_QUE_LIST, queOrNotes);
+					Intent intent = new Intent(ScanActivity.this, LoginActivity.class);
+					intent.putExtra(Constants.LOGIN_FOR_SAVE_QUE_LIST, true);
+					startActivity(intent);
+					finish();
+					return;
+				} else
+				{
+					Executor.INSTANCE.execute(new JobAsyncTask<RespAddBatchQues>(new BizRunner_SaveQues(queOrNotes),
+							new IUICallback.Adapter<RespAddBatchQues>()
 							{
-								finish();
-								startActivity(new Intent(ScanActivity.this, MainActivity.class));
-							}
-						};
-
-						public void onError(Throwable e)
-						{
-							System.out.println(e);
-						};
-					}));
+								public void onPostExecute(RespAddBatchQues result)
+								{
+									if (result.isSuccess())
+									{
+										finish();
+										startActivity(new Intent(ScanActivity.this, MainActivity.class));
+									} else
+										Toast.makeText(getApplicationContext(), "±£¥Ê ß∞‹£°", Toast.LENGTH_SHORT).show();
+								};
+							}));
 				}
 			}
 		});

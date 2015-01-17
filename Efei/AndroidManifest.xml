@@ -23,7 +23,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".SplashActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,19 +34,28 @@
         <activity
             android:name="com.efei.android.module.account.LoginActivity"
             android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
             android:name="com.efei.android.module.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoAcionBar" >
         </activity>
         <activity
             android:name="com.efei.android.module.scan.ScanActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
             android:name="com.efei.android.module.edit.QuestiontEditActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.EfeiActionBar" >
+        </activity>
+        <activity
+            android:name="com.efei.android.module.edit.TagTopicsEditActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.EfeiActionBar" >
         </activity>
     </application>

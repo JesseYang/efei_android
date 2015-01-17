@@ -36,18 +36,12 @@ public final class UiUtils
 	{
 	}
 
-	/** content、items以及answer_content会以双美元符号（$$）作为起始和终止：</br>
-	 1.嵌入公式；</br>
-	 2.图片；</br>
-	 3.带有格式的文字</br>
-	 具体地，
-	 <li> und_blabla：表示blabla是带有下划线的
-	 <li> sub_blabla：表示blabla是下标
-	 <li> sup_blabla：表示blabla是上标
-	 <li> ita_blabla：表示blabla是斜体
-	 <li> equ_{name}*{width}*{height}：表示一个公式图片，其中name为该公式图片的文件名，width为图片宽度，height为图片高度。该图片的下载地址为“#{image server}/public/download/#{name}.png”
-	 <li> math_{name}*{width}*{height}：和equ_{name}*{width}*{height}完全一致
-	 <li> fig_{name}*{width}*{height}：表示一张图片，具体解释同上*/
+	/**
+	 * content、items以及answer_content会以双美元符号（$$）作为起始和终止：</br> 1.嵌入公式；</br> 2.图片；</br> 3.带有格式的文字</br> 具体地， <li>und_blabla：表示blabla是带有下划线的 <li>
+	 * sub_blabla：表示blabla是下标 <li>sup_blabla：表示blabla是上标 <li>ita_blabla：表示blabla是斜体 <li>
+	 * equ_{name}*{width}*{height}：表示一个公式图片，其中name为该公式图片的文件名，width为图片宽度，height为图片高度。该图片的下载地址为“#{image server}/public/download/#{name}.png” <li>
+	 * math_{name}*{width}*{height}：和equ_{name}*{width}*{height}完全一致 <li>fig_{name}*{width}*{height}：表示一张图片，具体解释同上
+	 */
 	public static SpannableString richTextToSpannable(final String txt)
 	{
 		final StringBuilder sbTmp = new StringBuilder();
@@ -80,21 +74,17 @@ public final class UiUtils
 			ss.setSpan(info.imgSpan, info.posStart, info.posEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		return ss;
 	}
-	
-	/** content、items以及answer_content会以双美元符号（$$）作为起始和终止：</br>
-	 1.嵌入公式；</br>
-	 2.图片；</br>
-	 3.带有格式的文字</br>
-	 具体地，
-	 <li> und_blabla：表示blabla是带有下划线的
-	 <li> sub_blabla：表示blabla是下标
-	 <li> sup_blabla：表示blabla是上标
-	 <li> ita_blabla：表示blabla是斜体
-	 <li> equ_{name}*{width}*{height}：表示一个公式图片，其中name为该公式图片的文件名，width为图片宽度，height为图片高度。该图片的下载地址为“#{image server}/public/download/#{name}.png”
-	 <li> math_{name}*{width}*{height}：和equ_{name}*{width}*{height}完全一致
-	 <li> fig_{name}*{width}*{height}：表示一张图片，具体解释同上*/
+
+	/**
+	 * content、items以及answer_content会以双美元符号（$$）作为起始和终止：</br> 1.嵌入公式；</br> 2.图片；</br> 3.带有格式的文字</br> 具体地， <li>und_blabla：表示blabla是带有下划线的 <li>
+	 * sub_blabla：表示blabla是下标 <li>sup_blabla：表示blabla是上标 <li>ita_blabla：表示blabla是斜体 <li>
+	 * equ_{name}*{width}*{height}：表示一个公式图片，其中name为该公式图片的文件名，width为图片宽度，height为图片高度。该图片的下载地址为“#{image server}/public/download/#{name}.png” <li>
+	 * math_{name}*{width}*{height}：和equ_{name}*{width}*{height}完全一致 <li>fig_{name}*{width}*{height}：表示一张图片，具体解释同上
+	 */
 	public static SpannableString richTextToSpannable(final List<String> lines)
 	{
+		if (CollectionUtils.isEmpty(lines))
+			return new SpannableString("");
 		StringBuilder sb = new StringBuilder();
 		for (String line : lines)
 			sb.append(line).append('\n');

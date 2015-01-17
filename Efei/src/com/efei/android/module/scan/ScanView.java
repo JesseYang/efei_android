@@ -1,7 +1,5 @@
 package com.efei.android.module.scan;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
@@ -50,7 +48,7 @@ public class ScanView extends SurfaceView implements SurfaceHolder.Callback
 		try
 		{
 			mCamera.setPreviewDisplay(holder);
-		} catch (IOException e)
+		} catch (Exception e)
 		{
 			Log.d("DBG", "Error setting camera preview: " + e.getMessage());
 		}
