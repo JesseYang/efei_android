@@ -9,7 +9,9 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.efei.android.R;
+import com.efei.android.module.list.QueFragment;
 import com.efei.android.module.scan.ScanActivity;
+import com.efei.android.module.settings.SettingsFragment;
 import com.efei.lib.android.common.EfeiApplication;
 
 public class MainActivity extends ActionBarActivity
@@ -60,7 +62,7 @@ public class MainActivity extends ActionBarActivity
 		private void init()
 		{
 			viewBar = findViewById(R.id.bar_indicator);
-			
+
 			viewBar.findViewById(R.id.ll_scan).setOnClickListener(new OnClickListener()
 			{
 				@Override
@@ -74,9 +76,12 @@ public class MainActivity extends ActionBarActivity
 				@Override
 				public void onClick(View v)
 				{
+					if (viewBar.findViewById(R.id.iv_quelist).isSelected())
+						return;
 					uiRestore();
 					((TextView) viewBar.findViewById(R.id.tv_quelist)).setTextColor(0xff4388ff);
 					viewBar.findViewById(R.id.iv_quelist).setSelected(true);
+					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new QueFragment()).commit();
 				}
 			});
 			viewBar.findViewById(R.id.ll_setting).setOnClickListener(new OnClickListener()
@@ -84,9 +89,12 @@ public class MainActivity extends ActionBarActivity
 				@Override
 				public void onClick(View v)
 				{
+					if (viewBar.findViewById(R.id.iv_setting).isSelected())
+						return;
 					uiRestore();
 					((TextView) viewBar.findViewById(R.id.tv_setting)).setTextColor(0xff4388ff);
 					viewBar.findViewById(R.id.iv_setting).setSelected(true);
+					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new SettingsFragment()).commit();
 				}
 			});
 

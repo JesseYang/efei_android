@@ -22,6 +22,7 @@ import com.efei.android.R;
 import com.efei.android.module.Constants;
 import com.efei.android.module.edit.QuestiontEditActivity;
 import com.efei.lib.android.async.Executor;
+import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.IUICallback.Adapter;
 import com.efei.lib.android.async.JobAsyncTask;
@@ -34,6 +35,8 @@ public class QueFragment extends Fragment
 	private QueListAdapter adapter;
 
 	private View viewContainer;
+
+	private IJob currentJob;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -74,7 +77,9 @@ public class QueFragment extends Fragment
 	public void onResume()
 	{
 		super.onResume();
-		Executor.INSTANCE.execute(new JobAsyncTask<List<QuestionOrNote2>>(new BizRunner_QueList(), uiCallbackQueList));
+		if (null != currentJob)
+			return;
+		currentJob = Executor.INSTANCE.execute(new JobAsyncTask<List<QuestionOrNote2>>(new BizRunner_QueList(), uiCallbackQueList));
 	}
 
 	private IUICallback.Adapter<List<QuestionOrNote2>> uiCallbackQueList = new IUICallback.Adapter<List<QuestionOrNote2>>()
@@ -86,11 +91,13 @@ public class QueFragment extends Fragment
 			adapter.content.clear();
 			adapter.content.addAll(result);
 			adapter.notifyDataSetChanged();
+			currentJob = null;
 		};
 
 		public void onError(Throwable e)
 		{
 			System.out.println(e);
+			currentJob = null;
 		};
 	};
 

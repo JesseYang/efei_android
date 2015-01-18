@@ -208,6 +208,15 @@ public class ScanActivity extends Activity
 				}
 			}
 		});
+		
+		findViewById(R.id.tv_back).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				finish();
+			}
+		});
 	}
 
 	private List<QuestionOrNote2> queOrNotes = new ArrayList<QuestionOrNote2>();

@@ -9,16 +9,11 @@
         layout="@layout/bar_action" />
 
     <FrameLayout
-        android:background="@android:color/white"
+        android:id="@+id/fl_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
-
-        <fragment
-            android:id="@+id/frag_que"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            class="com.efei.android.module.list.QueFragment" />
+        android:layout_weight="1"
+        android:background="@android:color/white" >
     </FrameLayout>
 
     <include
