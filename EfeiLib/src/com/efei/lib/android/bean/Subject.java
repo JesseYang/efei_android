@@ -34,4 +34,15 @@ public enum Subject
 		throw new EfeiException("can't find subject with index:" + index);
 	}
 
+	public static Subject getSubjectByName(String name)
+	{
+		Subject[] values = Subject.values();
+		for (Subject subject : values)
+		{
+			if (subject.name.equals(name))
+				return subject;
+		}
+		throw new EfeiException("can't find subject with index:" + name);
+	}
+
 }

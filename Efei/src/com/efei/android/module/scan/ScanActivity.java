@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 import android.os.Bundle;
@@ -60,7 +61,7 @@ public class ScanActivity extends Activity
 	private boolean barcodeScanned = false;
 	private boolean previewing = true;
 
-	private ScanMode mode = ScanMode.Multi;
+	private ScanMode mode = ScanMode.Single;
 
 	static
 	{
@@ -93,7 +94,7 @@ public class ScanActivity extends Activity
 		preview.addView(mPreview);
 
 		View viewContinueMode = findViewById(R.id.tv_scan_continue_mode);
-		viewContinueMode.setSelected(true);
+		viewContinueMode.setSelected(false);
 		viewContinueMode.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -107,7 +108,7 @@ public class ScanActivity extends Activity
 		});
 
 		View viewSingleMode = findViewById(R.id.tv_scan_single_mode);
-		viewSingleMode.setSelected(false);
+		viewSingleMode.setSelected(true);
 		viewSingleMode.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -208,13 +209,35 @@ public class ScanActivity extends Activity
 				}
 			}
 		});
-		
+
 		findViewById(R.id.tv_back).setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
 				finish();
+			}
+		});
+
+		findViewById(R.id.iv_flash_light).setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				v.setSelected(!v.isSelected());
+				boolean selected = v.isSelected();
+				if (null == mCamera)
+					return;
+				final Camera camera = mCamera;
+				final Parameters parameter = camera.getParameters();
+				if (selected)
+					parameter.setFlashMode(Parameters.FLASH_MODE_TORCH);
+				else
+					parameter.setFlashMode(Parameters.FLASH_MODE_OFF);
+
+				camera.setParameters(parameter);
+
 			}
 		});
 	}

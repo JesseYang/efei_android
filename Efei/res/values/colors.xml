@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="action_bar_blue">#ff4388ff</color>
+    
+    <color name="item_selector_click">#ff6999e5</color>
 </resources>

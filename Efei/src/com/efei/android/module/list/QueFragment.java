@@ -1,7 +1,11 @@
 package com.efei.android.module.list;
 
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -21,14 +26,18 @@ import android.widget.Toast;
 import com.efei.android.R;
 import com.efei.android.module.Constants;
 import com.efei.android.module.edit.QuestiontEditActivity;
+import com.efei.android.module.list.SelectorActivity.SelectorResult;
+import com.efei.android.module.list.SelectorActivity.SelectorType;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.IUICallback.Adapter;
 import com.efei.lib.android.async.JobAsyncTask;
+import com.efei.lib.android.bean.Subject;
 import com.efei.lib.android.bean.persistance.QuestionOrNote2;
 import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService.RespDeletedOrPuttedNotes;
 import com.efei.lib.android.common.EfeiApplication;
+import com.efei.lib.android.exception.EfeiException;
 
 public class QueFragment extends Fragment
 {
@@ -38,10 +47,13 @@ public class QueFragment extends Fragment
 
 	private IJob currentJob;
 
+	private SelectorResult selectorResult;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
 		viewContainer = View.inflate(getActivity(), R.layout.fragment_que, null);
+		setupSelectorBar(viewContainer);
 		viewContainer.findViewById(R.id.pb_progress).setVisibility(View.VISIBLE);
 		ListView lv = (ListView) viewContainer.findViewById(R.id.lv_que_or_note);
 		lv.setVisibility(View.GONE);
@@ -50,6 +62,36 @@ public class QueFragment extends Fragment
 		lv.setAdapter(adapter);
 		registerForContextMenu(lv);
 		return viewContainer;
+	}
+
+	private void setupSelectorBar(View viewContainer)
+	{
+		viewContainer.findViewById(R.id.ll_subject).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				SelectorActivity.forwardForResult(QueFragment.this, SelectorType.Subject);
+			}
+		});
+
+		viewContainer.findViewById(R.id.ll_time).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				SelectorActivity.forwardForResult(QueFragment.this, SelectorType.Time);
+			}
+		});
+
+		viewContainer.findViewById(R.id.ll_tag).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				SelectorActivity.forwardForResult(QueFragment.this, SelectorType.Tag);
+			}
+		});
 	}
 
 	@Override
@@ -77,15 +119,26 @@ public class QueFragment extends Fragment
 	public void onResume()
 	{
 		super.onResume();
+		viewContainer.findViewById(R.id.pb_progress).setVisibility(View.VISIBLE);
 		if (null != currentJob)
 			return;
 		currentJob = Executor.INSTANCE.execute(new JobAsyncTask<List<QuestionOrNote2>>(new BizRunner_QueList(), uiCallbackQueList));
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (Activity.RESULT_OK != resultCode)
+			return;
+		selectorResult = (SelectorResult) data.getSerializableExtra(SelectorActivity.KEY_RESULT);
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	private IUICallback.Adapter<List<QuestionOrNote2>> uiCallbackQueList = new IUICallback.Adapter<List<QuestionOrNote2>>()
 	{
 		public void onPostExecute(List<QuestionOrNote2> result)
 		{
+			filterResultByTypeIfNeed(result);
 			viewContainer.findViewById(R.id.pb_progress).setVisibility(View.GONE);
 			viewContainer.findViewById(R.id.lv_que_or_note).setVisibility(View.VISIBLE);
 			adapter.content.clear();
@@ -93,6 +146,83 @@ public class QueFragment extends Fragment
 			adapter.notifyDataSetChanged();
 			currentJob = null;
 		};
+
+		private void filterResultByTypeIfNeed(List<QuestionOrNote2> result)
+		{
+			if (null == selectorResult)
+				return;
+			switch (selectorResult.type)
+			{
+			case Subject:
+				filterSubject(Subject.getSubjectByName(SelectorType.Subject.content[selectorResult.index]), result);
+				selectorResult = null;
+				return;
+
+			case Tag:
+				filterTag(selectorResult.type.content[selectorResult.index], result);
+				selectorResult = null;
+				return;
+
+			case Time:
+				filterTime(selectorResult.type.content[selectorResult.index], result);
+				selectorResult = null;
+				return;
+
+			default:
+				throw new EfeiException("unknow filter result");
+			}
+		}
+
+		private void filterTime(String time, List<QuestionOrNote2> result)
+		{
+			// { "最近一周", "最近一个月", "最近三个月", "最近半年", "全部时间" }
+			if ("全部时间".equals(time))
+				return;
+
+			final long duration;
+			if ("最近一周".equals(time))
+				duration = 7l * 24l * 60l * 60l * 1000l;
+			else if ("最近一个月".equals(time))
+				duration = 30l * 24l * 60l * 60l * 1000l;
+			else if ("最近三个月".equals(time))
+				duration = 90l * 24l * 60l * 60l * 1000l;
+			else if ("最近半年".equals(time))
+				duration = 180l * 24l * 60l * 60l * 1000l;
+			else
+				duration = 0;
+			final Date dateDivider = new Date(new Date().getTime() - duration);
+			Iterator<QuestionOrNote2> iterator = result.iterator();
+			while (iterator.hasNext())
+			{
+				QuestionOrNote2 note2 = iterator.next();
+				if (!new Date(note2.metaData.getLast_update_time() * 1000).after(dateDivider))
+					iterator.remove();
+			}
+		}
+
+		private void filterTag(String tag, List<QuestionOrNote2> result)
+		{
+			if ("全部标签".equals(tag))
+				return;
+			Iterator<QuestionOrNote2> iterator = result.iterator();
+			while (iterator.hasNext())
+			{
+				QuestionOrNote2 note2 = iterator.next();
+				if (!note2.metaData.getTag().contains(tag))
+					iterator.remove();
+			}
+		}
+
+		private void filterSubject(Subject subject, List<QuestionOrNote2> result)
+		{
+			Iterator<QuestionOrNote2> iterator = result.iterator();
+			while (iterator.hasNext())
+			{
+				QuestionOrNote2 note2 = iterator.next();
+				if (Subject.getSubjectByIndex(note2.metaData.getSubject()) != subject)
+					iterator.remove();
+			}
+		}
 
 		public void onError(Throwable e)
 		{

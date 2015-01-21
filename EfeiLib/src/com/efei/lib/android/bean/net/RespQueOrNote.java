@@ -15,6 +15,17 @@ public class RespQueOrNote extends BaseRespBean
 	private String summary;
 	private String topics;
 	private String tag;
+	private long last_update_time;
+
+	void setLast_update_time(long last_update_time)
+	{
+		this.last_update_time = last_update_time;
+	}
+
+	public long getLast_update_time()
+	{
+		return last_update_time;
+	}
 
 	public String get_id()
 	{

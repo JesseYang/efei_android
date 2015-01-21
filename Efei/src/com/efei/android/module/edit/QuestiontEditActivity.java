@@ -19,7 +19,6 @@ import com.efei.android.module.Constants;
 import com.efei.android.module.MainActivity;
 import com.efei.android.module.account.LoginActivity;
 import com.efei.android.module.edit.TagTopicsEditActivity.EditContent;
-import com.efei.android.module.scan.ScanActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.IUICallback.Adapter;
@@ -43,7 +42,7 @@ public class QuestiontEditActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setTitle("É¨Âë");
+		actionBar.setTitle("´íÌâ¼ÇÂ¼");
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_edit);
 	}
@@ -120,7 +119,7 @@ public class QuestiontEditActivity extends ActionBarActivity
 		switch (item.getItemId())
 		{
 		case android.R.id.home:
-			EfeiApplication.switchToActivity(ScanActivity.class);
+			finish();
 			return true;
 
 		case R.id.menu_save:
@@ -162,4 +161,5 @@ public class QuestiontEditActivity extends ActionBarActivity
 			Toast.makeText(getApplicationContext(), "±£´æÊ§°Ü£¡", Toast.LENGTH_SHORT).show();
 		};
 	};
+
 }
