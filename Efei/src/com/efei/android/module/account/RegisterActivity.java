@@ -1,7 +1,5 @@
 package com.efei.android.module.account;
 
-import java.util.List;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -10,50 +8,39 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.efei.android.R;
-import com.efei.android.module.Constants;
-import com.efei.android.module.MainActivity;
-import com.efei.android.module.edit.BizRunner_SaveQue;
-import com.efei.android.module.scan.BizRunner_SaveQues;
 import com.efei.android.module.scan.ScanActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IJob;
-import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.IUICallback.Adapter;
 import com.efei.lib.android.async.JobAsyncTask;
 import com.efei.lib.android.bean.persistance.Account;
-import com.efei.lib.android.bean.persistance.QuestionOrNote2;
-import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddBatchQues;
-import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddSingleQue;
-import com.efei.lib.android.common.EfeiApplication;
-import com.efei.lib.android.engine.ILoginService;
 import com.efei.lib.android.utils.TextUtils;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends ActionBarActivity
+public class RegisterActivity extends ActionBarActivity
 {
+	public static final String KEY_REGISTER_RESULT = "key_register_result";
+
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
-	private IJob jobLogin;
+	private IJob jobRegister;
 
 	// UI references.
 	private AutoCompleteTextView mEmailView;
+	private EditText mName;
 	private EditText mPasswordView;
 	private View mProgressView;
 	private View mLoginFormView;
@@ -68,31 +55,11 @@ public class LoginActivity extends ActionBarActivity
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setLogo(new ColorDrawable(0));
 
-		actionBar.setTitle("µÇÂ¼");
+		actionBar.setTitle("×¢²á");
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_register);
 
-		Account defaultUser = ILoginService.Factory.getService().getDefaultUser();
-		if (null == defaultUser)
-			setupViews();
-		else
-		{
-			finish();
-			EfeiApplication.switchToActivity(MainActivity.class);
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		super.onActivityResult(requestCode, resultCode, data);
-		if (Activity.RESULT_OK != resultCode)
-			return;
-		boolean res = data.getBooleanExtra(RegisterActivity.KEY_REGISTER_RESULT, false);
-		if (!res)
-			return;
-		finish();
-		EfeiApplication.switchToActivity(MainActivity.class);
+		setupViews();
 	}
 
 	private void setupViews()
@@ -100,17 +67,18 @@ public class LoginActivity extends ActionBarActivity
 		// Set up the login form.
 		mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 		mPasswordView = (EditText) findViewById(R.id.password);
+		mName = (EditText) findViewById(R.id.name);
 
 		mLoginFormView = findViewById(R.id.login_form);
 		mProgressView = findViewById(R.id.login_progress);
 
-		Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+		Button mEmailSignInButton = (Button) findViewById(R.id.email_register_button);
 		mEmailSignInButton.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				attemptLogin();
+				attemptRegister();
 			}
 		});
 
@@ -120,7 +88,7 @@ public class LoginActivity extends ActionBarActivity
 			public void onClick(View v)
 			{
 				finish();
-				startActivity(new Intent(LoginActivity.this, ScanActivity.class));
+				startActivity(new Intent(RegisterActivity.this, ScanActivity.class));
 			}
 		});
 	}
@@ -129,18 +97,20 @@ public class LoginActivity extends ActionBarActivity
 	 * Attempts to sign in or register the account specified by the login form. If there are form errors (invalid email, missing fields, etc.), the errors
 	 * are presented and no actual login attempt is made.
 	 */
-	private void attemptLogin()
+	private void attemptRegister()
 	{
-		if (jobLogin != null)
+		if (jobRegister != null)
 			return;
 
 		// Reset errors.
 		mEmailView.setError(null);
 		mPasswordView.setError(null);
+		mName.setError(null);
 
 		// Store values at the time of the login attempt.
 		String email = mEmailView.getText().toString();
 		String password = mPasswordView.getText().toString();
+		String name = mName.getText().toString();
 
 		boolean cancel = false;
 		View focusView = null;
@@ -166,6 +136,13 @@ public class LoginActivity extends ActionBarActivity
 			cancel = true;
 		}
 
+		if (TextUtils.isEmpty(name))
+		{
+			mName.setError("ÐÕÃû²»ÄÜÎª¿Õ");
+			focusView = mName;
+			cancel = true;
+		}
+
 		if (cancel)
 			// There was an error; don't attempt login and focus the
 			// first form field with an error.
@@ -175,7 +152,9 @@ public class LoginActivity extends ActionBarActivity
 			// Show a progress spinner, and kick off a background
 			// task to perform the user login attempt.
 			showProgress(true);
-			jobLogin = Executor.INSTANCE.execute(new JobAsyncTask<Account>(new BizRunner_Login(email, password), new LoginUICallback()));
+
+			jobRegister = Executor.INSTANCE.execute(new JobAsyncTask<Account>(new BizRunner_Register(email, password, name),
+					new RegisterUICallback()));
 		}
 	}
 
@@ -233,96 +212,64 @@ public class LoginActivity extends ActionBarActivity
 		}
 	}
 
-	private class LoginUICallback extends Adapter<Account>
+	private class RegisterUICallback extends Adapter<Account>
 	{
-		@SuppressWarnings("unchecked")
 		@Override
 		public void onPostExecute(Account result)
 		{
-			jobLogin = null;
+			jobRegister = null;
 			showProgress(false);
-
-			Intent intent = getIntent();
-			EfeiApplication app = (EfeiApplication) getApplication();
-
-			boolean bForSaveList = intent.getBooleanExtra(Constants.LOGIN_FOR_SAVE_QUE_LIST, false);
-			if (bForSaveList)
-			{
-				Executor.INSTANCE.execute(new JobAsyncTask<RespAddBatchQues>(new BizRunner_SaveQues((List<QuestionOrNote2>) app
-						.removeTemporary(Constants.TMP_QUE_LIST)), new IUICallback.Adapter<RespAddBatchQues>()
-				{
-					public void onPostExecute(RespAddBatchQues result)
-					{
-						if (result.isSuccess())
-						{
-							finish();
-							EfeiApplication.switchToActivity(MainActivity.class);
-						} else
-							Toast.makeText(getApplicationContext(), "±£´æÊ§°Ü£¡", Toast.LENGTH_SHORT).show();
-					};
-				}));
-				return;
-			}
-
-			boolean bForSaveQue = intent.getBooleanExtra(Constants.LOGIN_FOR_SAVE_QUE, false);
-			if (bForSaveQue)
-			{
-				Executor.INSTANCE.execute(new JobAsyncTask<RespAddSingleQue>(new BizRunner_SaveQue(((QuestionOrNote2) app
-						.removeTemporary(Constants.TMP_QUE)).metaData), new IUICallback.Adapter<RespAddSingleQue>()
-				{
-					public void onPostExecute(RespAddSingleQue result)
-					{
-						if (result.isSuccess())
-						{
-							finish();
-							EfeiApplication.switchToActivity(MainActivity.class);
-						} else
-							Toast.makeText(getApplicationContext(), "±£´æÊ§°Ü£¡", Toast.LENGTH_SHORT).show();
-					};
-				}));
-				return;
-			}
-
+			Intent resultIntent = new Intent();
+			resultIntent.putExtra(KEY_REGISTER_RESULT, true);
+			setResult(Activity.RESULT_OK, resultIntent);
 			finish();
-			EfeiApplication.switchToActivity(MainActivity.class);
 		}
 
 		@Override
 		public void onCancelled()
 		{
-			jobLogin = null;
+			jobRegister = null;
 			showProgress(false);
 		}
 
 		@Override
 		public void onError(Throwable e)
 		{
-			jobLogin = null;
+			jobRegister = null;
 			showProgress(false);
-			mPasswordView.setError(getString(R.string.error_incorrect_password));
-			mPasswordView.requestFocus();
 			super.onError(e);
 		}
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
+	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		String sp = new String("Ãâ·Ñ×¢²á");
-		// sp.setSpan(new AbsoluteSizeSpan(30 , true), 0, sp.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-		MenuItem item = menu.add(sp);
-		item.setOnMenuItemClickListener(new OnMenuItemClickListener()
+		if (item.getItemId() == android.R.id.home)
 		{
-
-			@Override
-			public boolean onMenuItemClick(MenuItem item)
-			{
-				Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-				startActivityForResult(intent, 1);
-				return true;
-			}
-		});
-		MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_ALWAYS | MenuItemCompat.SHOW_AS_ACTION_WITH_TEXT);
-		return super.onCreateOptionsMenu(menu);
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
+
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu)
+	// {
+	// String sp = new String("Ö±½ÓµÇÂ¼");
+	// // sp.setSpan(new AbsoluteSizeSpan(30 , true), 0, sp.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+	// MenuItem item = menu.add(sp);
+	// item.setOnMenuItemClickListener(new OnMenuItemClickListener()
+	// {
+	//
+	// @Override
+	// public boolean onMenuItemClick(MenuItem item)
+	// {
+	// finish();
+	// EfeiApplication.switchToActivity(LoginActivity.class);
+	// return true;
+	// }
+	// });
+	// MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_ALWAYS | MenuItemCompat.SHOW_AS_ACTION_WITH_TEXT);
+	// return super.onCreateOptionsMenu(menu);
+	// }
 }

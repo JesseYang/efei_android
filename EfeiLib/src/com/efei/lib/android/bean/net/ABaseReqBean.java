@@ -2,7 +2,6 @@ package com.efei.lib.android.bean.net;
 
 import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.engine.ILoginService;
-import com.efei.lib.android.engine.ServiceFactory;
 import com.efei.lib.android.exception.EfeiException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -16,8 +15,7 @@ public abstract class ABaseReqBean
 	public ABaseReqBean()
 	{
 		this.client = "test_client_android_version";
-		ILoginService loginService = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
-		Account defaultUser = loginService.getDefaultUser();
+		Account defaultUser = ILoginService.Factory.getService().getDefaultUser();
 		this.auth_key = null == defaultUser ? null : defaultUser.getAuthKey();
 	}
 

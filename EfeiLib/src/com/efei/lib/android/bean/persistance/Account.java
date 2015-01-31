@@ -26,8 +26,6 @@ public final class Account
 	@DatabaseField(columnName = Properties.LastLoginTime)
 	private Date lastLoginTime;
 
-	private transient String password;
-
 	Account()
 	{
 	}
@@ -42,19 +40,9 @@ public final class Account
 		return email_mobile;
 	}
 
-	public void setEmail_mobile(String email_mobile)
+	void setEmail_mobile(String email_mobile)
 	{
 		this.email_mobile = email_mobile;
-	}
-
-	public String getPassword()
-	{
-		return password;
-	}
-
-	public void setPassword(String password)
-	{
-		this.password = password;
 	}
 
 	public Date getLastLoginTime()

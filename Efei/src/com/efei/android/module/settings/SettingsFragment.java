@@ -11,7 +11,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.efei.android.R;
+import com.efei.android.module.settings.me.SettingsMeActivity;
 import com.efei.lib.android.common.EfeiApplication;
+import com.efei.lib.android.engine.ILoginService;
 
 public class SettingsFragment extends Fragment
 {
@@ -32,6 +34,8 @@ public class SettingsFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
+		getActivity().findViewById(R.id.bar_action_quelist).setVisibility(View.GONE);
+		getActivity().findViewById(R.id.bar_action_settings).setVisibility(View.VISIBLE);
 		View view = View.inflate(getActivity(), R.layout.fragment_settings, null);
 		setupViews(view);
 		return view;
@@ -76,8 +80,8 @@ public class SettingsFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				// TODO Auto-generated method stub
-
+				ILoginService.Factory.getService().logout();
+				getActivity().finish();
 			}
 		});
 	}

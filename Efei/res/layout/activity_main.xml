@@ -4,9 +4,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include
-        android:id="@+id/bar_action"
-        layout="@layout/bar_action" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <include
+            android:id="@+id/bar_action_quelist"
+            layout="@layout/bar_action_quelist" />
+
+        <include
+            android:id="@+id/bar_action_settings"
+            layout="@layout/bar_action_settings" />
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/fl_fragment_container"

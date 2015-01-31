@@ -47,7 +47,6 @@ import com.efei.lib.android.biz_remote_interface.IQueScanService.RespNoteId;
 import com.efei.lib.android.biz_remote_interface.IQueScanService.RespQueId;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
-import com.efei.lib.android.engine.ServiceFactory;
 import com.efei.lib.android.exception.EfeiException;
 import com.efei.lib.android.utils.CollectionUtils;
 
@@ -180,8 +179,7 @@ public class ScanActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				ILoginService service = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
-				Account defaultUser = service.getDefaultUser();
+				Account defaultUser = ILoginService.Factory.getService().getDefaultUser();
 				if (null == defaultUser)
 				{
 					EfeiApplication app = (EfeiApplication) getApplication();

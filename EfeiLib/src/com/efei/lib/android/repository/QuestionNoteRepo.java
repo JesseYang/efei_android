@@ -13,7 +13,6 @@ import com.efei.lib.android.bean.net.RespQueOrNote;
 import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.bean.persistance.QuestionOrNote;
 import com.efei.lib.android.engine.ILoginService;
-import com.efei.lib.android.engine.ServiceFactory;
 import com.efei.lib.android.exception.EfeiException;
 import com.efei.lib.android.grammar.RichText;
 import com.efei.lib.android.utils.NetUtils;
@@ -49,8 +48,7 @@ public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 
 			String json = NetUtils.get(URL_API_QUE + respQueId.getQuestion_id(), null);
 			RespQueOrNote resp = BaseRespBean.toObject(json, RespQueOrNote.class);
-			ILoginService loginService = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
-			Account defaultUser = loginService.getDefaultUser();
+			Account defaultUser = ILoginService.Factory.getService().getDefaultUser();
 			QuestionOrNote queOrNote = new QuestionOrNote(resp, defaultUser);
 			queOrNote.setFormattedContent(new RichText(queOrNote.getContent()).getReformatText());
 			if (null == defaultUser)
@@ -106,8 +104,7 @@ public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 			@Override
 			public Void execute(Dao<QuestionOrNote, String> dao) throws SQLException
 			{
-				ILoginService service = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
-				Account defaultUser = service.getDefaultUser();
+				Account defaultUser = ILoginService.Factory.getService().getDefaultUser();
 				if (null == defaultUser)
 					throw new EfeiException("no default user!");
 				for (QuestionOrNote queOrNote : queOrNotes)
@@ -146,8 +143,7 @@ public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 			@Override
 			public List<QuestionOrNote> execute(Dao<QuestionOrNote, String> dao) throws SQLException
 			{
-				ILoginService service = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
-				Account defaultUser = service.getDefaultUser();
+				Account defaultUser = ILoginService.Factory.getService().getDefaultUser();
 				if (null == defaultUser)
 					throw new EfeiException("no default user!");
 				List<QuestionOrNote> results = dao.queryForEq(QuestionOrNote.Properties.AccountId, defaultUser.getEmail_mobile());

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.efei.lib.android.exception.EfeiException;
 import com.efei.lib.android.utils.CollectionUtils;
+import com.efei.lib.android.utils.DBManager;
 import com.j256.ormlite.dao.Dao;
 
 class ABaseRepo<RepoBean>

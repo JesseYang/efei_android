@@ -9,6 +9,7 @@ import com.efei.lib.android.exception.EfeiException;
 import com.efei.lib.android.utils.CollectionUtils;
 import com.j256.ormlite.dao.Dao;
 
+@Deprecated
 public final class AccountLocalRepo extends ABaseRepo<Account>
 {
 	private static final String TAG = AccountLocalRepo.class.getSimpleName();
@@ -21,7 +22,6 @@ public final class AccountLocalRepo extends ABaseRepo<Account>
 	{
 		execute(new DBExecutor<Void, Account>()
 		{
-
 			@Override
 			public Void execute(Dao<Account, String> dao) throws SQLException
 			{

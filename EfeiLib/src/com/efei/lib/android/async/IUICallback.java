@@ -1,5 +1,10 @@
 package com.efei.lib.android.async;
 
+import android.widget.Toast;
+
+import com.efei.lib.android.common.EfeiApplication;
+import com.efei.lib.android.exception.KnownEfeiExcepiton;
+
 public interface IUICallback<Result>
 {
 	void onPreExecute();
@@ -38,6 +43,8 @@ public interface IUICallback<Result>
 		@Override
 		public void onError(Throwable e)
 		{
+			if (e instanceof KnownEfeiExcepiton)
+				Toast.makeText(EfeiApplication.getContext(), ((KnownEfeiExcepiton) e).error.desc, Toast.LENGTH_SHORT).show();
 		}
 
 	}

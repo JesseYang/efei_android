@@ -1,13 +1,16 @@
 package com.efei.lib.android.biz_remote_interface;
 
+import java.io.IOException;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.net.RespQueOrNote;
 import com.efei.lib.android.exception.EfeiException;
+import com.efei.lib.android.exception.KnownEfeiExcepiton;
 import com.efei.lib.android.utils.NetUtils;
 import com.efei.lib.android.utils.TextUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 class QueScanImpl extends BaseImpl implements IQueScanService
 {
@@ -27,13 +30,19 @@ class QueScanImpl extends BaseImpl implements IQueScanService
 		{
 			String json = NetUtils.get(API_URL, null);
 			JSONObject jsonObj = new JSONObject(json);
-			ObjectMapper mapper = newMapper();
 			String note_id = jsonObj.optString("note_id");
+			final BaseRespBean result;
 			if (!TextUtils.isEmpty(note_id))
-				return mapper.readValue(json, RespNoteId.class);
+				result = BaseRespBean.toObject(json, RespNoteId.class);
 			else
-				return mapper.readValue(json, RespQueOrNote.class);
-		} catch (Exception e)
+				result = BaseRespBean.toObject(json, RespQueOrNote.class);
+			if (!result.isSuccess())
+				throw new KnownEfeiExcepiton(result.getCode());
+			return result;
+		} catch (IOException e)
+		{
+			throw new EfeiException(e);
+		} catch (JSONException e)
 		{
 			throw new EfeiException(e);
 		}

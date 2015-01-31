@@ -1,17 +1,31 @@
 package com.efei.lib.android.engine;
 
-import com.efei.lib.android.async.IJob;
-import com.efei.lib.android.async.IUICallback;
-import com.efei.lib.android.bean.net.ReqLogin;
-import com.efei.lib.android.bean.net.ReqRegister;
-import com.efei.lib.android.bean.net.RespLogin;
 import com.efei.lib.android.bean.persistance.Account;
 
 public interface ILoginService
 {
-	IJob register(ReqRegister reqRegister, IUICallback<RespLogin> uiCallback);
+	Account login(String email_mobile, String password) throws Exception;
 
-	IJob login(ReqLogin reqLogin, IUICallback<RespLogin> uiCallback);
+	Account register(String email_mobile, String password, String name);
+
+	void logout();
 
 	Account getDefaultUser();
+
+	public static class Factory
+	{
+		private Factory()
+		{
+		}
+
+		private static ILoginService service;
+
+		public synchronized static ILoginService getService()
+		{
+			if (null == service)
+				service = new LoginServiceImpl();
+			return service;
+		}
+	}
+
 }

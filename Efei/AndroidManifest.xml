@@ -62,12 +62,28 @@
             android:theme="@style/AppTheme.EfeiActionBar" >
         </activity>
         <activity
-            android:name="com.efei.android.module.settings.SettingsMeActivity"
+            android:name="com.efei.android.module.settings.me.SettingsMeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.EfeiActionBar" >
         </activity>
         <activity
             android:name="com.efei.android.module.list.SelectorActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.EfeiActionBar" >
+        </activity>
+        <activity
+            android:name="com.efei.android.module.account.RegisterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="com.efei.android.module.settings.me.MobileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.EfeiActionBar" >
+        </activity>
+        <activity
+            android:name="com.efei.android.module.settings.me.NameActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.EfeiActionBar" >
         </activity>

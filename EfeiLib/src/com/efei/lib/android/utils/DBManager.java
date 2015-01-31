@@ -1,4 +1,4 @@
-package com.efei.lib.android.repository;
+package com.efei.lib.android.utils;
 
 import java.sql.SQLException;
 
@@ -16,13 +16,13 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-final class DBManager
+public final class DBManager
 {
 	private DBManager()
 	{
 	}
 
-	static <T> Dao<T, String> beginSession(Class<T> beanClazz)
+	public static <T> Dao<T, String> beginSession(Class<T> beanClazz)
 	{
 		ConnectionSource connectionSource = OpenHelperManager.getHelper(EfeiApplication.getContext(), EfeiSqliteOpenHelper.class).getConnectionSource();
 
@@ -37,7 +37,7 @@ final class DBManager
 		}
 	}
 
-	static void endSession()
+	public static void endSession()
 	{
 		OpenHelperManager.releaseHelper();
 	}
@@ -66,11 +66,11 @@ final class DBManager
 		@Override
 		public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion)
 		{
-			// TODO Auto-generated method stub
 			try
 			{
 				TableUtils.dropTable(connectionSource, Account.class, false);
 				TableUtils.dropTable(connectionSource, QuestionOrNote.class, false);
+				onCreate(database);
 			} catch (SQLException e)
 			{
 				throw new EfeiException(e);

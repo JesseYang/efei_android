@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:text="我们已经发送验证码到这个号码："
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/tv_new_phone_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:text="13500000000"
+        android:textColor="@color/action_bar_blue"
+        android:textSize="15dp" />
+
+    <AutoCompleteTextView
+        android:id="@+id/actv_verify_code"
+        android:layout_width="224dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/edit_frame"
+        android:gravity="center_vertical"
+        android:hint="请输入验证码"
+        android:inputType="textPhonetic"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textColor="@android:color/black"
+        android:textCursorDrawable="@null" />
+
+    <TextView
+        android:id="@+id/tv_resend_verify_code"
+        android:layout_width="224dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_resend_verify_code"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="重发验证码"
+        android:textColor="@android:color/white"
+        android:textSize="16dp" />
+
+</LinearLayout>

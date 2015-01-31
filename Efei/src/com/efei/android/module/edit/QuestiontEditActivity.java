@@ -29,7 +29,6 @@ import com.efei.lib.android.biz_remote_interface.IQueScanService;
 import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddSingleQue;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
-import com.efei.lib.android.engine.ServiceFactory;
 import com.efei.lib.android.utils.TextUtils;
 
 public class QuestiontEditActivity extends ActionBarActivity
@@ -123,8 +122,7 @@ public class QuestiontEditActivity extends ActionBarActivity
 			return true;
 
 		case R.id.menu_save:
-			ILoginService service = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
-			Account defaultUser = service.getDefaultUser();
+			Account defaultUser = ILoginService.Factory.getService().getDefaultUser();
 			if (null == defaultUser)
 			{
 				EfeiApplication app = (EfeiApplication) getApplication();

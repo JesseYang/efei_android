@@ -25,8 +25,8 @@ import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.common.Constants;
 import com.efei.lib.android.engine.ILoginService;
-import com.efei.lib.android.engine.ServiceFactory;
 import com.efei.lib.android.exception.EfeiException;
+import com.efei.lib.android.exception.KnownEfeiExcepiton;
 
 public final class NetUtils
 {
@@ -34,7 +34,7 @@ public final class NetUtils
 	{
 	}
 
-	public static <T> T postObjectAsJson(String urlApi, ABaseReqBean reqBean, Class<T> respClazz)
+	public static <T extends BaseRespBean> T postObjectAsJson(String urlApi, ABaseReqBean reqBean, Class<T> respClazz)
 	{
 		HttpClient client = newClient();
 		HttpPost post = new HttpPost(Constants.Net.HOST_URL + urlApi);
@@ -48,7 +48,10 @@ public final class NetUtils
 			post.setEntity(entity);
 			HttpResponse response = client.execute(post);
 			String respString = readResponseAsString(response);
-			return BaseRespBean.toObject(respString, respClazz);
+			T res = BaseRespBean.toObject(respString, respClazz);
+			if (!res.isSuccess())
+				throw new KnownEfeiExcepiton(res.getCode());
+			return res;
 		} catch (IOException e)
 		{
 			throw new EfeiException(e);
@@ -69,8 +72,7 @@ public final class NetUtils
 
 	private static Map<String, String> injectAuthKey(Map<String, String> params)
 	{
-		ILoginService service = ServiceFactory.INSTANCE.getService(ServiceFactory.LOGIN_SERVICE);
-		Account defaultUser = service.getDefaultUser();
+		Account defaultUser = ILoginService.Factory.getService().getDefaultUser();
 		final String authKey = null == defaultUser ? "" : defaultUser.getAuthKey();
 		if (null == params)
 			params = new HashMap<String, String>();

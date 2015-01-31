@@ -21,7 +21,7 @@ public class JobAsyncTask<Result> implements IJob
 	}
 
 	// thread pool call----start
-	final Result doInBackground()
+	final Result doInBackground() throws Exception
 	{
 		return bussinessCallback.onBusinessLogic(this);
 	}

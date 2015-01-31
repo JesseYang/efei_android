@@ -52,6 +52,8 @@ public class QueFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
+		getActivity().findViewById(R.id.bar_action_quelist).setVisibility(View.VISIBLE);
+		getActivity().findViewById(R.id.bar_action_settings).setVisibility(View.GONE);
 		viewContainer = View.inflate(getActivity(), R.layout.fragment_que, null);
 		setupSelectorBar(viewContainer);
 		viewContainer.findViewById(R.id.pb_progress).setVisibility(View.VISIBLE);
