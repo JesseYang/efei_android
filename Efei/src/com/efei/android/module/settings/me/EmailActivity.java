@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import com.efei.android.R;
 import com.efei.lib.android.utils.TextUtils;
 
-public class MobileActivity extends ActionBarActivity
+public class EmailActivity extends ActionBarActivity
 {
 
 	@Override
@@ -15,12 +15,12 @@ public class MobileActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_me_mobile_or_email);
-		String mobile = getIntent().getStringExtra(SettingsMeActivity.KEY_MOBILE);
-		if (TextUtils.isBlank(mobile))
-			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Mobile_PhoneCodeFragment(mobile)).commit();
+		String email = getIntent().getStringExtra(SettingsMeActivity.KEY_EMAIL);
+		if (TextUtils.isBlank(email))
+			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Email_FillFragment(email)).commit();
 		else
-			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Mobile_CompleteFragment(mobile)).commit();
-		getSupportActionBar().setTitle("手机设置");
+			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Email_CompleteFragment(email)).commit();
+		getSupportActionBar().setTitle("邮箱设置");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 

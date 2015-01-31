@@ -83,6 +83,11 @@
             android:theme="@style/AppTheme.EfeiActionBar" >
         </activity>
         <activity
+            android:name="com.efei.android.module.settings.me.EmailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.EfeiActionBar" >
+        </activity>
+        <activity
             android:name="com.efei.android.module.settings.me.NameActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.EfeiActionBar" >

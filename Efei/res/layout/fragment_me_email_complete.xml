@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/iv_email"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginTop="18dp"
+        android:src="@drawable/email" />
+
+    <TextView
+        android:id="@+id/tv_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="35dp"
+        android:layout_marginTop="33dp"
+        android:text="您的邮箱地址为：xxx@xxx.com"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/tv_change_email"
+        android:layout_width="224dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:background="@color/action_bar_blue"
+        android:gravity="center"
+        android:text="更换邮箱"
+        android:textColor="@android:color/white"
+        android:textSize="16dp" />
+
+</LinearLayout>

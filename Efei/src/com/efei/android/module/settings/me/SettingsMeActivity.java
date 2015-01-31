@@ -21,6 +21,7 @@ import com.efei.lib.android.common.EfeiApplication;
 public class SettingsMeActivity extends ActionBarActivity
 {
 	static final String KEY_MOBILE = "key_mobile";
+	static final String KEY_EMAIL = "key_email";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -63,10 +64,13 @@ public class SettingsMeActivity extends ActionBarActivity
 
 		findViewById(R.id.ll_email_bar).setOnClickListener(new OnClickListener()
 		{
-
 			@Override
 			public void onClick(View v)
 			{
+				Intent intent = new Intent(SettingsMeActivity.this, EmailActivity.class);
+				TextView tv = (TextView) v.findViewById(R.id.tv_email);
+				intent.putExtra(KEY_EMAIL, tv.getText());
+				startActivity(intent);
 			}
 		});
 
