@@ -58,16 +58,28 @@ public final class NetUtils
 		}
 	}
 
-	public static String get(String strAPIUrl, Map<String, String> params) throws ClientProtocolException, IOException
+	public static <T extends BaseRespBean> T put(String urlApi, ABaseReqBean reqBean, Class<T> respClazz)
 	{
-		params = injectAuthKey(params);
-		final String url = encodeGet_DeleteUrl(strAPIUrl, params);
 		HttpClient client = newClient();
-		HttpGet get = new HttpGet(url);
-		get.setHeader("Content-Type", "application/json");
-		get.setHeader("Accept", "application/json");
-		HttpResponse response = client.execute(get);
-		return readResponseAsString(response);
+		HttpPut put = new HttpPut(Constants.Net.HOST_URL + urlApi);
+		put.setHeader("Content-Type", "application/json");
+		put.setHeader("Accept", "application/json");
+		try
+		{
+			byte[] postBytes = reqBean.toJson().getBytes(HTTP.UTF_8);
+			String jsonPost = new String(postBytes, HTTP.UTF_8);
+			HttpEntity entity = new StringEntity(jsonPost, HTTP.UTF_8);
+			put.setEntity(entity);
+			HttpResponse response = client.execute(put);
+			String respJson = readResponseAsString(response);
+			T res = BaseRespBean.toObject(respJson, respClazz);
+			if (!res.isSuccess())
+				throw new KnownEfeiExcepiton(res.getCode());
+			return res;
+		} catch (IOException e)
+		{
+			throw new EfeiException(e);
+		}
 	}
 
 	private static Map<String, String> injectAuthKey(Map<String, String> params)
@@ -137,24 +149,15 @@ public final class NetUtils
 		return readResponseAsString(response);
 	}
 
-	public static <T> T put(String urlApi, ABaseReqBean reqBean, Class<T> respClazz)
+	public static String get(String strAPIUrl, Map<String, String> params) throws ClientProtocolException, IOException
 	{
+		params = injectAuthKey(params);
+		final String url = encodeGet_DeleteUrl(strAPIUrl, params);
 		HttpClient client = newClient();
-		HttpPut put = new HttpPut(Constants.Net.HOST_URL + urlApi);
-		put.setHeader("Content-Type", "application/json");
-		put.setHeader("Accept", "application/json");
-		try
-		{
-			byte[] postBytes = reqBean.toJson().getBytes(HTTP.UTF_8);
-			String jsonPost = new String(postBytes, HTTP.UTF_8);
-			HttpEntity entity = new StringEntity(jsonPost, HTTP.UTF_8);
-			put.setEntity(entity);
-			HttpResponse response = client.execute(put);
-			String respJson = readResponseAsString(response);
-			return BaseRespBean.toObject(respJson, respClazz);
-		} catch (IOException e)
-		{
-			throw new EfeiException(e);
-		}
+		HttpGet get = new HttpGet(url);
+		get.setHeader("Content-Type", "application/json");
+		get.setHeader("Accept", "application/json");
+		HttpResponse response = client.execute(get);
+		return readResponseAsString(response);
 	}
 }
