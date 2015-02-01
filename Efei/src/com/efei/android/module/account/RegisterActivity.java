@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.efei.android.R;
 import com.efei.android.module.scan.ScanActivity;
@@ -39,7 +40,7 @@ public class RegisterActivity extends ActionBarActivity
 	private IJob jobRegister;
 
 	// UI references.
-	private AutoCompleteTextView mEmailView;
+	private AutoCompleteTextView mMobileView;
 	private EditText mName;
 	private EditText mPasswordView;
 	private View mProgressView;
@@ -65,7 +66,7 @@ public class RegisterActivity extends ActionBarActivity
 	private void setupViews()
 	{
 		// Set up the login form.
-		mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+		mMobileView = (AutoCompleteTextView) findViewById(R.id.email);
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mName = (EditText) findViewById(R.id.name);
 
@@ -103,12 +104,12 @@ public class RegisterActivity extends ActionBarActivity
 			return;
 
 		// Reset errors.
-		mEmailView.setError(null);
+		mMobileView.setError(null);
 		mPasswordView.setError(null);
 		mName.setError(null);
 
 		// Store values at the time of the login attempt.
-		String email = mEmailView.getText().toString();
+		String mobile = mMobileView.getText().toString();
 		String password = mPasswordView.getText().toString();
 		String name = mName.getText().toString();
 
@@ -116,29 +117,24 @@ public class RegisterActivity extends ActionBarActivity
 		View focusView = null;
 
 		// Check for a valid password, if the user entered one.
-		if (!TextUtils.isEmpty(password) && !isPasswordValid(password))
+		if (!isPasswordValid(password))
 		{
-			mPasswordView.setError(getString(R.string.error_invalid_password));
+			Toast.makeText(this, "请填写长度为6~16的密码！", Toast.LENGTH_SHORT).show();
 			focusView = mPasswordView;
 			cancel = true;
 		}
 
 		// Check for a valid email address.
-		if (TextUtils.isEmpty(email))
+		if (!isMobileValid(mobile))
 		{
-			mEmailView.setError(getString(R.string.error_field_required));
-			focusView = mEmailView;
-			cancel = true;
-		} else if (!isEmailValid(email))
-		{
-			mEmailView.setError(getString(R.string.error_invalid_email));
-			focusView = mEmailView;
+			Toast.makeText(this, "请填写合法的手机号！", Toast.LENGTH_SHORT).show();
+			focusView = mMobileView;
 			cancel = true;
 		}
 
-		if (TextUtils.isEmpty(name))
+		if (TextUtils.isBlank(name))
 		{
-			mName.setError("姓名不能为空");
+			Toast.makeText(this, "姓名不能为空！", Toast.LENGTH_SHORT).show();
 			focusView = mName;
 			cancel = true;
 		}
@@ -153,22 +149,19 @@ public class RegisterActivity extends ActionBarActivity
 			// task to perform the user login attempt.
 			showProgress(true);
 
-			jobRegister = Executor.INSTANCE.execute(new JobAsyncTask<Account>(new BizRunner_Register(email, password, name),
+			jobRegister = Executor.INSTANCE.execute(new JobAsyncTask<Account>(new BizRunner_Register(mobile, password, name),
 					new RegisterUICallback()));
 		}
 	}
 
-	private boolean isEmailValid(String email)
+	private boolean isMobileValid(String mobile)
 	{
-		// TODO: Replace this with your own logic
-		// return email.contains("@");
-		return true;
+		return TextUtils.isMobilePhoneNumber(mobile);
 	}
 
 	private boolean isPasswordValid(String password)
 	{
-		// TODO: Replace this with your own logic
-		return password.length() > 4;
+		return TextUtils.isValidatePassword(password);
 	}
 
 	/**

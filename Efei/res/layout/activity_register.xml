@@ -57,7 +57,7 @@
                     android:layout_height="30dp"
                     android:background="@drawable/edit_frame"
                     android:gravity="center_vertical"
-                    android:hint="@string/prompt_email"
+                    android:hint="手机号"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:paddingLeft="10dp"
