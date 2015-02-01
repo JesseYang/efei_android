@@ -49,6 +49,7 @@ public class SplashActivity extends ActionBarActivity
 		{
 			try
 			{
+				Thread.sleep(1000);
 				Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 				startActivity(intent);
 				finish();
