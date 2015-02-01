@@ -39,7 +39,7 @@ import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService.RespDel
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.exception.EfeiException;
 
-public class QueFragment extends Fragment
+public class QueListFragment extends Fragment
 {
 	private QueListAdapter adapter;
 
@@ -73,7 +73,7 @@ public class QueFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				SelectorActivity.forwardForResult(QueFragment.this, SelectorType.Subject);
+				SelectorActivity.forwardForResult(QueListFragment.this, SelectorType.Subject);
 			}
 		});
 
@@ -82,7 +82,7 @@ public class QueFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				SelectorActivity.forwardForResult(QueFragment.this, SelectorType.Time);
+				SelectorActivity.forwardForResult(QueListFragment.this, SelectorType.Time);
 			}
 		});
 
@@ -91,7 +91,7 @@ public class QueFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				SelectorActivity.forwardForResult(QueFragment.this, SelectorType.Tag);
+				SelectorActivity.forwardForResult(QueListFragment.this, SelectorType.Tag);
 			}
 		});
 	}

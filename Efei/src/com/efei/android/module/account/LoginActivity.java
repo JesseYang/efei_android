@@ -34,10 +34,10 @@ import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.IUICallback.Adapter;
 import com.efei.lib.android.async.JobAsyncTask;
+import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.bean.persistance.QuestionOrNote2;
 import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddBatchQues;
-import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddSingleQue;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
 import com.efei.lib.android.utils.TextUtils;
@@ -259,10 +259,10 @@ public class LoginActivity extends ActionBarActivity
 			boolean bForSaveQue = intent.getBooleanExtra(Constants.LOGIN_FOR_SAVE_QUE, false);
 			if (bForSaveQue)
 			{
-				Executor.INSTANCE.execute(new JobAsyncTask<RespAddSingleQue>(new BizRunner_SaveQue(((QuestionOrNote2) app
-						.removeTemporary(Constants.TMP_QUE)).metaData), new IUICallback.Adapter<RespAddSingleQue>()
+				Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_SaveQue(((QuestionOrNote2) app
+						.removeTemporary(Constants.TMP_QUE)).metaData, true), new IUICallback.Adapter<BaseRespBean>()
 				{
-					public void onPostExecute(RespAddSingleQue result)
+					public void onPostExecute(BaseRespBean result)
 					{
 						if (result.isSuccess())
 						{

@@ -23,16 +23,16 @@ import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.IUICallback.Adapter;
 import com.efei.lib.android.async.JobAsyncTask;
+import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.bean.persistance.QuestionOrNote2;
-import com.efei.lib.android.biz_remote_interface.IQueScanService;
-import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddSingleQue;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
 import com.efei.lib.android.utils.TextUtils;
 
 public class QuestiontEditActivity extends ActionBarActivity
 {
+	public static final String KEY_CREATE_QUE = "key_create_que";
 	private QuestionOrNote2 queOrNote;
 	private EditText etSummary;
 
@@ -137,7 +137,8 @@ public class QuestiontEditActivity extends ActionBarActivity
 			Editable text = etSummary.getText();
 			if (null != text && !TextUtils.isEmpty(text))
 				queOrNote.metaData.setSummary(text.toString());
-			Executor.INSTANCE.execute(new JobAsyncTask<RespAddSingleQue>(new BizRunner_SaveQue(queOrNote.metaData), uiCallback));
+			Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_SaveQue(queOrNote.metaData, getIntent().getBooleanExtra(
+					KEY_CREATE_QUE, false)), uiCallback));
 			return true;
 
 		default:
@@ -145,9 +146,9 @@ public class QuestiontEditActivity extends ActionBarActivity
 		}
 	}
 
-	private IUICallback.Adapter<RespAddSingleQue> uiCallback = new Adapter<IQueScanService.RespAddSingleQue>()
+	private IUICallback.Adapter<BaseRespBean> uiCallback = new Adapter<BaseRespBean>()
 	{
-		public void onPostExecute(RespAddSingleQue result)
+		public void onPostExecute(BaseRespBean result)
 		{
 			Toast.makeText(getApplicationContext(), "保存成功！", Toast.LENGTH_SHORT).show();
 			EfeiApplication.switchToActivity(MainActivity.class);
@@ -159,5 +160,4 @@ public class QuestiontEditActivity extends ActionBarActivity
 			Toast.makeText(getApplicationContext(), "保存失败！", Toast.LENGTH_SHORT).show();
 		};
 	};
-
 }

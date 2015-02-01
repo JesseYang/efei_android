@@ -8,7 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.efei.android.R;
-import com.efei.android.module.list.QueFragment;
+import com.efei.android.module.list.QueListFragment;
 import com.efei.android.module.scan.ScanActivity;
 import com.efei.android.module.settings.SettingsFragment;
 import com.efei.lib.android.common.EfeiApplication;
@@ -64,7 +64,7 @@ public class MainActivity extends ActionBarActivity
 					uiRestore();
 					((TextView) viewBar.findViewById(R.id.tv_quelist)).setTextColor(0xff4388ff);
 					viewBar.findViewById(R.id.iv_quelist).setSelected(true);
-					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new QueFragment()).commit();
+					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new QueListFragment()).commit();
 				}
 			});
 			viewBar.findViewById(R.id.ll_setting).setOnClickListener(new OnClickListener()

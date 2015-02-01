@@ -342,7 +342,9 @@ public class ScanActivity extends Activity
 			{
 				EfeiApplication app = (EfeiApplication) getApplication();
 				app.addTemporary(Constants.TMP_QUE, result);
-				EfeiApplication.switchToActivity(QuestiontEditActivity.class);
+				Intent intent = new Intent(ScanActivity.this, QuestiontEditActivity.class);
+				intent.putExtra(QuestiontEditActivity.KEY_CREATE_QUE, true);
+				startActivity(intent);
 				finish();
 			}
 		}

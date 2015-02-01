@@ -101,7 +101,7 @@ public class SelectorActivity extends ActionBarActivity
 		setContentView(lv);
 	}
 
-	static void forwardForResult(QueFragment source, SelectorType type)
+	static void forwardForResult(QueListFragment source, SelectorType type)
 	{
 		Intent intent = new Intent(source.getActivity(), SelectorActivity.class);
 		intent.putExtra(KEY_TYPE, type);
