@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.efei.android.R;
+import com.efei.android.module.account.LoginActivity;
 import com.efei.android.module.settings.me.SettingsMeActivity;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
@@ -82,6 +83,7 @@ public class SettingsFragment extends Fragment
 			{
 				ILoginService.Factory.getService().logout();
 				getActivity().finish();
+				EfeiApplication.switchToActivity(LoginActivity.class);
 			}
 		});
 	}
