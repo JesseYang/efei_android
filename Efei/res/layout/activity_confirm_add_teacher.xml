@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="是否添加教师？"
+        android:textSize="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="北京市第一中学 数学 张三丰"
+        android:textColor="@color/action_bar_blue"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/tvAdd"
+        android:layout_width="224dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="38dp"
+        android:background="@color/action_bar_blue"
+        android:gravity="center"
+        android:text="添加"
+        android:textColor="@android:color/white"
+        android:textSize="16dp" />
+
+</LinearLayout>

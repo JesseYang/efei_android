@@ -78,7 +78,7 @@ class SettingImpl extends BaseImpl implements ISettingService
 	{
 		final String API_URL = "student/teachers";
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("scope", 1 + "");
+		params.put("scope", 0 + "");
 		params.put("subject", subject + "");
 		params.put("name", name);
 		return get(API_URL, params, RespSearchTeachers.class);

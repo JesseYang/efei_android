@@ -92,6 +92,26 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.EfeiActionBar" >
         </activity>
+        <activity
+            android:name="com.efei.android.module.settings.teacher.TeacherSearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoAcionBar" >
+        </activity>
+        <activity
+            android:name="com.efei.android.module.settings.teacher.MyTeacherActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.EfeiActionBar" >
+        </activity>
+        <activity
+            android:name="com.efei.android.module.settings.teacher.ClassSelectorActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.EfeiActionBar" >
+        </activity>
+        <activity
+            android:name="com.efei.android.module.settings.teacher.ConfirmAddTeacherActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.EfeiActionBar" >
+        </activity>
     </application>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->

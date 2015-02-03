@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.efei.android.module.account.LoginActivity;
+import com.efei.lib.android.biz_remote_interface.ISettingService;
+import com.efei.lib.android.biz_remote_interface.ISettingService.RespSearchTeachers;
 
 public class SplashActivity extends ActionBarActivity
 {
@@ -49,6 +51,7 @@ public class SplashActivity extends ActionBarActivity
 		{
 			try
 			{
+				RespSearchTeachers teachers = ISettingService.Factory.getService().get0student$teachers(0, "Со");
 				Thread.sleep(1000);
 				Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 				startActivity(intent);

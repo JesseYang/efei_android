@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.efei.android.R;
 import com.efei.android.module.account.LoginActivity;
 import com.efei.android.module.settings.me.SettingsMeActivity;
+import com.efei.android.module.settings.teacher.MyTeacherActivity;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
 
@@ -59,8 +60,7 @@ public class SettingsFragment extends Fragment
 			@Override
 			public void onClick(View v)
 			{
-				// TODO Auto-generated method stub
-
+				EfeiApplication.switchToActivity(MyTeacherActivity.class);
 			}
 		});
 
