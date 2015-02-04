@@ -12,7 +12,7 @@ public final class Constants
 	
 	public static final String TMP_TEACHER = "tmp_teacher";
 	
-	public static final String TMP_CLASS = "tmp_class";
+//	public static final String TMP_CLASS = "tmp_class";
 
 	public static final String LOGIN_FOR_SAVE_QUE = "login_for_save_que";
 

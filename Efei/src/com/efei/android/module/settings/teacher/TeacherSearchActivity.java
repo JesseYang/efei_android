@@ -3,18 +3,22 @@ package com.efei.android.module.settings.teacher;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.efei.android.R;
 import com.efei.android.module.Constants;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.JobAsyncTask;
+import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.net.common_data.Teacher;
+import com.efei.lib.android.bean.net.common_data.Teacher.Classs;
 import com.efei.lib.android.biz_remote_interface.ISettingService.RespSearchTeachers;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.utils.CollectionUtils;
@@ -96,6 +100,25 @@ public class TeacherSearchActivity extends Activity
 				@Override
 				public void onClick(View v)
 				{
+					if (CollectionUtils.isEmpty(teacher.getClasses()) || teacher.getClasses().size() < 2)
+					{
+						final Classs classs = CollectionUtils.isEmpty(teacher.getClasses()) ? null : teacher.getClasses().get(0);
+						Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_AddTeacher(teacher, classs),
+								new IUICallback.Adapter<BaseRespBean>()
+								{
+									@Override
+									public void onPostExecute(BaseRespBean result)
+									{
+										Toast.makeText(TeacherSearchActivity.this, "Ìí¼Ó³É¹¦", Toast.LENGTH_SHORT).show();
+										Intent intent = new Intent(TeacherSearchActivity.this, MyTeacherActivity.class);
+										intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+										intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+										startActivity(intent);
+										finish();
+									}
+								}));
+						return;
+					}
 					EfeiApplication app = (EfeiApplication) getApplication();
 					app.addTemporary(Constants.TMP_TEACHER, teacher);
 					EfeiApplication.switchToActivity(ClassSelectorActivity.class);

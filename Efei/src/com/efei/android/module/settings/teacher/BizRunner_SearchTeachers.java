@@ -9,7 +9,7 @@ class BizRunner_SearchTeachers implements IBusinessCallback<RespSearchTeachers>
 {
 
 	private String name;
-	
+
 	public BizRunner_SearchTeachers(String name)
 	{
 		this.name = name;
@@ -20,5 +20,4 @@ class BizRunner_SearchTeachers implements IBusinessCallback<RespSearchTeachers>
 	{
 		return ISettingService.Factory.getService().get0student$teachers(0, name);
 	}
-
 }

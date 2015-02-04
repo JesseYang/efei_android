@@ -1,5 +1,7 @@
 package com.efei.android;
 
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -7,8 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.efei.android.module.account.LoginActivity;
+import com.efei.android.module.settings.teacher.MyTeacherActivity;
+import com.efei.lib.android.bean.net.common_data.Teacher;
 import com.efei.lib.android.biz_remote_interface.ISettingService;
 import com.efei.lib.android.biz_remote_interface.ISettingService.RespSearchTeachers;
+import com.efei.lib.android.utils.CollectionUtils;
 
 public class SplashActivity extends ActionBarActivity
 {
@@ -51,8 +56,13 @@ public class SplashActivity extends ActionBarActivity
 		{
 			try
 			{
-				RespSearchTeachers teachers = ISettingService.Factory.getService().get0student$teachers(0, "Со");
-				Thread.sleep(1000);
+				RespSearchTeachers teachers = ISettingService.Factory.getService().get0student$teachers();
+				List<Teacher> teachersList = teachers.getTeachers();
+				if (!CollectionUtils.isEmpty(teachersList))
+				{
+					for (Teacher teacher : teachersList)
+						MyTeacherActivity.MY_TEACHERS.put(teacher.getId(), teacher);
+				}
 				Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 				startActivity(intent);
 				finish();

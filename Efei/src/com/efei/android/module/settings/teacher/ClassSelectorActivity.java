@@ -2,6 +2,7 @@ package com.efei.android.module.settings.teacher;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
@@ -12,9 +13,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.efei.android.R;
 import com.efei.android.module.Constants;
+import com.efei.lib.android.async.Executor;
+import com.efei.lib.android.async.IUICallback;
+import com.efei.lib.android.async.JobAsyncTask;
+import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.net.common_data.Teacher;
 import com.efei.lib.android.bean.net.common_data.Teacher.Classs;
 import com.efei.lib.android.common.EfeiApplication;
@@ -33,11 +39,9 @@ public class ClassSelectorActivity extends ActionBarActivity
 
 		EfeiApplication app = (EfeiApplication) getApplication();
 		final Teacher teacher = app.removeTemporary(Constants.TMP_TEACHER);
-		if (CollectionUtils.isEmpty(teacher.getClasses()))
+		if (CollectionUtils.isEmpty(teacher.getClasses()) || teacher.getClasses().size() < 2)
 		{
 			finish();
-			app.addTemporary(Constants.TMP_TEACHER, teacher);
-			EfeiApplication.switchToActivity(ConfirmAddTeacherActivity.class);
 			return;
 		}
 
@@ -48,11 +52,20 @@ public class ClassSelectorActivity extends ActionBarActivity
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
-				EfeiApplication app = (EfeiApplication) getApplication();
-				app.addTemporary(Constants.TMP_TEACHER, teacher);
-				ClassAdapter adapter = (ClassAdapter) parent.getAdapter();
-				app.addTemporary(Constants.TMP_CLASS, adapter.classes.get(position));
-				EfeiApplication.switchToActivity(ConfirmAddTeacherActivity.class);
+				Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_AddTeacher(teacher, teacher.getClasses().get(position)),
+						new IUICallback.Adapter<BaseRespBean>()
+						{
+							@Override
+							public void onPostExecute(BaseRespBean result)
+							{
+								Toast.makeText(ClassSelectorActivity.this, "Ìí¼Ó³É¹¦", Toast.LENGTH_SHORT).show();
+								Intent intent = new Intent(ClassSelectorActivity.this, MyTeacherActivity.class);
+								intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								startActivity(intent);
+								finish();
+							}
+						}));
 			}
 		});
 	}
