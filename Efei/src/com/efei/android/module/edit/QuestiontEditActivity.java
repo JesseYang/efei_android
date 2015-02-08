@@ -19,6 +19,7 @@ import com.efei.android.module.Constants;
 import com.efei.android.module.MainActivity;
 import com.efei.android.module.account.LoginActivity;
 import com.efei.android.module.edit.TagTopicsEditActivity.EditContent;
+import com.efei.android.module.settings.teacher.ConfirmAddTeacherActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.IUICallback.Adapter;
@@ -26,6 +27,7 @@ import com.efei.lib.android.async.JobAsyncTask;
 import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.bean.persistance.QuestionOrNote2;
+import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddSingleQue;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
 import com.efei.lib.android.utils.TextUtils;
@@ -151,8 +153,21 @@ public class QuestiontEditActivity extends ActionBarActivity
 		public void onPostExecute(BaseRespBean result)
 		{
 			Toast.makeText(getApplicationContext(), "±£´æ³É¹¦£¡", Toast.LENGTH_SHORT).show();
-			EfeiApplication.switchToActivity(MainActivity.class);
 			finish();
+			if (result instanceof RespAddSingleQue)
+			{
+				RespAddSingleQue resp = (RespAddSingleQue) result;
+				if (null == resp.getTeacher())
+					EfeiApplication.switchToActivity(MainActivity.class);
+				else
+				{
+					EfeiApplication app = (EfeiApplication) getApplication();
+					app.addTemporary(Constants.TMP_TEACHER, resp.getTeacher());
+					Intent intent = new Intent(QuestiontEditActivity.this, ConfirmAddTeacherActivity.class);
+					startActivity(intent);
+				}
+			} else
+				EfeiApplication.switchToActivity(MainActivity.class);
 		};
 
 		public void onError(Throwable e)

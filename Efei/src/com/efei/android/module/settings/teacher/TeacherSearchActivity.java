@@ -9,16 +9,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.efei.android.R;
 import com.efei.android.module.Constants;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.JobAsyncTask;
-import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.net.common_data.Teacher;
-import com.efei.lib.android.bean.net.common_data.Teacher.Classs;
 import com.efei.lib.android.biz_remote_interface.ISettingService.RespSearchTeachers;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.utils.CollectionUtils;
@@ -49,9 +46,7 @@ public class TeacherSearchActivity extends Activity
 				EditText et = (EditText) findViewById(R.id.actv_search);
 				search(et.getText());
 			}
-
 		});
-
 	}
 
 	private void search(CharSequence text)
@@ -100,28 +95,30 @@ public class TeacherSearchActivity extends Activity
 				@Override
 				public void onClick(View v)
 				{
-					if (CollectionUtils.isEmpty(teacher.getClasses()) || teacher.getClasses().size() < 2)
-					{
-						final Classs classs = CollectionUtils.isEmpty(teacher.getClasses()) ? null : teacher.getClasses().get(0);
-						Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_AddTeacher(teacher, classs),
-								new IUICallback.Adapter<BaseRespBean>()
-								{
-									@Override
-									public void onPostExecute(BaseRespBean result)
-									{
-										Toast.makeText(TeacherSearchActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
-										Intent intent = new Intent(TeacherSearchActivity.this, MyTeacherActivity.class);
-										intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-										intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-										startActivity(intent);
-										finish();
-									}
-								}));
-						return;
-					}
+//					if (CollectionUtils.isEmpty(teacher.getClasses()) || teacher.getClasses().size() < 2)
+//					{
+//						final Classs classs = CollectionUtils.isEmpty(teacher.getClasses()) ? null : teacher.getClasses().get(0);
+//						Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_AddTeacher(teacher, classs),
+//								new IUICallback.Adapter<BaseRespBean>()
+//								{
+//									@Override
+//									public void onPostExecute(BaseRespBean result)
+//									{
+//										Toast.makeText(TeacherSearchActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+//										Intent intent = new Intent(TeacherSearchActivity.this, MyTeacherActivity.class);
+//										intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//										intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//										startActivity(intent);
+//										finish();
+//									}
+//								}));
+//						return;
+//					}
 					EfeiApplication app = (EfeiApplication) getApplication();
 					app.addTemporary(Constants.TMP_TEACHER, teacher);
-					EfeiApplication.switchToActivity(ClassSelectorActivity.class);
+					Intent intent = new Intent(TeacherSearchActivity.this, ClassSelectorActivity.class);
+					intent.putExtra(ClassSelectorActivity.KEY_WHO_START_ME, TeacherSearchActivity.class.getSimpleName());
+					startActivity(intent);
 				}
 			});
 		}

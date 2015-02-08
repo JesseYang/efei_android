@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.efei.android.R;
@@ -14,6 +15,7 @@ import com.efei.android.module.MainActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.JobAsyncTask;
+import com.efei.lib.android.bean.Subject;
 import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.net.common_data.Teacher;
 import com.efei.lib.android.bean.net.common_data.Teacher.Classs;
@@ -33,6 +35,13 @@ public class ConfirmAddTeacherActivity extends ActionBarActivity
 
 		EfeiApplication app = (EfeiApplication) getApplication();
 		final Teacher teacher = app.removeTemporary(Constants.TMP_TEACHER);
+
+		TextView tvInfo = (TextView) findViewById(R.id.tv_teacher_info);
+		// 北京市第一中学 数学 张三丰
+		tvInfo.setText("");
+		tvInfo.append(teacher.getSchool() + " ");
+		tvInfo.append(Subject.getSubjectByIndex(teacher.getSubject()).name + " ");
+		tvInfo.append(teacher.getName());
 
 		findViewById(R.id.tvAdd).setOnClickListener(new OnClickListener()
 		{
@@ -60,6 +69,8 @@ public class ConfirmAddTeacherActivity extends ActionBarActivity
 				}
 				EfeiApplication app = (EfeiApplication) getApplication();
 				app.addTemporary(Constants.TMP_TEACHER, teacher);
+				Intent intent = new Intent(ConfirmAddTeacherActivity.this, ClassSelectorActivity.class);
+				intent.putExtra(ClassSelectorActivity.KEY_WHO_START_ME, ConfirmAddTeacherActivity.class.getSimpleName());
 				EfeiApplication.switchToActivity(ClassSelectorActivity.class);
 			}
 		});
@@ -71,6 +82,10 @@ public class ConfirmAddTeacherActivity extends ActionBarActivity
 		if (android.R.id.home == item.getItemId())
 		{
 			finish();
+			Intent intent = new Intent(ConfirmAddTeacherActivity.this, MainActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

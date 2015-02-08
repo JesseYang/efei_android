@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.efei.android.R;
 import com.efei.android.module.Constants;
+import com.efei.android.module.MainActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.JobAsyncTask;
@@ -28,6 +29,8 @@ import com.efei.lib.android.utils.CollectionUtils;
 
 public class ClassSelectorActivity extends ActionBarActivity
 {
+	public static final String KEY_WHO_START_ME = "key_who_start_me";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -41,7 +44,18 @@ public class ClassSelectorActivity extends ActionBarActivity
 		final Teacher teacher = app.removeTemporary(Constants.TMP_TEACHER);
 		if (CollectionUtils.isEmpty(teacher.getClasses()) || teacher.getClasses().size() < 2)
 		{
-			finish();
+			final Classs classs = CollectionUtils.isEmpty(teacher.getClasses()) ? null : teacher.getClasses().get(0);
+			Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_AddTeacher(teacher, classs),
+					new IUICallback.Adapter<BaseRespBean>()
+					{
+						@Override
+						public void onPostExecute(BaseRespBean result)
+						{
+							Toast.makeText(ClassSelectorActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+							finish();
+							forwardDestination();
+						}
+					}));
 			return;
 		}
 
@@ -59,15 +73,26 @@ public class ClassSelectorActivity extends ActionBarActivity
 							public void onPostExecute(BaseRespBean result)
 							{
 								Toast.makeText(ClassSelectorActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
-								Intent intent = new Intent(ClassSelectorActivity.this, MyTeacherActivity.class);
-								intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-								startActivity(intent);
 								finish();
+								forwardDestination();
 							}
+
 						}));
 			}
 		});
+	}
+
+	private void forwardDestination()
+	{
+		String whoStartMe = getIntent().getStringExtra(KEY_WHO_START_ME);
+		if (TeacherSearchActivity.class.getSimpleName().equals(whoStartMe))
+		{
+			Intent intent = new Intent(ClassSelectorActivity.this, MyTeacherActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		} else
+			EfeiApplication.switchToActivity(MainActivity.class);
 	}
 
 	@Override

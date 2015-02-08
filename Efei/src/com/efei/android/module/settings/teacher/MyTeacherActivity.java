@@ -1,9 +1,7 @@
 package com.efei.android.module.settings.teacher;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import android.os.Bundle;
 import android.support.v4.view.MenuCompat;
@@ -30,8 +28,6 @@ import com.efei.lib.android.utils.CollectionUtils;
 
 public class MyTeacherActivity extends ActionBarActivity
 {
-	public static Map<String, Teacher> MY_TEACHERS = new HashMap<String, Teacher>();
-
 	private TeacherAdapter adapter;
 	private ListView lvContent;
 	private View progressBar;

@@ -29,6 +29,7 @@ import com.efei.android.module.MainActivity;
 import com.efei.android.module.edit.BizRunner_SaveQue;
 import com.efei.android.module.scan.BizRunner_SaveQues;
 import com.efei.android.module.scan.ScanActivity;
+import com.efei.android.module.settings.teacher.ConfirmAddTeacherActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback;
@@ -38,6 +39,7 @@ import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.bean.persistance.QuestionOrNote2;
 import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddBatchQues;
+import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddSingleQue;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
 import com.efei.lib.android.utils.TextUtils;
@@ -245,12 +247,8 @@ public class LoginActivity extends ActionBarActivity
 				{
 					public void onPostExecute(RespAddBatchQues result)
 					{
-						if (result.isSuccess())
-						{
-							finish();
-							EfeiApplication.switchToActivity(MainActivity.class);
-						} else
-							Toast.makeText(getApplicationContext(), "±£¥Ê ß∞‹£°", Toast.LENGTH_SHORT).show();
+						finish();
+						EfeiApplication.switchToActivity(MainActivity.class);
 					};
 				}));
 				return;
@@ -264,12 +262,17 @@ public class LoginActivity extends ActionBarActivity
 				{
 					public void onPostExecute(BaseRespBean result)
 					{
-						if (result.isSuccess())
-						{
-							finish();
+						finish();
+						RespAddSingleQue resp = (RespAddSingleQue) result;
+						if (null == resp.getTeacher())
 							EfeiApplication.switchToActivity(MainActivity.class);
-						} else
-							Toast.makeText(getApplicationContext(), "±£¥Ê ß∞‹£°", Toast.LENGTH_SHORT).show();
+						else
+						{
+							EfeiApplication app = (EfeiApplication) getApplication();
+							app.addTemporary(Constants.TMP_TEACHER, resp.getTeacher());
+							Intent intent = new Intent(LoginActivity.this, ConfirmAddTeacherActivity.class);
+							startActivity(intent);
+						}
 					};
 				}));
 				return;
