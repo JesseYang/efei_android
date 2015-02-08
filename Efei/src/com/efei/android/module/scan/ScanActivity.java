@@ -23,13 +23,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.efei.android.R;
 import com.efei.android.module.Constants;
 import com.efei.android.module.MainActivity;
 import com.efei.android.module.account.LoginActivity;
 import com.efei.android.module.edit.QuestiontEditActivity;
+import com.efei.android.module.settings.teacher.ConfirmAddTeacherActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IBusinessCallback;
 import com.efei.lib.android.async.IJob;
@@ -185,7 +185,7 @@ public class ScanActivity extends Activity
 					EfeiApplication app = (EfeiApplication) getApplication();
 					app.addTemporary(Constants.TMP_QUE_LIST, queOrNotes);
 					Intent intent = new Intent(ScanActivity.this, LoginActivity.class);
-					intent.putExtra(Constants.LOGIN_FOR_SAVE_QUE_LIST, true);
+					intent.putExtra(Constants.KEY_FOR_SAVE_QUE_LIST, true);
 					startActivity(intent);
 					finish();
 					return;
@@ -196,12 +196,17 @@ public class ScanActivity extends Activity
 							{
 								public void onPostExecute(RespAddBatchQues result)
 								{
-									if (result.isSuccess())
+									finish();
+									if (CollectionUtils.isEmpty(result.getTeachers()))
+										EfeiApplication.switchToActivity(MainActivity.class);
+									else
 									{
-										finish();
-										startActivity(new Intent(ScanActivity.this, MainActivity.class));
-									} else
-										Toast.makeText(getApplicationContext(), "±£¥Ê ß∞‹£°", Toast.LENGTH_SHORT).show();
+										EfeiApplication app = (EfeiApplication) getApplication();
+										app.addTemporary(Constants.TMP_TEACHER_LIST, result.getTeachers());
+										Intent intent = new Intent(ScanActivity.this, ConfirmAddTeacherActivity.class);
+										intent.putExtra(Constants.KEY_FOR_SAVE_QUE_LIST, true);
+										startActivity(intent);
+									}
 								};
 							}));
 				}

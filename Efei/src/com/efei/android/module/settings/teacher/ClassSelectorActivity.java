@@ -91,6 +91,11 @@ public class ClassSelectorActivity extends ActionBarActivity
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
+		} else if (ConfirmAddTeacherActivity.class.getSimpleName().equals(whoStartMe))
+		{
+			Intent intent = new Intent(this, ConfirmAddTeacherActivity.class);
+			intent.putExtra(Constants.KEY_FOR_SAVE_QUE_LIST, true);
+			startActivity(intent);
 		} else
 			EfeiApplication.switchToActivity(MainActivity.class);
 	}

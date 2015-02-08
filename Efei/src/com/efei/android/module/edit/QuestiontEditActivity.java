@@ -130,7 +130,7 @@ public class QuestiontEditActivity extends ActionBarActivity
 				EfeiApplication app = (EfeiApplication) getApplication();
 				app.addTemporary(Constants.TMP_QUE, queOrNote);
 				Intent intent = new Intent(QuestiontEditActivity.this, LoginActivity.class);
-				intent.putExtra(Constants.LOGIN_FOR_SAVE_QUE, true);
+				intent.putExtra(Constants.KEY_FOR_SAVE_QUE, true);
 				startActivity(intent);
 				finish();
 				return true;
@@ -164,6 +164,7 @@ public class QuestiontEditActivity extends ActionBarActivity
 					EfeiApplication app = (EfeiApplication) getApplication();
 					app.addTemporary(Constants.TMP_TEACHER, resp.getTeacher());
 					Intent intent = new Intent(QuestiontEditActivity.this, ConfirmAddTeacherActivity.class);
+					intent.putExtra(Constants.KEY_FOR_SAVE_QUE, true);
 					startActivity(intent);
 				}
 			} else

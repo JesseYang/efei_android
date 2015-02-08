@@ -42,6 +42,7 @@ import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddBatchQue
 import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddSingleQue;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
+import com.efei.lib.android.utils.CollectionUtils;
 import com.efei.lib.android.utils.TextUtils;
 
 /**
@@ -239,7 +240,7 @@ public class LoginActivity extends ActionBarActivity
 			Intent intent = getIntent();
 			EfeiApplication app = (EfeiApplication) getApplication();
 
-			boolean bForSaveList = intent.getBooleanExtra(Constants.LOGIN_FOR_SAVE_QUE_LIST, false);
+			boolean bForSaveList = intent.getBooleanExtra(Constants.KEY_FOR_SAVE_QUE_LIST, false);
 			if (bForSaveList)
 			{
 				Executor.INSTANCE.execute(new JobAsyncTask<RespAddBatchQues>(new BizRunner_SaveQues((List<QuestionOrNote2>) app
@@ -248,13 +249,22 @@ public class LoginActivity extends ActionBarActivity
 					public void onPostExecute(RespAddBatchQues result)
 					{
 						finish();
-						EfeiApplication.switchToActivity(MainActivity.class);
+						if (CollectionUtils.isEmpty(result.getTeachers()))
+							EfeiApplication.switchToActivity(MainActivity.class);
+						else
+						{
+							EfeiApplication app = (EfeiApplication) getApplication();
+							app.addTemporary(Constants.TMP_TEACHER_LIST, result.getTeachers());
+							Intent intent = new Intent(LoginActivity.this, ConfirmAddTeacherActivity.class);
+							intent.putExtra(Constants.KEY_FOR_SAVE_QUE_LIST, true);
+							startActivity(intent);
+						}
 					};
 				}));
 				return;
 			}
 
-			boolean bForSaveQue = intent.getBooleanExtra(Constants.LOGIN_FOR_SAVE_QUE, false);
+			boolean bForSaveQue = intent.getBooleanExtra(Constants.KEY_FOR_SAVE_QUE, false);
 			if (bForSaveQue)
 			{
 				Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_SaveQue(((QuestionOrNote2) app
@@ -271,6 +281,7 @@ public class LoginActivity extends ActionBarActivity
 							EfeiApplication app = (EfeiApplication) getApplication();
 							app.addTemporary(Constants.TMP_TEACHER, resp.getTeacher());
 							Intent intent = new Intent(LoginActivity.this, ConfirmAddTeacherActivity.class);
+							intent.putExtra(Constants.KEY_FOR_SAVE_QUE, true);
 							startActivity(intent);
 						}
 					};
