@@ -1,14 +1,14 @@
 package com.efei.android;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.efei.android.module.account.LoginActivity;
 
-public class SplashActivity extends ActionBarActivity
+public class SplashActivity extends Activity
 {
 
 	@Override
@@ -49,6 +49,7 @@ public class SplashActivity extends ActionBarActivity
 		{
 			try
 			{
+				Thread.sleep(1000);
 				Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 				startActivity(intent);
 				finish();

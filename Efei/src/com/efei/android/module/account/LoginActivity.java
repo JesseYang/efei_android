@@ -126,6 +126,15 @@ public class LoginActivity extends ActionBarActivity
 				startActivity(new Intent(LoginActivity.this, ScanActivity.class));
 			}
 		});
+
+		findViewById(R.id.tv_forget_pwd).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				EfeiApplication.switchToActivity(ForgetPwdActivity.class);
+			}
+		});
 	}
 
 	/**

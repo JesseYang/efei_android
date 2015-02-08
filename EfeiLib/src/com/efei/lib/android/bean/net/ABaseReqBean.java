@@ -14,7 +14,7 @@ public abstract class ABaseReqBean
 
 	public ABaseReqBean()
 	{
-		this.client = "test_client_android_version";
+		this.client = "android_{" + android.os.Build.VERSION.SDK_INT + "}";
 		Account defaultUser = ILoginService.Factory.getService().getDefaultUser();
 		this.auth_key = null == defaultUser ? null : defaultUser.getAuthKey();
 	}
