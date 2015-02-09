@@ -26,7 +26,7 @@
         android:layout_width="224dp"
         android:layout_height="35dp"
         android:layout_gravity="center"
-        android:background="@color/action_bar_blue"
+        android:background="@drawable/btn_round_blue"
         android:gravity="center"
         android:text="更换手机号"
         android:textColor="@android:color/white"

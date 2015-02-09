@@ -64,6 +64,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="退出"
+            android:textColor="@android:color/white"
             android:textSize="16dp" />
     </FrameLayout>
 

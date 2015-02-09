@@ -20,7 +20,7 @@
     <application
         android:name="com.efei.lib.android.common.EfeiApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity

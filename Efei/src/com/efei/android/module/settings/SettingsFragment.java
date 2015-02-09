@@ -65,9 +65,8 @@ public class SettingsFragment extends Fragment
 			}
 		});
 
-		view.findViewById(R.id.ll_about_efei).setOnClickListener(new OnClickListener()
+		view.findViewById(R.id.ll_feedback).setOnClickListener(new OnClickListener()
 		{
-
 			@Override
 			public void onClick(View v)
 			{

@@ -52,10 +52,10 @@ public class ClassSelectorActivity extends ActionBarActivity
 						public void onPostExecute(BaseRespBean result)
 						{
 							Toast.makeText(ClassSelectorActivity.this, "Ìí¼Ó³É¹¦", Toast.LENGTH_SHORT).show();
-							finish();
 							forwardDestination();
 						}
 					}));
+			finish();
 			return;
 		}
 
@@ -145,7 +145,7 @@ public class ClassSelectorActivity extends ActionBarActivity
 			{
 				convertView = View.inflate(parent.getContext(), R.layout.item_selector, null);
 				TextView itemName = (TextView) convertView.findViewById(R.id.tv_item_name);
-				itemName.setTag(itemName);
+				convertView.setTag(itemName);
 			}
 			TextView tv = (TextView) convertView.getTag();
 			tv.setText(classes.get(position).getName());
