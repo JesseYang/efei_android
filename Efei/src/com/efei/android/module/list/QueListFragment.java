@@ -38,9 +38,14 @@ import com.efei.lib.android.bean.persistance.QuestionOrNote2;
 import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService.RespDeletedOrPuttedNotes;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.exception.EfeiException;
+import com.efei.lib.android.utils.CollectionUtils;
+import com.efei.lib.android.utils.TextUtils;
 
 public class QueListFragment extends Fragment
 {
+	static final int REQUEST_FOR_SELECTOR = 1;
+	static final int REQUEST_FOR_QUE_SEARCH_KEYWORD = 2;
+
 	private QueListAdapter adapter;
 
 	private View viewContainer;
@@ -49,10 +54,20 @@ public class QueListFragment extends Fragment
 
 	private SelectorResult selectorResult;
 
+	private String key_word;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
 		getActivity().findViewById(R.id.bar_action_quelist).setVisibility(View.VISIBLE);
+		getActivity().findViewById(R.id.actv_search).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				startActivityForResult(new Intent(getActivity(), QueSearchActivity.class), REQUEST_FOR_QUE_SEARCH_KEYWORD);
+			}
+		});
 		getActivity().findViewById(R.id.bar_action_settings).setVisibility(View.GONE);
 		viewContainer = View.inflate(getActivity(), R.layout.fragment_que, null);
 		setupSelectorBar(viewContainer);
@@ -132,7 +147,10 @@ public class QueListFragment extends Fragment
 	{
 		if (Activity.RESULT_OK != resultCode)
 			return;
-		selectorResult = (SelectorResult) data.getSerializableExtra(SelectorActivity.KEY_RESULT);
+		if (REQUEST_FOR_SELECTOR == requestCode)
+			selectorResult = (SelectorResult) data.getSerializableExtra(SelectorActivity.KEY_RESULT);
+		else if (REQUEST_FOR_QUE_SEARCH_KEYWORD == requestCode)
+			key_word = data.getStringExtra(QueSearchActivity.KEY_SEARCH_KEY_WORD);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -141,6 +159,7 @@ public class QueListFragment extends Fragment
 		public void onPostExecute(List<QuestionOrNote2> result)
 		{
 			filterResultByTypeIfNeed(result);
+			filterResultByKeyWordIfNeed(result);
 			viewContainer.findViewById(R.id.pb_progress).setVisibility(View.GONE);
 			viewContainer.findViewById(R.id.lv_que_or_note).setVisibility(View.VISIBLE);
 			adapter.content.clear();
@@ -148,6 +167,47 @@ public class QueListFragment extends Fragment
 			adapter.notifyDataSetChanged();
 			currentJob = null;
 		};
+
+		private void filterResultByKeyWordIfNeed(List<QuestionOrNote2> result)
+		{
+			if (TextUtils.isBlank(key_word))
+				return;
+			Iterator<QuestionOrNote2> iterator = result.iterator();
+			while (iterator.hasNext())
+			{
+				QuestionOrNote2 queOrNote = iterator.next();
+				String tmpContent = "";
+				List<String> contents = queOrNote.metaData.getContent();
+				if (!CollectionUtils.isEmpty(contents))
+				{
+					for (String content : contents)
+						tmpContent += content;
+					if (tmpContent.contains(key_word))
+						continue;
+				}
+
+				tmpContent = "";
+				List<String> items = queOrNote.metaData.getItems();
+				if (!CollectionUtils.isEmpty(items))
+				{
+					for (String item : items)
+						tmpContent += item;
+					if (tmpContent.contains(key_word))
+						continue;
+				}
+
+				String summary = queOrNote.metaData.getSummary();
+				if (!TextUtils.isEmpty(summary))
+				{
+					if (summary.contains(key_word))
+						continue;
+				}
+
+				iterator.remove();
+			}
+
+			key_word = null;
+		}
 
 		private void filterResultByTypeIfNeed(List<QuestionOrNote2> result)
 		{

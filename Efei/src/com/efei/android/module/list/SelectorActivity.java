@@ -105,7 +105,7 @@ public class SelectorActivity extends ActionBarActivity
 	{
 		Intent intent = new Intent(source.getActivity(), SelectorActivity.class);
 		intent.putExtra(KEY_TYPE, type);
-		source.startActivityForResult(intent, 1);
+		source.startActivityForResult(intent, QueListFragment.REQUEST_FOR_SELECTOR);
 	}
 
 	private static class MyAdapter extends BaseAdapter
