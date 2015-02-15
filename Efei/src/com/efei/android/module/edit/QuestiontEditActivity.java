@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -19,6 +20,8 @@ import com.efei.android.module.Constants;
 import com.efei.android.module.MainActivity;
 import com.efei.android.module.account.LoginActivity;
 import com.efei.android.module.edit.TagTopicsEditActivity.EditContent;
+import com.efei.android.module.list.BizRunner_DeleteQue;
+import com.efei.android.module.list.ExportActivity;
 import com.efei.android.module.settings.teacher.ConfirmAddTeacherActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
@@ -27,6 +30,7 @@ import com.efei.lib.android.async.JobAsyncTask;
 import com.efei.lib.android.bean.net.BaseRespBean;
 import com.efei.lib.android.bean.persistance.Account;
 import com.efei.lib.android.bean.persistance.QuestionOrNote2;
+import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService.RespDeletedOrPuttedNotes;
 import com.efei.lib.android.biz_remote_interface.IQueScanService.RespAddSingleQue;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
@@ -43,7 +47,7 @@ public class QuestiontEditActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setTitle("错题记录");
+		actionBar.setTitle("错题本");
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_edit);
 	}
@@ -71,15 +75,43 @@ public class QuestiontEditActivity extends ActionBarActivity
 			etSummary.setText(queOrNote.metaData.getSummary());
 		findViewById(R.id.tv_show_ans).setOnClickListener(new OnClickListener()
 		{
+			private boolean initClick = true;
+
 			@Override
 			public void onClick(View v)
 			{
+				final TextView tvAns = (TextView) findViewById(R.id.tv_ans);
+				final TextView btnAns = (TextView) v;
+
+				if (TextUtils.isBlank(queOrNote.answer))
+				{
+					findViewById(R.id.ll_ans_container).setVisibility(View.GONE);
+					tvAns.setText("");
+					btnAns.setCompoundDrawablesWithIntrinsicBounds(R.drawable.visible, 0, 0, 0);
+					if (initClick)
+						initClick = false;
+					else
+						Toast.makeText(QuestiontEditActivity.this, "答案未上传！", Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				v.setSelected(!v.isSelected());
-				CharSequence showTxt = v.isSelected() ? queOrNote.answer : "";
-				TextView tvAns = (TextView) findViewById(R.id.tv_ans);
-				tvAns.setText(showTxt);
+
+				if (v.isSelected())
+				{
+					findViewById(R.id.ll_ans_container).setVisibility(View.VISIBLE);
+					tvAns.setText(queOrNote.answer);
+					btnAns.setCompoundDrawablesWithIntrinsicBounds(R.drawable.visible, 0, 0, 0);
+				} else
+				{
+					findViewById(R.id.ll_ans_container).setVisibility(View.GONE);
+					tvAns.setText("");
+					btnAns.setCompoundDrawablesWithIntrinsicBounds(R.drawable.invisible, 0, 0, 0);
+				}
 			}
 		});
+
+		findViewById(R.id.tv_show_ans).performClick();
 
 		findViewById(R.id.ll_tag_bar).setOnClickListener(new OnClickListener()
 		{
@@ -109,9 +141,67 @@ public class QuestiontEditActivity extends ActionBarActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		MenuItem item = menu.add(Menu.NONE, R.id.menu_save, Menu.NONE, "保存");
-		MenuCompat.setShowAsAction(item, MenuItem.SHOW_AS_ACTION_ALWAYS);
+		final MenuItem itemSave = menu.add(Menu.NONE, R.id.menu_save, Menu.NONE, "保存");
+		MenuCompat.setShowAsAction(itemSave, MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		final MenuItem itemDelete = menu.add("\t删除");
+		itemDelete.setIcon(R.drawable.delete).setOnMenuItemClickListener(new OnMenuItemClickListener()
+		{
+			@Override
+			public boolean onMenuItemClick(MenuItem item)
+			{
+				Executor.INSTANCE.execute(new JobAsyncTask<RespDeletedOrPuttedNotes>(new BizRunner_DeleteQue(queOrNote.metaData.get_id()),
+						new IUICallback.Adapter<RespDeletedOrPuttedNotes>()
+						{
+							@Override
+							public void onPostExecute(RespDeletedOrPuttedNotes result)
+							{
+								Toast.makeText(QuestiontEditActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+								finish();
+							}
+						}));
+				return true;
+			}
+		});
+		MenuCompat.setShowAsAction(itemDelete, MenuItem.SHOW_AS_ACTION_NEVER);
+
+		final MenuItem itemExport = menu.add("\t导出");
+		itemExport.setIcon(R.drawable.export).setOnMenuItemClickListener(new OnMenuItemClickListener()
+		{
+			@Override
+			public boolean onMenuItemClick(MenuItem item)
+			{
+				Intent intent = new Intent(QuestiontEditActivity.this, ExportActivity.class);
+				intent.putExtra(ExportActivity.KEY_EXPORT_QUE_IDS, new String[]
+				{ queOrNote.metaData.get_id() });
+				startActivity(intent);
+				return true;
+			}
+		});
+		MenuCompat.setShowAsAction(itemExport, MenuItem.SHOW_AS_ACTION_NEVER);
+
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onMenuOpened(int featureId, Menu menu)
+	{
+		// if (featureId == Window.FEATURE_ACTION_BAR && menu != null)
+		// {
+		// if (menu.getClass().getSimpleName().equals("MenuBuilder"))
+		// {
+		// try
+		// {
+		// Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+		// m.setAccessible(true);
+		// m.invoke(menu, true);
+		// } catch (Exception e)
+		// {
+		// e.printStackTrace();
+		// }
+		// }
+		// }
+		return super.onMenuOpened(featureId, menu);
 	}
 
 	@Override
@@ -171,9 +261,5 @@ public class QuestiontEditActivity extends ActionBarActivity
 				EfeiApplication.switchToActivity(MainActivity.class);
 		};
 
-		public void onError(Throwable e)
-		{
-			Toast.makeText(getApplicationContext(), "保存失败！", Toast.LENGTH_SHORT).show();
-		};
 	};
 }

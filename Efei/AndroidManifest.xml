@@ -128,6 +128,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoAcionBar" >
         </activity>
+        <activity
+            android:name="com.efei.android.module.list.ExportActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.EfeiActionBar" >
+        </activity>
     </application>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->

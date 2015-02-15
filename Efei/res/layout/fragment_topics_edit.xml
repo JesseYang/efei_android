@@ -5,6 +5,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:gravity="center"
@@ -27,12 +28,14 @@
             android:textColor="@android:color/black"
             android:textCursorDrawable="@null" />
 
-        <Button
+        <TextView
+            android:gravity="center"
+            android:layout_gravity="center"
             android:id="@+id/btn_add"
             android:layout_width="60dp"
             android:layout_height="23dp"
             android:layout_marginRight="10dp"
-            android:background="#ffeff3f4"
+            android:background="@drawable/btn_round_gray"
             android:text="添加"
             android:textSize="15dp" />
     </LinearLayout>
@@ -42,21 +45,29 @@
         android:layout_height="23dp"
         android:background="#ffeff3f4" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/white"
-        android:text="已添加的知识点："
-        android:textSize="13dp" />
-
-    <ListView
-        android:id="@+id/lv"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@android:color/white"
-        android:dividerHeight="3dp" >
-    </ListView>
+        android:background="@android:color/white"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginLeft="15dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:text="已添加的知识点："
+            android:textSize="15dp" />
+
+        <ListView
+            android:id="@+id/lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:divider="@android:color/white"
+            android:dividerHeight="3dp" >
+        </ListView>
+    </LinearLayout>
 
 </LinearLayout>

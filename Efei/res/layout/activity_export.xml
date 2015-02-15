@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eff3f4"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/white" >
+
+        <TextView
+            android:id="@+id/tv_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="导出选中的3道题目"
+            android:textSize="18dp" />
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@android:color/transparent" />
+
+    <include
+        android:id="@+id/contains_ans"
+        layout="@layout/item_export_optionals" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/transparent" />
+
+    <include
+        android:id="@+id/contains_note"
+        layout="@layout/item_export_optionals" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@android:color/transparent" />
+
+    <include
+        android:id="@+id/export_by_download"
+        layout="@layout/item_export_optionals" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/transparent" />
+
+    <include
+        android:id="@+id/export_by_email"
+        layout="@layout/item_export_optionals" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/icon_account" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent" />
+
+        <AutoCompleteTextView
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@drawable/edit_frame"
+            android:gravity="center_vertical"
+            android:hint="请输入导出文档的邮箱地址"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:textCursorDrawable="@null" />
+    </LinearLayout>
+
+</LinearLayout>

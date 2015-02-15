@@ -127,7 +127,7 @@ public final class NetUtils
 	{
 		final int code = response.getStatusLine().getStatusCode();
 		if (200 != code)
-			throw new EfeiException("获取数据失败：" + code);
+			throw new KnownEfeiExcepiton(code);
 		InputStream is = response.getEntity().getContent();
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		byte[] buffer = new byte[512];
@@ -159,5 +159,25 @@ public final class NetUtils
 		get.setHeader("Accept", "application/json");
 		HttpResponse response = client.execute(get);
 		return readResponseAsString(response);
+	}
+
+	public static InputStream getAsStream(String strAPIUrl, Map<String, String> params) throws ClientProtocolException, IOException
+	{
+		params = injectAuthKey(params);
+		final String url = encodeGet_DeleteUrl(strAPIUrl, params);
+		HttpClient client = newClient();
+		HttpGet get = new HttpGet(url);
+		get.setHeader("Content-Type", "application/json");
+		get.setHeader("Accept", "application/json");
+		HttpResponse response = client.execute(get);
+		return readResponseAsStream(response);
+	}
+
+	private static InputStream readResponseAsStream(HttpResponse response) throws IOException
+	{
+		final int code = response.getStatusLine().getStatusCode();
+		if (200 != code)
+			throw new KnownEfeiExcepiton(code);
+		return response.getEntity().getContent();
 	}
 }

@@ -2,21 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffeff3f4"
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
     <AutoCompleteTextView
         android:id="@+id/actv_feedback"
-        android:layout_width="224dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="23dp"
+        android:layout_marginRight="23dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/edit_frame"
-        android:gravity="center_vertical"
+        android:gravity="top"
         android:hint="请留下您的宝贵意见"
-        android:inputType="textPhonetic"
-        android:maxLines="1"
+        android:inputType="textMultiLine"
+        android:lines="6"
+        android:paddingBottom="5dp"
         android:paddingLeft="10dp"
-        android:singleLine="true"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
         android:textColor="@android:color/black"
         android:textCursorDrawable="@null" />
 

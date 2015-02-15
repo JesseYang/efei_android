@@ -7,8 +7,10 @@
     android:orientation="horizontal" >
 
     <TextView
+        android:id="@+id/tv_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:focusable="true"
@@ -19,7 +21,6 @@
         android:textSize="19dp" />
 
     <AutoCompleteTextView
-        android:focusable="false"
         android:id="@+id/actv_search"
         android:layout_width="0dp"
         android:layout_height="30dp"
@@ -28,22 +29,25 @@
         android:background="#ff2a6af2"
         android:drawableLeft="@drawable/icon_search"
         android:drawablePadding="10dp"
+        android:focusable="false"
         android:gravity="center_vertical"
         android:inputType="textEmailAddress"
         android:maxLines="1"
         android:paddingLeft="10dp"
         android:singleLine="true"
-        android:textColor="@android:color/black"
-        android:textCursorDrawable="@null" />
+        android:textColor="@android:color/white"
+        android:textCursorDrawable="@null"
+        android:textSize="13dp" />
 
     <TextView
+        android:id="@+id/tv_select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:drawableTop="@drawable/icon_select"
-        android:gravity="bottom"
+        android:gravity="center"
         android:text="选择"
         android:textColor="@android:color/white"
         android:textSize="10dp" />

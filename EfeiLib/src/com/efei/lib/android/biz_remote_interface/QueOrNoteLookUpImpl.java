@@ -76,4 +76,16 @@ class QueOrNoteLookUpImpl extends BaseImpl implements IQueOrNoteLookUpService
 		return NetUtils.put(API_URL, req, RespDeletedOrPuttedNotes.class);
 	}
 
+	@Override
+	public RespExport get0student$notes$export(boolean has_answer, boolean has_note, String note_id_str, String email)
+	{
+		final String API_URL = "student/notes/export";
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("has_answer", has_answer + "");
+		params.put("has_note", has_note + "");
+		params.put("note_id_str", note_id_str);
+		params.put("email", email);
+		return get(API_URL, params, RespExport.class);
+	}
+
 }

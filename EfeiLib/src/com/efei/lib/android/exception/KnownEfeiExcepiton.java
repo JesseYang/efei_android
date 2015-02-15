@@ -16,7 +16,9 @@ public class KnownEfeiExcepiton extends EfeiException
 		EXPIRED(-7, "session过期"), //
 		TEACHER_NOT_EXIST(-9, "该教师不存在"), //
 		QUESTION_NOT_EXIST(-10, "该题目不存在"), //
-		NOTE_NOT_EXIST(-11, "该笔记不存在");//
+		NOTE_NOT_EXIST(-11, "该笔记不存在"), //
+
+		SERVER_ERROR(500, "服务器故障");//
 
 		private final int codeError;
 		public final String desc;

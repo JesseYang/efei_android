@@ -1,7 +1,8 @@
 package com.efei.android.module.scan;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.sourceforge.zbar.Config;
 import net.sourceforge.zbar.Image;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.efei.android.R;
 import com.efei.android.module.Constants;
@@ -138,7 +140,9 @@ public class ScanActivity extends Activity
 					QuestionOrNote2 queOrNote = (QuestionOrNote2) findViewById(R.id.tv_question_scan_result).getTag();
 					if (null == queOrNote)
 						return;
-					queOrNotes.add(queOrNote);
+					if (queOrNotes.containsKey(queOrNote.metaData.get_id()))
+						Toast.makeText(ScanActivity.this, "该题已经添加！", Toast.LENGTH_SHORT).show();
+					queOrNotes.put(queOrNote.metaData.get_id(), queOrNote);
 
 					TextView tvQueNum = (TextView) findViewById(R.id.tv_scanned_que_num);
 					tvQueNum.setText("已扫描：" + queOrNotes.size() + "道题");
@@ -191,24 +195,24 @@ public class ScanActivity extends Activity
 					return;
 				} else
 				{
-					Executor.INSTANCE.execute(new JobAsyncTask<RespAddBatchQues>(new BizRunner_SaveQues(queOrNotes),
-							new IUICallback.Adapter<RespAddBatchQues>()
+					Executor.INSTANCE.execute(new JobAsyncTask<RespAddBatchQues>(new BizRunner_SaveQues(new ArrayList<QuestionOrNote2>(
+							queOrNotes.values())), new IUICallback.Adapter<RespAddBatchQues>()
+					{
+						public void onPostExecute(RespAddBatchQues result)
+						{
+							finish();
+							if (CollectionUtils.isEmpty(result.getTeachers()))
+								EfeiApplication.switchToActivity(MainActivity.class);
+							else
 							{
-								public void onPostExecute(RespAddBatchQues result)
-								{
-									finish();
-									if (CollectionUtils.isEmpty(result.getTeachers()))
-										EfeiApplication.switchToActivity(MainActivity.class);
-									else
-									{
-										EfeiApplication app = (EfeiApplication) getApplication();
-										app.addTemporary(Constants.TMP_TEACHER_LIST, result.getTeachers());
-										Intent intent = new Intent(ScanActivity.this, ConfirmAddTeacherActivity.class);
-										intent.putExtra(Constants.KEY_FOR_SAVE_QUE_LIST, true);
-										startActivity(intent);
-									}
-								};
-							}));
+								EfeiApplication app = (EfeiApplication) getApplication();
+								app.addTemporary(Constants.TMP_TEACHER_LIST, result.getTeachers());
+								Intent intent = new Intent(ScanActivity.this, ConfirmAddTeacherActivity.class);
+								intent.putExtra(Constants.KEY_FOR_SAVE_QUE_LIST, true);
+								startActivity(intent);
+							}
+						};
+					}));
 				}
 			}
 		});
@@ -245,7 +249,7 @@ public class ScanActivity extends Activity
 		});
 	}
 
-	private List<QuestionOrNote2> queOrNotes = new ArrayList<QuestionOrNote2>();
+	private Map<String, QuestionOrNote2> queOrNotes = new HashMap<String, QuestionOrNote2>();
 
 	public void onPause()
 	{

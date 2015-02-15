@@ -5,7 +5,7 @@ import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService;
 import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService.RespDeletedOrPuttedNotes;
 
-final class BizRunner_DeleteQue implements IBusinessCallback<RespDeletedOrPuttedNotes>
+public final class BizRunner_DeleteQue implements IBusinessCallback<RespDeletedOrPuttedNotes>
 {
 	private String note_id;
 

@@ -1,13 +1,18 @@
 package com.efei.lib.android.utils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.CharacterStyle;
+import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
 import android.text.style.SubscriptSpan;
@@ -72,6 +77,7 @@ public final class UiUtils
 
 		for (CharacterStyleInfo info : csis)
 			ss.setSpan(info.imgSpan, info.posStart, info.posEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		// ss.setSpan(new SuperscriptSpanAdjuster(0.0), 0, ss.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 		return ss;
 	}
 
@@ -115,7 +121,8 @@ public final class UiUtils
 		BitmapDrawable bmpDrawable = new BitmapDrawable(EfeiApplication.getContext().getResources(), bmp);
 		final float fRadio = 0.8f;
 		bmpDrawable.setBounds(0, 0, (int) (bmp.getWidth() * fRadio), (int) (bmp.getHeight() * fRadio));
-		ImageSpan img = new ImageSpan(bmpDrawable, ImageSpan.ALIGN_BOTTOM);
+		// ImageSpan img = new ImageSpan(bmpDrawable, ImageSpan.ALIGN_BOTTOM);
+		ImageSpan img = new CenteredImageSpan(bmpDrawable);
 		return new CharacterStyleInfo(imgPos, img);
 	}
 
@@ -139,6 +146,74 @@ public final class UiUtils
 			this.imgSpan = imgSpan;
 		}
 
+	}
+
+	static class CenteredImageSpan extends ImageSpan
+	{
+		// Extra variables used to redefine the Font Metrics when an ImageSpan is added
+		private int initialDescent = 0;
+		private int extraSpace = 0;
+
+		public CenteredImageSpan(final Drawable drawable)
+		{
+			this(drawable, DynamicDrawableSpan.ALIGN_BOTTOM);
+		}
+
+		public CenteredImageSpan(final Drawable drawable, final int verticalAlignment)
+		{
+			super(drawable, verticalAlignment);
+		}
+
+		//
+		// Following methods are overriden from DynamicDrawableSpan.
+		//
+
+		// Method used to redefined the Font Metrics when an ImageSpan is added
+		@Override
+		public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm)
+		{
+			Drawable d = getCachedDrawable();
+			Rect rect = d.getBounds();
+
+			if (fm != null)
+			{
+				// Centers the text with the ImageSpan
+				if (rect.bottom - (fm.descent - fm.ascent) > 0)
+				{
+					// Stores the initial descent and computes the margin available
+					initialDescent = fm.descent;
+					extraSpace = rect.bottom - (fm.descent - fm.ascent);
+				}
+
+				fm.descent = extraSpace / 2 + initialDescent;
+				fm.bottom = fm.descent;
+
+				fm.ascent = -rect.bottom + fm.descent;
+				fm.top = fm.ascent;
+			}
+
+			return rect.right;
+		}
+
+		// Redefined locally because it is a private member from DynamicDrawableSpan
+		private Drawable getCachedDrawable()
+		{
+			WeakReference<Drawable> wr = mDrawableRef;
+			Drawable d = null;
+
+			if (wr != null)
+				d = wr.get();
+
+			if (d == null)
+			{
+				d = getDrawable();
+				mDrawableRef = new WeakReference<Drawable>(d);
+			}
+
+			return d;
+		}
+
+		private WeakReference<Drawable> mDrawableRef;
 	}
 
 }

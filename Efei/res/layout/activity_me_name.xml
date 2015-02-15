@@ -23,14 +23,19 @@
 
     <AutoCompleteTextView
         android:id="@+id/actv_name"
-        android:layout_width="224dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:background="@drawable/edit_frame"
         android:gravity="center_vertical"
         android:hint="请填写真实姓名"
         android:inputType="textPhonetic"
         android:maxLines="1"
+        android:paddingBottom="5dp"
         android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
         android:singleLine="true"
         android:textColor="@android:color/black"
         android:textCursorDrawable="@null" />

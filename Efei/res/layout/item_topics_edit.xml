@@ -10,13 +10,14 @@
         android:id="@+id/tv_topic"
         android:layout_width="wrap_content"
         android:layout_height="28dp"
-        android:background="#ff4388ff"
+        android:background="@drawable/btn_round_blue"
         android:drawablePadding="10dp"
         android:drawableRight="@drawable/topic_delete"
         android:gravity="center"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="测试"
+        android:textColor="@android:color/white"
         android:textSize="15dp" />
 
     <View

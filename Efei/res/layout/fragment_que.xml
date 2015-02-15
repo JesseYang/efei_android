@@ -4,10 +4,59 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        layout="@layout/bar_category" />
+        android:layout_height="35dp" >
+
+        <include
+            android:id="@+id/bar_category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/bar_category" />
+
+        <LinearLayout
+            android:id="@+id/bar_select_all"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <FrameLayout
+                    android:id="@+id/fl_select"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent" >
+
+                    <ImageView
+                        android:id="@+id/iv_check"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/btn_circle_nike"
+                        android:clickable="true" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="全选"
+                    android:textColor="#ffd6d9de"
+                    android:textSize="13dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#ffaaaaaa" />
+        </LinearLayout>
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"

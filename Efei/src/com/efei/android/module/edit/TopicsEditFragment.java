@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.efei.android.R;
 import com.efei.android.module.Constants;
 import com.efei.lib.android.bean.persistance.QuestionOrNote2;
+import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService.RespTopics_PinyinEntry;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.utils.TextUtils;
 
@@ -29,10 +31,12 @@ public class TopicsEditFragment extends Fragment
 {
 	private QuestionOrNote2 queOrNote;
 	private TopicsAdapter adapter;
+	private RespTopics_PinyinEntry pinyinEntry;
 
-	public TopicsEditFragment(QuestionOrNote2 queOrNote)
+	public TopicsEditFragment(QuestionOrNote2 queOrNote, RespTopics_PinyinEntry pinyinEntry)
 	{
 		this.queOrNote = queOrNote;
+		this.pinyinEntry = pinyinEntry;
 	}
 
 	@Override
@@ -85,15 +89,23 @@ public class TopicsEditFragment extends Fragment
 		adapter = new TopicsAdapter();
 		lv.setAdapter(adapter);
 
+		final AutoCompleteTextView editView = (AutoCompleteTextView) view.findViewById(R.id.actv_topic);
+		ArrayList<String> auto = new ArrayList<String>();
+		List<Object[]> topics = pinyinEntry.getTopics();
+		for (Object[] objects : topics)
+			auto.add(objects[0].toString());
+		ArrayAdapter<String> autoAdapter = new ArrayAdapter<String>(getActivity(), R.layout.item_auto_complete, R.id.tv, auto);
+		editView.setAdapter(autoAdapter);
+		editView.setThreshold(1);
 		view.findViewById(R.id.btn_add).setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-				AutoCompleteTextView editView = (AutoCompleteTextView) view.findViewById(R.id.actv_topic);
 				String content = null == editView.getText() ? null : editView.getText().toString();
 				if (TextUtils.isEmpty(content))
 					return;
+				editView.setText("");
 				adapter.topics.add(content);
 				adapter.notifyDataSetChanged();
 			}
@@ -152,4 +164,5 @@ public class TopicsEditFragment extends Fragment
 	{
 		private TextView tvTopic;
 	}
+
 }

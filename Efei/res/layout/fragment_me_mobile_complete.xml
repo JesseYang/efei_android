@@ -23,7 +23,9 @@
 
     <TextView
         android:id="@+id/tv_change_mobile"
-        android:layout_width="224dp"
+        android:layout_width="match_parent"
+        android:layout_marginRight="23dp"
+        android:layout_marginLeft="23dp"
         android:layout_height="35dp"
         android:layout_gravity="center"
         android:background="@drawable/btn_round_blue"

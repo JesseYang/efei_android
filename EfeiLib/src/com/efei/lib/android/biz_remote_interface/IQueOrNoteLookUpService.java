@@ -17,9 +17,11 @@ public interface IQueOrNoteLookUpService
 	 * @return
 	 */
 	RespTopics_PinyinEntry get0student$topics(int subject);
+
 	public static class RespTopics_PinyinEntry extends BaseRespBean
 	{
 		private List<Object[]> topics;
+
 		public List<Object[]> getTopics()
 		{
 			return topics;
@@ -38,6 +40,7 @@ public interface IQueOrNoteLookUpService
 	 * @return
 	 */
 	RespNoteUpdateTime get0student$notes$note_update_time();
+
 	public static class RespNoteUpdateTime extends BaseRespBean
 	{
 		private Map<String, Long> note_update_time;
@@ -60,6 +63,7 @@ public interface IQueOrNoteLookUpService
 	 * @return
 	 */
 	RespNoteId_UpdateTimeEntry get0student$notes();
+
 	public static class RespNoteId_UpdateTimeEntry extends BaseRespBean
 	{
 		private List<Object[]> notes;
@@ -80,6 +84,7 @@ public interface IQueOrNoteLookUpService
 	 * code：REQUIRE_SIGNIN，NOTE_NOT_EXIST <li>note：题目及笔记内容，为哈希，结构详见附录
 	 */
 	RespNestNote get0student$notes(String note_id);
+
 	public static class RespNestNote extends BaseRespBean
 	{
 		private RespQueOrNote note;
@@ -100,6 +105,7 @@ public interface IQueOrNoteLookUpService
 	 * code：REQUIRE_SIGNIN <li>notes：数组，每一个元素是一个note的内容，为哈希，结构详见附录
 	 */
 	RespNestQueOrNoteArray get0student$notes$list(String... ids);
+
 	public static class RespNestQueOrNoteArray extends BaseRespBean
 	{
 		private List<RespQueOrNote> notes;
@@ -120,7 +126,8 @@ public interface IQueOrNoteLookUpService
 	 * code：REQUIRE_SIGNIN，NOTE_NOT_EXIST <li>note：题目及笔记内容，为哈希，结构详见附录 <li>note_update_time：错题本更新时间，为哈希，key是代表学科的整数（详见附录），value是该科目下所有错题的最后更新时间，用整数的unix时间表示
 	 */
 	RespDeletedOrPuttedNotes delete0student$notes(String note_id);
-	/**{@link IQueOrNoteLookUpService#delete0student$notes(String)} and {@link IQueOrNoteLookUpService#put0student$notes(String, String, String, String)}*/
+
+	/** {@link IQueOrNoteLookUpService#delete0student$notes(String)} and {@link IQueOrNoteLookUpService#put0student$notes(String, String, String, String)} */
 	public static class RespDeletedOrPuttedNotes extends BaseRespBean
 	{
 		private RespQueOrNote note;
@@ -152,7 +159,8 @@ public interface IQueOrNoteLookUpService
 	 * <li>summary：总结笔记</br> <b>返回值</b></br> <li>code：REQUIRE_SIGNIN，NOTE_NOT_EXIST <li>note：题目及笔记内容，为哈希，结构详见附录 <li>
 	 * note_update_time：错题本更新时间，为哈希，key是代表学科的整数（详见附录），value是该科目下所有错题的最后更新时间，用整数的unix时间表示
 	 */
-	RespDeletedOrPuttedNotes put0student$notes(String note_id , String tag , String topics , String summary);
+	RespDeletedOrPuttedNotes put0student$notes(String note_id, String tag, String topics, String summary);
+
 	public static class ReqUpdateNote extends ABaseReqBean
 	{
 		private String tag;
@@ -190,7 +198,28 @@ public interface IQueOrNoteLookUpService
 		}
 
 	}
-	
+
+	/**
+	 * 导出错题本中的题目：get@student/notes/export -> student/notes_controller#export</br> <b>参数</b> <li>has_answer：布尔值，表示是否包含答案及解析 <li>has_note：布尔值，表示是否包含笔记 <li>
+	 * note_id_str：字符串，逗号分割的要导出的note的id列表 <li>email：接收导出文档的邮箱，当为空时不发送邮件而是直接下载</br> <b>返回值</b> <li>code：REQUIRE_SIGNIN <li>file_path：当选择直接下载模式时有意义，为下载地址
+	 */
+	RespExport get0student$notes$export(boolean has_answer, boolean has_note, String note_id_str, String email);
+
+	public static class RespExport extends BaseRespBean
+	{
+		private String file_path;
+
+		void setFile_path(String file_path)
+		{
+			this.file_path = file_path;
+		}
+
+		public String getFile_path()
+		{
+			return file_path;
+		}
+	}
+
 	public static class Factory
 	{
 		private Factory()

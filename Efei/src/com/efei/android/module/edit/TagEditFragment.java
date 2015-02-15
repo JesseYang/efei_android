@@ -43,6 +43,7 @@ public class TagEditFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
 		View view = View.inflate(getActivity(), R.layout.fragment_tag_edit, null);
+		tagSelected = queOrNote.metaData.getTag();
 		ListView lv = (ListView) view.findViewById(R.id.lv);
 		final String[] tags = queOrNote.metaData.getTag_set().split("\\,");
 		final BaseAdapter adapter = new TagAdapter(tags);
