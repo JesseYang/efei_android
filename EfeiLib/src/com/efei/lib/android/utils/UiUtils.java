@@ -55,6 +55,8 @@ public final class UiUtils
 		String[] txtsBy$ = txt.split("\\$\\$");
 		for (String txtBy$ : txtsBy$)
 		{
+			if (TextUtils.isBlank(txtBy$))
+				continue;
 			if (txtBy$.startsWith(START_PROMPT_MATH))
 				parseImgAndConstructTmpText(sbTmp, csis, txtBy$, START_PROMPT_MATH);
 			else if (txtBy$.startsWith(START_PROMPT_EQU))
@@ -62,8 +64,17 @@ public final class UiUtils
 			else if (txtBy$.startsWith(START_PROMPT_FIG))
 				parseImgAndConstructTmpText(sbTmp, csis, txtBy$, START_PROMPT_FIG);
 			else if (txtBy$.startsWith(START_PROMPT_UND))
-				parseStyleTextAndConstructTmpText(sbTmp, csis, txtBy$, new UnderlineSpan());
-			else if (txtBy$.startsWith(START_PROMPT_ITA))
+			// parseStyleTextAndConstructTmpText(sbTmp, csis, txtBy$, new UnderlineSpan());
+			{
+				String realString = txtBy$.substring(4);
+				if (TextUtils.isBlank(realString))
+				{
+					final int undSize = realString.length();
+					for (int i = 0; i < undSize; i++)
+						sbTmp.append('_');
+				} else
+					parseStyleTextAndConstructTmpText(sbTmp, csis, txtBy$, new UnderlineSpan());
+			} else if (txtBy$.startsWith(START_PROMPT_ITA))
 				parseStyleTextAndConstructTmpText(sbTmp, csis, txtBy$, new StyleSpan(android.graphics.Typeface.ITALIC));
 			else if (txtBy$.startsWith(START_PROMPT_SUP))
 				parseStyleTextAndConstructTmpText(sbTmp, csis, txtBy$, new SuperscriptSpan());

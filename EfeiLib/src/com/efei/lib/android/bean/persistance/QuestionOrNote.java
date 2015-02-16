@@ -71,7 +71,7 @@ public class QuestionOrNote
 		setAnswerContent(TextUtils.concat(resp.getAnswer_content()));
 		setTagSet(resp.getTag_set());
 		setSummary(resp.getSummary());
-		setTopics(resp.getTopics());
+		setTopics(resp.getTopic_str());
 		setTag(resp.getTag());
 		setAccount(account);
 	}

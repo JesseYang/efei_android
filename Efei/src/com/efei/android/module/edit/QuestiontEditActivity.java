@@ -68,7 +68,7 @@ public class QuestiontEditActivity extends ActionBarActivity
 		TextView tvTag = (TextView) findViewById(R.id.tv_tag);
 		tvTag.setText(queOrNote.metaData.getTag());
 		TextView tvTopics = (TextView) findViewById(R.id.tv_topics);
-		tvTopics.setText(queOrNote.metaData.getTopics());
+		tvTopics.setText(queOrNote.metaData.getTopic_str());
 		etSummary = (EditText) findViewById(R.id.et_summary);
 		boolean empty = TextUtils.isEmpty(queOrNote.metaData.getSummary());
 		if (!empty)

@@ -83,7 +83,7 @@ class QueListAdapter extends BaseAdapter
 	private void view_itemMap(final QuestionOrNote2 note, final QueViewHolder holder)
 	{
 		setTextContent(holder.tvTag, note.metaData.getTag());
-		setTextContent(holder.tvPoint, note.metaData.getTopics());
+		setTextContent(holder.tvPoint, note.metaData.getTopic_str());
 		setTextContent(holder.tvNote, note.metaData.getSummary());
 		setTextContent(holder.tvQue, note.content);
 

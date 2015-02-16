@@ -77,23 +77,6 @@ public class ScanActivity extends Activity
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-		mCamera = getCameraInstance();
-
-		/* Instance barcode scanner */
-		scanner = new ImageScanner();
-		scanner.setConfig(0, Config.X_DENSITY, 3);
-		scanner.setConfig(0, Config.Y_DENSITY, 3);
-
-		mPreview = new ScanView(this, mCamera, previewCb, autoFocusCB);
-		FrameLayout preview = (FrameLayout) findViewById(R.id.cameraPreview);
-
-		// TODO yunzhong:
-		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT,
-				Gravity.CENTER);
-		mPreview.setLayoutParams(params);
-
-		preview.addView(mPreview);
-
 		View viewContinueMode = findViewById(R.id.tv_scan_continue_mode);
 		viewContinueMode.setSelected(false);
 		viewContinueMode.setOnClickListener(new OnClickListener()
@@ -247,6 +230,29 @@ public class ScanActivity extends Activity
 
 			}
 		});
+	}
+
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		mCamera = getCameraInstance();
+
+		/* Instance barcode scanner */
+		scanner = new ImageScanner();
+		scanner.setConfig(0, Config.X_DENSITY, 3);
+		scanner.setConfig(0, Config.Y_DENSITY, 3);
+
+		mPreview = new ScanView(this, mCamera, previewCb, autoFocusCB);
+		FrameLayout preview = (FrameLayout) findViewById(R.id.cameraPreview);
+		preview.removeAllViews();
+
+		// TODO yunzhong:
+		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT,
+				Gravity.CENTER);
+		mPreview.setLayoutParams(params);
+
+		preview.addView(mPreview);
 	}
 
 	private Map<String, QuestionOrNote2> queOrNotes = new HashMap<String, QuestionOrNote2>();

@@ -65,7 +65,7 @@ final class Email_FillFragment extends Fragment
 								Toast.makeText(getActivity(), "«Î≤È ’” º˛£°", Toast.LENGTH_SHORT).show();
 								getActivity().getSupportFragmentManager().beginTransaction()
 										.replace(R.id.fl_fragment_container, new Email_FinalFragment(email.toString()))
-										.commit();
+										.commitAllowingStateLoss();
 							}
 						}));
 				return true;

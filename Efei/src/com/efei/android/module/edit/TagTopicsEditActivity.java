@@ -1,6 +1,9 @@
 package com.efei.android.module.edit;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -19,6 +22,9 @@ import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService;
 import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService.RespTopics_PinyinEntry;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.exception.EfeiException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class TagTopicsEditActivity extends ActionBarActivity
 {
@@ -40,7 +46,7 @@ public class TagTopicsEditActivity extends ActionBarActivity
 		{
 		case Tag:
 			actionBar.setTitle("标签编辑");
-			getSupportFragmentManager().beginTransaction().add(R.id.fl_container, new TagEditFragment(queOrNote), "tag").commit();
+			getSupportFragmentManager().beginTransaction().add(R.id.fl_container, new TagEditFragment(queOrNote), "tag").commitAllowingStateLoss();
 			return;
 		case Topics:
 			actionBar.setTitle("知识点编辑");
@@ -49,12 +55,16 @@ public class TagTopicsEditActivity extends ActionBarActivity
 					new IUICallback.Adapter<RespTopics_PinyinEntry>()
 					{
 						@Override
-						public void onPostExecute(RespTopics_PinyinEntry result)
+						public void onProgressUpdate(int percent, Object... params)
 						{
 							findViewById(R.id.pb_progress).setVisibility(View.GONE);
-							getSupportFragmentManager().beginTransaction()
-									.add(R.id.fl_container, new TopicsEditFragment(queOrNote, result), "topics").commit();
+							getSupportFragmentManager()
+									.beginTransaction()
+									.add(R.id.fl_container,
+											new TopicsEditFragment(queOrNote, (RespTopics_PinyinEntry) params[0]),
+											"topics").commitAllowingStateLoss();
 						}
+
 					}));
 			return;
 		default:
@@ -100,7 +110,42 @@ public class TagTopicsEditActivity extends ActionBarActivity
 		@Override
 		public RespTopics_PinyinEntry onBusinessLogic(IJob job) throws Exception
 		{
-			return IQueOrNoteLookUpService.Factory.getService().get0student$topics(queOrNote.metaData.getSubject());
+			String cacheKey = "get0student$topics" + queOrNote.metaData.getSubject();
+			SharedPreferences sp = EfeiApplication.getContext().getSharedPreferences("cache", Context.MODE_PRIVATE);
+			final RespTopics_PinyinEntry res;
+			Editor editor = sp.edit();
+			String cacheValue = sp.getString(cacheKey, null);
+			final ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			if (null == cacheValue)
+			{
+				res = IQueOrNoteLookUpService.Factory.getService().get0student$topics(queOrNote.metaData.getSubject());
+				job.publishProgress(0, res);
+
+				try
+				{
+					cacheValue = mapper.writeValueAsString(res);
+					editor.putString(cacheKey, cacheValue).commit();
+				} catch (JsonProcessingException e)
+				{
+					throw new EfeiException(e);
+				}
+			} else
+			{
+				job.publishProgress(0, mapper.readValue(cacheValue, RespTopics_PinyinEntry.class));
+
+				res = IQueOrNoteLookUpService.Factory.getService().get0student$topics(queOrNote.metaData.getSubject());
+				try
+				{
+					cacheValue = mapper.writeValueAsString(res);
+					editor.putString(cacheKey, cacheValue).commit();
+				} catch (JsonProcessingException e)
+				{
+					throw new EfeiException(e);
+				}
+			}
+
+			return res;
 		}
 	}
 }

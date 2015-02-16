@@ -13,7 +13,7 @@ public class RespQueOrNote extends BaseRespBean
 	private List<String> answer_content;
 	private String tag_set;
 	private String summary;
-	private String topics;
+	private String topic_str;
 	private String tag;
 	private long last_update_time;
 
@@ -107,14 +107,14 @@ public class RespQueOrNote extends BaseRespBean
 		this.summary = summary;
 	}
 
-	public String getTopics()
+	public String getTopic_str()
 	{
-		return topics;
+		return topic_str;
 	}
 
-	public void setTopics(String topics)
+	public void setTopic_str(String topic_str)
 	{
-		this.topics = topics;
+		this.topic_str = topic_str;
 	}
 
 	public String getTag()

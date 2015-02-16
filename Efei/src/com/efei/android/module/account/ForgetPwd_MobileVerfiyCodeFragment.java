@@ -132,7 +132,7 @@ final class ForgetPwd_MobileVerfiyCodeFragment extends Fragment
 										.beginTransaction()
 										.replace(R.id.fl_fragment_container,
 												new ForgetPwd_MobileResetPwdFragment(result
-														.getReset_password_token())).commit();
+														.getReset_password_token())).commitAllowingStateLoss();
 							}
 						}));
 				return true;

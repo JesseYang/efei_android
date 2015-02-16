@@ -48,7 +48,7 @@ final class Email_CompleteFragment extends Fragment
 			public void onClick(View v)
 			{
 				getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new Email_FillFragment(email))
-						.commit();
+						.commitAllowingStateLoss();
 			}
 		});
 		return view;

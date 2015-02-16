@@ -65,7 +65,7 @@ final class Mobile_PhoneCodeFragment extends Fragment
 								getActivity().getSupportFragmentManager()
 										.beginTransaction()
 										.replace(R.id.fl_fragment_container,
-												new Mobile_VerifyCodeFragment(mobile.toString())).commit();
+												new Mobile_VerifyCodeFragment(mobile.toString())).commitAllowingStateLoss();
 							}
 						}));
 				return true;

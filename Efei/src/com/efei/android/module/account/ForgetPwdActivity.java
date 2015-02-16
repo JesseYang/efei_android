@@ -17,7 +17,7 @@ public class ForgetPwdActivity extends ActionBarActivity
 		getSupportActionBar().setTitle("’“ªÿ√‹¬Î");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new ForgetPwd_FillAccountFragment()).commit();
+		getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new ForgetPwd_FillAccountFragment()).commitAllowingStateLoss();
 	}
 
 	@Override

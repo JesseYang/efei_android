@@ -65,14 +65,14 @@ final class ForgetPwd_FillAccountFragment extends Fragment
 											.beginTransaction()
 											.replace(R.id.fl_fragment_container,
 													new ForgetPwd_EmailSendedFragment(account.toString()))
-											.commit();
+											.commitAllowingStateLoss();
 								} else
 								{
 									getActivity().getSupportFragmentManager()
 											.beginTransaction()
 											.replace(R.id.fl_fragment_container,
 													new ForgetPwd_MobileVerfiyCodeFragment(account
-															.toString())).commit();
+															.toString())).commitAllowingStateLoss();
 								}
 							}
 						}));

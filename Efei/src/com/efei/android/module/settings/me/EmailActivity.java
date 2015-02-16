@@ -17,9 +17,9 @@ public class EmailActivity extends ActionBarActivity
 		setContentView(R.layout.activity_me_mobile_or_email);
 		String email = getIntent().getStringExtra(SettingsMeActivity.KEY_EMAIL);
 		if (TextUtils.isBlank(email))
-			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Email_FillFragment(email)).commit();
+			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Email_FillFragment(email)).commitAllowingStateLoss();
 		else
-			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Email_CompleteFragment(email)).commit();
+			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Email_CompleteFragment(email)).commitAllowingStateLoss();
 		getSupportActionBar().setTitle("” œ‰…Ë÷√");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}

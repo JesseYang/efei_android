@@ -22,10 +22,10 @@ public final class BizRunner_SaveQue implements IBusinessCallback<BaseRespBean>
 	public BaseRespBean onBusinessLogic(IJob job)
 	{
 		if (bCreate)
-			return IQueScanService.Factory.getService().post0student$note(queOrNote.get_id(), queOrNote.getTag(), queOrNote.getTopics(),
+			return IQueScanService.Factory.getService().post0student$note(queOrNote.get_id(), queOrNote.getTag(), queOrNote.getTopic_str(),
 					queOrNote.getSummary());
 		else
-			return IQueOrNoteLookUpService.Factory.getService().put0student$notes(queOrNote.get_id(), queOrNote.getTag(), queOrNote.getTopics(),
+			return IQueOrNoteLookUpService.Factory.getService().put0student$notes(queOrNote.get_id(), queOrNote.getTag(), queOrNote.getTopic_str(),
 					queOrNote.getSummary());
 	}
 }

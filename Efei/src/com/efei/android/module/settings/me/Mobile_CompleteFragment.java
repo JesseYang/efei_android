@@ -48,7 +48,7 @@ final class Mobile_CompleteFragment extends Fragment
 			public void onClick(View v)
 			{
 				getActivity().getSupportFragmentManager().beginTransaction()
-						.replace(R.id.fl_fragment_container, new Mobile_PhoneCodeFragment(mobile)).commit();
+						.replace(R.id.fl_fragment_container, new Mobile_PhoneCodeFragment(mobile)).commitAllowingStateLoss();
 			}
 		});
 		return view;

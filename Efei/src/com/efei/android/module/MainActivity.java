@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity
 					uiRestore();
 					((TextView) viewBar.findViewById(R.id.tv_quelist)).setTextColor(0xff4388ff);
 					viewBar.findViewById(R.id.iv_quelist).setSelected(true);
-					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new QueListFragment()).commit();
+					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new QueListFragment()).commitAllowingStateLoss();
 				}
 			});
 			viewBar.findViewById(R.id.ll_setting).setOnClickListener(new OnClickListener()
@@ -76,7 +76,7 @@ public class MainActivity extends ActionBarActivity
 					uiRestore();
 					((TextView) viewBar.findViewById(R.id.tv_setting)).setTextColor(0xff4388ff);
 					viewBar.findViewById(R.id.iv_setting).setSelected(true);
-					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new SettingsFragment()).commit();
+					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new SettingsFragment()).commitAllowingStateLoss();
 				}
 			});
 

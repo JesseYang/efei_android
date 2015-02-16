@@ -17,9 +17,9 @@ public class MobileActivity extends ActionBarActivity
 		setContentView(R.layout.activity_me_mobile_or_email);
 		String mobile = getIntent().getStringExtra(SettingsMeActivity.KEY_MOBILE);
 		if (TextUtils.isBlank(mobile))
-			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Mobile_PhoneCodeFragment(mobile)).commit();
+			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Mobile_PhoneCodeFragment(mobile)).commitAllowingStateLoss();
 		else
-			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Mobile_CompleteFragment(mobile)).commit();
+			getSupportFragmentManager().beginTransaction().add(R.id.fl_fragment_container, new Mobile_CompleteFragment(mobile)).commitAllowingStateLoss();
 		getSupportActionBar().setTitle(" ÷ª˙…Ë÷√");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
