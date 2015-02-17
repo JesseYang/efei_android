@@ -95,15 +95,18 @@ public class TopicsEditFragment extends Fragment
 	{
 		ListView lv = (ListView) view.findViewById(R.id.lv);
 		adapter = new TopicsAdapter();
-		List<String> topicStrs = new ArrayList<String>(Arrays.asList(queOrNote.metaData.getTopic_str().split(",")));
-		Iterator<String> iterator = topicStrs.iterator();
-		while (iterator.hasNext())
+		if (!TextUtils.isBlank(queOrNote.metaData.getTopic_str()))
 		{
-			String next = iterator.next();
-			if (TextUtils.isBlank(next))
-				iterator.remove();
+			List<String> topicStrs = new ArrayList<String>(Arrays.asList(queOrNote.metaData.getTopic_str().split(",")));
+			Iterator<String> iterator = topicStrs.iterator();
+			while (iterator.hasNext())
+			{
+				String next = iterator.next();
+				if (TextUtils.isBlank(next))
+					iterator.remove();
+			}
+			adapter.topics.addAll(topicStrs);
 		}
-		adapter.topics.addAll(topicStrs);
 		lv.setAdapter(adapter);
 
 		final AutoCompleteTextView editView = (AutoCompleteTextView) view.findViewById(R.id.actv_topic);

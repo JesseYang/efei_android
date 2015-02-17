@@ -144,6 +144,9 @@ public class QuestiontEditActivity extends ActionBarActivity
 		final MenuItem itemSave = menu.add(Menu.NONE, R.id.menu_save, Menu.NONE, "±£´æ");
 		MenuCompat.setShowAsAction(itemSave, MenuItem.SHOW_AS_ACTION_ALWAYS);
 
+		if (getIntent().getBooleanExtra(KEY_CREATE_QUE, false))
+			return super.onCreateOptionsMenu(menu);
+
 		final MenuItem itemDelete = menu.add("\tÉ¾³ý");
 		itemDelete.setIcon(R.drawable.delete).setOnMenuItemClickListener(new OnMenuItemClickListener()
 		{

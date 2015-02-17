@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Paint.FontMetricsInt;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -127,13 +129,14 @@ public final class UiUtils
 	{
 		String[] txtsByStar = txtImage.split("\\*");
 		String imageFile = txtsByStar[0].substring(startPrompt.length());
-		final String link = Constants.Net.IMAGE_SERVER_URL + URL_API_IMAGE + imageFile + ".png";
+		final String link = Constants.Net.IMAGE_SERVER_URL + URL_API_IMAGE + imageFile + "." + txtsByStar[1];
 		Bitmap bmp = ImageLoader.getInstance().loadImageSync(link, new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).build());
 		BitmapDrawable bmpDrawable = new BitmapDrawable(EfeiApplication.getContext().getResources(), bmp);
-		final float fRadio = 0.8f;
-		bmpDrawable.setBounds(0, 0, (int) (bmp.getWidth() * fRadio), (int) (bmp.getHeight() * fRadio));
-		// ImageSpan img = new ImageSpan(bmpDrawable, ImageSpan.ALIGN_BOTTOM);
-		ImageSpan img = new CenteredImageSpan(bmpDrawable);
+
+		final float fRadio = EfeiApplication.getContext().getResources().getDisplayMetrics().density;
+		bmpDrawable.setBounds(0, 0, (int) (Float.parseFloat(txtsByStar[2]) * fRadio), (int) (Float.parseFloat(txtsByStar[3]) * fRadio));
+		 ImageSpan img = new ImageSpan(bmpDrawable, ImageSpan.ALIGN_BOTTOM);
+//		ImageSpan img = new CenteredImageSpan(bmpDrawable);
 		return new CharacterStyleInfo(imgPos, img);
 	}
 
@@ -159,12 +162,8 @@ public final class UiUtils
 
 	}
 
-	static class CenteredImageSpan extends ImageSpan
+	private static class CenteredImageSpan extends ImageSpan
 	{
-		// Extra variables used to redefine the Font Metrics when an ImageSpan is added
-		private int initialDescent = 0;
-		private int extraSpace = 0;
-
 		public CenteredImageSpan(final Drawable drawable)
 		{
 			this(drawable, DynamicDrawableSpan.ALIGN_BOTTOM);
@@ -173,37 +172,6 @@ public final class UiUtils
 		public CenteredImageSpan(final Drawable drawable, final int verticalAlignment)
 		{
 			super(drawable, verticalAlignment);
-		}
-
-		//
-		// Following methods are overriden from DynamicDrawableSpan.
-		//
-
-		// Method used to redefined the Font Metrics when an ImageSpan is added
-		@Override
-		public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm)
-		{
-			Drawable d = getCachedDrawable();
-			Rect rect = d.getBounds();
-
-			if (fm != null)
-			{
-				// Centers the text with the ImageSpan
-				if (rect.bottom - (fm.descent - fm.ascent) > 0)
-				{
-					// Stores the initial descent and computes the margin available
-					initialDescent = fm.descent;
-					extraSpace = rect.bottom - (fm.descent - fm.ascent);
-				}
-
-				fm.descent = extraSpace / 2 + initialDescent;
-				fm.bottom = fm.descent;
-
-				fm.ascent = -rect.bottom + fm.descent;
-				fm.top = fm.ascent;
-			}
-
-			return rect.right;
 		}
 
 		// Redefined locally because it is a private member from DynamicDrawableSpan
@@ -225,6 +193,43 @@ public final class UiUtils
 		}
 
 		private WeakReference<Drawable> mDrawableRef;
+		private int transY;
+
+		@Override
+		public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint)
+		{
+			Drawable b = getCachedDrawable();
+			canvas.save();
+
+			// int bCenter = b.getIntrinsicHeight() / 2;
+			// int fontTop = paint.getFontMetricsInt().top;
+			// int fontBottom = paint.getFontMetricsInt().bottom;
+			// int transY = (bottom - b.getBounds().bottom) - (((fontBottom - fontTop) / 2) - bCenter);
+			transY = (int) (b.getBounds().height() - paint.getTextSize() > 5 ? bottom - b.getBounds().bottom * 0.7f : bottom - b.getBounds().bottom);
+
+			canvas.translate(x, transY);
+			b.draw(canvas);
+			canvas.restore();
+		}
+		
+		@Override
+		public int getSize(Paint paint, CharSequence text, int start, int end, FontMetricsInt fm)
+		{
+			Drawable d = getCachedDrawable();
+			Rect rect = new Rect(d.getBounds());
+			rect.offset(0, transY);
+
+			if (fm != null)
+			{
+				fm.ascent = -rect.bottom;
+				fm.descent = 0;
+
+				fm.top = fm.ascent;
+				fm.bottom = 0;
+			}
+
+			return rect.right;
+		}
 	}
 
 }

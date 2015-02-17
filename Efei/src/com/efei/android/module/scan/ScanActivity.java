@@ -7,6 +7,7 @@ import java.util.Map;
 import net.sourceforge.zbar.Config;
 import net.sourceforge.zbar.Image;
 import net.sourceforge.zbar.ImageScanner;
+import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
 import android.app.Activity;
 import android.content.Intent;
@@ -304,14 +305,17 @@ public class ScanActivity extends Activity
 
 			if (result != 0)
 			{
-				previewing = false;
-				mCamera.setPreviewCallback(null);
-				mCamera.stopPreview();
-
 				SymbolSet syms = scanner.getResults();
 				if (CollectionUtils.isEmpty(syms))
 					return;
-				queryQuestionInRepo(syms.iterator().next().getData());
+				Symbol first = syms.iterator().next();
+				if (!first.getData().contains("http"))
+					return;
+
+				previewing = false;
+				mCamera.setPreviewCallback(null);
+				mCamera.stopPreview();
+				queryQuestionInRepo(first.getData());
 				barcodeScanned = true;
 			}
 		}
