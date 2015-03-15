@@ -186,26 +186,6 @@ public class QuestiontEditActivity extends ActionBarActivity
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	@Override
-	public boolean onMenuOpened(int featureId, Menu menu)
-	{
-		// if (featureId == Window.FEATURE_ACTION_BAR && menu != null)
-		// {
-		// if (menu.getClass().getSimpleName().equals("MenuBuilder"))
-		// {
-		// try
-		// {
-		// Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-		// m.setAccessible(true);
-		// m.invoke(menu, true);
-		// } catch (Exception e)
-		// {
-		// e.printStackTrace();
-		// }
-		// }
-		// }
-		return super.onMenuOpened(featureId, menu);
-	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)

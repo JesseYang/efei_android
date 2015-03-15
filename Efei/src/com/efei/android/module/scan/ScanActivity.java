@@ -361,7 +361,7 @@ public class ScanActivity extends Activity
 				EfeiApplication app = (EfeiApplication) getApplication();
 				app.addTemporary(Constants.TMP_QUE, result);
 				Intent intent = new Intent(ScanActivity.this, QuestiontEditActivity.class);
-				intent.putExtra(QuestiontEditActivity.KEY_CREATE_QUE, result.alreadyInServer);
+				intent.putExtra(QuestiontEditActivity.KEY_CREATE_QUE, !result.alreadyInServer);
 				startActivity(intent);
 				finish();
 			}
