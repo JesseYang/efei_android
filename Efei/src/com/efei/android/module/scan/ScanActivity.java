@@ -271,7 +271,6 @@ public class ScanActivity extends Activity
 		{
 			Camera camera = Camera.open();
 			camera.getParameters().setZoom(0);
-			camera.getParameters().setPreviewSize(900, 900);
 			return camera;
 		} catch (Exception e)
 		{
@@ -362,7 +361,7 @@ public class ScanActivity extends Activity
 				EfeiApplication app = (EfeiApplication) getApplication();
 				app.addTemporary(Constants.TMP_QUE, result);
 				Intent intent = new Intent(ScanActivity.this, QuestiontEditActivity.class);
-				intent.putExtra(QuestiontEditActivity.KEY_CREATE_QUE, true);
+				intent.putExtra(QuestiontEditActivity.KEY_CREATE_QUE, result.alreadyInServer);
 				startActivity(intent);
 				finish();
 			}
@@ -374,6 +373,7 @@ public class ScanActivity extends Activity
 			findViewById(R.id.question_scan_result_panel).setVisibility(View.VISIBLE);
 			TextView tv = (TextView) findViewById(R.id.tv_question_scan_result);
 			tv.setText(e.getMessage());
+			super.onError(e);
 		}
 	}
 
@@ -391,14 +391,14 @@ public class ScanActivity extends Activity
 		{
 			IQueScanService scanService = IQueScanService.Factory.getService();
 			RespQueId queId = scanService.get(encodeShortLink(shortLink));
-			BaseRespBean respBean = scanService.get0student$questions(queId.getQuestion_id() , queId.getHomework_id());
+			BaseRespBean respBean = scanService.get0student$questions(queId.getQuestion_id(), queId.getHomework_id());
 			if (respBean instanceof RespNoteId)
 			{
 				String note_id = ((RespNoteId) respBean).getNote_id();
 				RespNestNote nestNote = IQueOrNoteLookUpService.Factory.getService().get0student$notes(note_id);
-				return new QuestionOrNote2(nestNote.getNote(),queId.getHomework_id());
+				return new QuestionOrNote2(nestNote.getNote(), queId.getHomework_id(), true);
 			} else if (respBean instanceof RespQueOrNote)
-				return new QuestionOrNote2((RespQueOrNote) respBean,queId.getHomework_id());
+				return new QuestionOrNote2((RespQueOrNote) respBean, queId.getHomework_id(), false);
 			else
 				throw new EfeiException("can't resovle resp type");
 		}

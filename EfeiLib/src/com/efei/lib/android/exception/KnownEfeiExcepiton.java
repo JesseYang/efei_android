@@ -18,7 +18,9 @@ public class KnownEfeiExcepiton extends EfeiException
 		QUESTION_NOT_EXIST(-10, "该题目不存在"), //
 		NOTE_NOT_EXIST(-11, "该笔记不存在"), //
 
-		SERVER_ERROR(500, "服务器故障");//
+		SERVER_ERROR(500, "服务器故障"), //
+
+		CLIENT_NO_NET(1000, "当前网络环境不好");
 
 		private final int codeError;
 		public final String desc;

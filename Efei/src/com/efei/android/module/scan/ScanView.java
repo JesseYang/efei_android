@@ -3,6 +3,7 @@ package com.efei.android.module.scan;
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -81,9 +82,14 @@ public class ScanView extends SurfaceView implements SurfaceHolder.Callback
 
 		try
 		{
+			// FIXME don't use code below
+//			Parameters params = mCamera.getParameters();
+//			params.setPreviewSize(height, width);
+//			params.setRotation(90);
+//			mCamera.setParameters(params);
+			
 			// Hard code camera surface rotation 90 degs to match Activity view in portrait
 			mCamera.setDisplayOrientation(90);
-
 			mCamera.setPreviewDisplay(mHolder);
 			mCamera.setPreviewCallback(previewCallback);
 			mCamera.startPreview();

@@ -223,6 +223,7 @@ public class RegisterActivity extends ActionBarActivity
 		{
 			jobRegister = null;
 			showProgress(false);
+			super.onCancelled();
 		}
 
 		@Override

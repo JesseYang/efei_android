@@ -307,6 +307,7 @@ public class LoginActivity extends ActionBarActivity
 		{
 			jobLogin = null;
 			showProgress(false);
+			super.onCancelled();
 		}
 
 		@Override

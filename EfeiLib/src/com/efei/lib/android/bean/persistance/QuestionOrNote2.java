@@ -15,8 +15,9 @@ public class QuestionOrNote2
 	public final String homework_id;
 	public final Spannable content;
 	public final Spannable answer;
+	public final boolean alreadyInServer;
 
-	public QuestionOrNote2(RespQueOrNote respQueOrNote, String homework_id)
+	public QuestionOrNote2(RespQueOrNote respQueOrNote, String homework_id, boolean alreadyInServer)
 	{
 		this.metaData = respQueOrNote;
 		this.homework_id = homework_id;
@@ -31,5 +32,6 @@ public class QuestionOrNote2
 		}
 		this.content = UiUtils.richTextToSpannable(content);
 		this.answer = UiUtils.richTextToSpannable(metaData.getAnswer_content());
+		this.alreadyInServer = alreadyInServer;
 	}
 }

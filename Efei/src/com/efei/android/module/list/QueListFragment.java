@@ -310,7 +310,7 @@ public class QueListFragment extends Fragment
 					if (summary.contains(key_word))
 						continue;
 				}
-				
+
 				String tag = queOrNote.metaData.getTag();
 				if (!TextUtils.isEmpty(tag))
 				{
@@ -408,7 +408,14 @@ public class QueListFragment extends Fragment
 
 		public void onError(Throwable e)
 		{
-			System.out.println(e);
+			viewContainer.findViewById(R.id.pb_progress).setVisibility(View.GONE);
+			currentJob = null;
+			super.onError(e);
+		};
+
+		public void onCancelled()
+		{
+			viewContainer.findViewById(R.id.pb_progress).setVisibility(View.GONE);
 			currentJob = null;
 		};
 	};
