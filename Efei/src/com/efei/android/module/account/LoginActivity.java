@@ -277,7 +277,7 @@ public class LoginActivity extends ActionBarActivity
 			if (bForSaveQue)
 			{
 				Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_SaveQue(((QuestionOrNote2) app
-						.removeTemporary(Constants.TMP_QUE)).metaData, true), new IUICallback.Adapter<BaseRespBean>()
+						.removeTemporary(Constants.TMP_QUE)), true), new IUICallback.Adapter<BaseRespBean>()
 				{
 					public void onPostExecute(BaseRespBean result)
 					{

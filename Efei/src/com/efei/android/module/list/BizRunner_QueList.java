@@ -26,7 +26,7 @@ final class BizRunner_QueList implements IBusinessCallback<List<QuestionOrNote2>
 		List<RespQueOrNote> notes = queNoteArray.getNotes();
 		List<QuestionOrNote2> result = new ArrayList<QuestionOrNote2>();
 		for (RespQueOrNote note : notes)
-			result.add(new QuestionOrNote2(note));
+			result.add(new QuestionOrNote2(note,null));
 		return result;
 	}
 };

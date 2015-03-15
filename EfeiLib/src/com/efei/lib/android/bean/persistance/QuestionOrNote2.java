@@ -12,12 +12,14 @@ import com.efei.lib.android.utils.UiUtils;
 public class QuestionOrNote2
 {
 	public final RespQueOrNote metaData;
+	public final String homework_id;
 	public final Spannable content;
 	public final Spannable answer;
 
-	public QuestionOrNote2(RespQueOrNote respQueOrNote)
+	public QuestionOrNote2(RespQueOrNote respQueOrNote, String homework_id)
 	{
 		this.metaData = respQueOrNote;
+		this.homework_id = homework_id;
 		List<String> question = metaData.getContent();
 		List<String> choices = metaData.getItems();
 		List<String> content = new ArrayList<String>();

@@ -232,7 +232,7 @@ public class QuestiontEditActivity extends ActionBarActivity
 			Editable text = etSummary.getText();
 			if (null != text && !TextUtils.isEmpty(text))
 				queOrNote.metaData.setSummary(text.toString());
-			Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_SaveQue(queOrNote.metaData, getIntent().getBooleanExtra(
+			Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_SaveQue(queOrNote, getIntent().getBooleanExtra(
 					KEY_CREATE_QUE, false)), uiCallback));
 			return true;
 

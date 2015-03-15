@@ -21,9 +21,13 @@ public final class BizRunner_SaveQues implements IBusinessCallback<RespAddBatchQ
 	@Override
 	public RespAddBatchQues onBusinessLogic(IJob job)
 	{
+		List<String> homework_ids = new ArrayList<String>();
 		List<String> question_ids = new ArrayList<String>();
 		for (QuestionOrNote2 note2 : queOrNotes)
+		{
+			homework_ids.add(note2.homework_id);
 			question_ids.add(note2.metaData.get_id());
-		return IQueScanService.Factory.getService().post0student$notes$batch(question_ids.toArray(new String[0]));
+		}
+		return IQueScanService.Factory.getService().post0student$notes$batch(homework_ids.toArray(new String[0]), question_ids.toArray(new String[0]));
 	}
 }

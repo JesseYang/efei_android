@@ -1,6 +1,7 @@
 package com.efei.lib.android.biz_remote_interface;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,12 +24,14 @@ class QueScanImpl extends BaseImpl implements IQueScanService
 	}
 
 	@Override
-	public BaseRespBean get0student$questions(String question_id)
+	public BaseRespBean get0student$questions(String question_id, String homework_id)
 	{
 		final String API_URL = "student/questions" + "/" + question_id;
 		try
 		{
-			String json = NetUtils.get(API_URL, null);
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("homework_id", homework_id);
+			String json = NetUtils.get(API_URL, params);
 			JSONObject jsonObj = new JSONObject(json);
 			String note_id = jsonObj.optString("note_id");
 			final BaseRespBean result;
@@ -49,7 +52,7 @@ class QueScanImpl extends BaseImpl implements IQueScanService
 	}
 
 	@Override
-	public RespAddSingleQue post0student$note(String question_id, String tag, String topics, String summary)
+	public RespAddSingleQue post0student$note(String question_id, String tag, String topics, String summary, String homework_id)
 	{
 		final String API_URL = "student/notes";
 		ReqAddSingleQue req = new ReqAddSingleQue();
@@ -57,15 +60,17 @@ class QueScanImpl extends BaseImpl implements IQueScanService
 		req.setSummary(summary);
 		req.setTag(tag);
 		req.setTopics(topics);
+		req.setHomework_id(homework_id);
 		return NetUtils.postObjectAsJson(API_URL, req, RespAddSingleQue.class);
 	}
 
 	@Override
-	public RespAddBatchQues post0student$notes$batch(String... question_ids)
+	public RespAddBatchQues post0student$notes$batch(String[] homework_ids, String... question_ids)
 	{
 		final String API_URL = "student/notes/batch";
 		ReqAddBatchQues req = new ReqAddBatchQues();
 		req.setQuestion_ids(question_ids);
+		req.setHomework_ids(homework_ids);
 		return NetUtils.postObjectAsJson(API_URL, req, RespAddBatchQues.class);
 	}
 

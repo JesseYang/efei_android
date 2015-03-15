@@ -16,10 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.efei.android.R;
+import com.efei.android.module.Constants;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.JobAsyncTask;
 import com.efei.lib.android.bean.net.BaseRespBean;
+import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.utils.TextUtils;
 
 final class Email_FillFragment extends Fragment
@@ -62,6 +64,9 @@ final class Email_FillFragment extends Fragment
 							@Override
 							public void onPostExecute(BaseRespBean result)
 							{
+								EfeiApplication app = (EfeiApplication) getActivity().getApplication();
+								app.addTemporary(Constants.KEY_EMAIL, email.toString());
+								
 								Toast.makeText(getActivity(), "«Î≤È ’” º˛£°", Toast.LENGTH_SHORT).show();
 								getActivity().getSupportFragmentManager().beginTransaction()
 										.replace(R.id.fl_fragment_container, new Email_FinalFragment(email.toString()))

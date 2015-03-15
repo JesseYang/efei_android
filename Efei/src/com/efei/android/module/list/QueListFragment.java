@@ -310,6 +310,13 @@ public class QueListFragment extends Fragment
 					if (summary.contains(key_word))
 						continue;
 				}
+				
+				String tag = queOrNote.metaData.getTag();
+				if (!TextUtils.isEmpty(tag))
+				{
+					if (tag.contains(key_word))
+						continue;
+				}
 
 				iterator.remove();
 			}
@@ -345,6 +352,8 @@ public class QueListFragment extends Fragment
 
 		private void filterTime(String time, List<QuestionOrNote2> result)
 		{
+			TextView tvSubject = (TextView) viewContainer.findViewById(R.id.tv_time);
+			tvSubject.setText(time);
 			// { "最近一周", "最近一个月", "最近三个月", "最近半年", "全部时间" }
 			if ("全部时间".equals(time))
 				return;
@@ -392,6 +401,9 @@ public class QueListFragment extends Fragment
 				if (Subject.getSubjectByIndex(note2.metaData.getSubject()) != subject)
 					iterator.remove();
 			}
+
+			TextView tvSubject = (TextView) viewContainer.findViewById(R.id.tv_subject);
+			tvSubject.setText(subject.name);
 		}
 
 		public void onError(Throwable e)

@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.efei.android.module.Constants;
 import com.efei.android.module.account.LoginActivity;
+import com.efei.lib.android.biz_remote_interface.ISettingService;
+import com.efei.lib.android.biz_remote_interface.ISettingService.RespStudentInfo;
+import com.efei.lib.android.common.EfeiApplication;
 
 public class SplashActivity extends Activity
 {
@@ -16,7 +20,7 @@ public class SplashActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-		new Thread(new TestRunner()).start();
+		new Thread(new InitRunner()).start();
 	}
 
 	@Override
@@ -41,7 +45,7 @@ public class SplashActivity extends Activity
 		return super.onOptionsItemSelected(item);
 	}
 
-	private class TestRunner implements Runnable
+	private class InitRunner implements Runnable
 	{
 
 		@Override
@@ -49,13 +53,18 @@ public class SplashActivity extends Activity
 		{
 			try
 			{
-				Thread.sleep(1000);
-				Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-				startActivity(intent);
-				finish();
+				ISettingService service = ISettingService.Factory.getService();
+				final RespStudentInfo studentInfo = service.get0student$students$info();
+				EfeiApplication app = (EfeiApplication) getApplication();
+				app.addTemporary(Constants.KEY_EMAIL, studentInfo.getEmail());
 			} catch (Exception e)
 			{
 				e.printStackTrace();
+			} finally
+			{
+				Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+				startActivity(intent);
+				finish();
 			}
 		}
 	}

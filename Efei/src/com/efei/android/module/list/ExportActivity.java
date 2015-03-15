@@ -10,17 +10,17 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.MenuCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.efei.android.R;
+import com.efei.android.module.Constants;
+import com.efei.android.module.settings.me.EmailActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IBusinessCallback;
 import com.efei.lib.android.async.IJob;
@@ -28,6 +28,7 @@ import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.JobAsyncTask;
 import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService;
 import com.efei.lib.android.biz_remote_interface.IQueOrNoteLookUpService.RespExport;
+import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.utils.NetUtils;
 import com.efei.lib.android.utils.TextUtils;
 
@@ -49,6 +50,13 @@ public class ExportActivity extends ActionBarActivity
 			return;
 		}
 		setContentView(R.layout.activity_export);
+		// setupViews();
+	}
+
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
 		setupViews();
 	}
 
@@ -56,6 +64,7 @@ public class ExportActivity extends ActionBarActivity
 	private boolean hasNote;
 	private View barExportDownload;
 	private View barExportEmail;
+	private String email;
 
 	private void setupViews()
 	{
@@ -113,23 +122,34 @@ public class ExportActivity extends ActionBarActivity
 				visible = barExportEmail.isSelected() ? View.VISIBLE : View.INVISIBLE;
 				barExportEmail.findViewById(R.id.iv_check).setVisibility(visible);
 
-				findViewById(R.id.email).setEnabled(!v.isSelected());
-				if (v.isSelected())
-				{
-					EditText email = (EditText) findViewById(R.id.email);
-					email.setText("");
-				}
+				// findViewById(R.id.email).setEnabled(!v.isSelected());
+				// if (v.isSelected())
+				// {
+				// EditText email = (EditText) findViewById(R.id.email);
+				// email.setText("");
+				// }
 			}
 		});
 
+		EfeiApplication app = (EfeiApplication) getApplication();
+		email = app.removeTemporary(Constants.KEY_EMAIL);
+		app.addTemporary(Constants.KEY_EMAIL, email);
+		final String emailDisplay = TextUtils.isBlank(email) ? "£®Œ¥…Ë÷√£©" : email;
+
 		barExportEmail = findViewById(R.id.export_by_email);
 		tv = (TextView) barExportEmail.findViewById(R.id.tv);
-		tv.setText("∑¢ÀÕ÷¡” œ‰");
+		tv.setText("∑¢ÀÕ÷¡” œ‰" + emailDisplay);
 		barExportEmail.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
+				if (TextUtils.isBlank(email))
+				{
+					EfeiApplication.switchToActivity(EmailActivity.class);
+					return;
+				}
+
 				View check = v.findViewById(R.id.iv_check);
 				v.setSelected(!v.isSelected());
 				int visible = v.isSelected() ? View.VISIBLE : View.INVISIBLE;
@@ -139,12 +159,12 @@ public class ExportActivity extends ActionBarActivity
 				visible = barExportDownload.isSelected() ? View.VISIBLE : View.INVISIBLE;
 				barExportDownload.findViewById(R.id.iv_check).setVisibility(visible);
 
-				findViewById(R.id.email).setEnabled(v.isSelected());
-				if (v.isSelected())
-				{
-					EditText email = (EditText) findViewById(R.id.email);
-					email.requestFocus();
-				}
+				// findViewById(R.id.email).setEnabled(v.isSelected());
+				// if (v.isSelected())
+				// {
+				// EditText email = (EditText) findViewById(R.id.email);
+				// email.requestFocus();
+				// }
 			}
 		});
 
@@ -191,11 +211,12 @@ public class ExportActivity extends ActionBarActivity
 
 	private String getEmail()
 	{
-		EditText et = (EditText) findViewById(R.id.email);
-		Editable text = et.getText();
-		if (TextUtils.isBlank(text))
-			return null;
-		return text.toString();
+		return TextUtils.isBlank(email) ? null : email;
+		// EditText et = (EditText) findViewById(R.id.email);
+		// Editable text = et.getText();
+		// if (TextUtils.isBlank(text))
+		// return null;
+		// return text.toString();
 	}
 
 	@Override

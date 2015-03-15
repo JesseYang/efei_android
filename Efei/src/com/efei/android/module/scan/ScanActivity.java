@@ -391,14 +391,14 @@ public class ScanActivity extends Activity
 		{
 			IQueScanService scanService = IQueScanService.Factory.getService();
 			RespQueId queId = scanService.get(encodeShortLink(shortLink));
-			BaseRespBean respBean = scanService.get0student$questions(queId.getQuestion_id());
+			BaseRespBean respBean = scanService.get0student$questions(queId.getQuestion_id() , queId.getHomework_id());
 			if (respBean instanceof RespNoteId)
 			{
 				String note_id = ((RespNoteId) respBean).getNote_id();
 				RespNestNote nestNote = IQueOrNoteLookUpService.Factory.getService().get0student$notes(note_id);
-				return new QuestionOrNote2(nestNote.getNote());
+				return new QuestionOrNote2(nestNote.getNote(),queId.getHomework_id());
 			} else if (respBean instanceof RespQueOrNote)
-				return new QuestionOrNote2((RespQueOrNote) respBean);
+				return new QuestionOrNote2((RespQueOrNote) respBean,queId.getHomework_id());
 			else
 				throw new EfeiException("can't resovle resp type");
 		}
