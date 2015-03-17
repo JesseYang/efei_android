@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.efei.android.R;
 import com.efei.android.module.account.LoginActivity;
+import com.efei.android.module.settings.about.AboutActivity;
 import com.efei.android.module.settings.feedback.FeedbackActivity;
 import com.efei.android.module.settings.me.SettingsMeActivity;
 import com.efei.android.module.settings.teacher.MyTeacherActivity;
@@ -62,6 +63,15 @@ public class SettingsFragment extends Fragment
 			public void onClick(View v)
 			{
 				EfeiApplication.switchToActivity(MyTeacherActivity.class);
+			}
+		});
+
+		view.findViewById(R.id.ll_about).setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				EfeiApplication.switchToActivity(AboutActivity.class);
 			}
 		});
 

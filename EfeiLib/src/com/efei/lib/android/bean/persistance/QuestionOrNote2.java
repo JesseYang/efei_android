@@ -30,8 +30,8 @@ public class QuestionOrNote2
 			final char prefix = (char) ('A' + i);
 			content.add(prefix + "." + choices.get(i));
 		}
-		this.content = UiUtils.richTextToSpannable(content);
-		this.answer = UiUtils.richTextToSpannable(metaData.getAnswer_content());
+		this.content = UiUtils.richTextToSpannable(content , metaData.getImage_path());
+		this.answer = UiUtils.richTextToSpannable(metaData.getAnswer_content() , metaData.getImage_path());
 		this.alreadyInServer = alreadyInServer;
 	}
 }

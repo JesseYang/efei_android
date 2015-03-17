@@ -16,7 +16,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name="com.efei.lib.android.common.EfeiApplication"
@@ -131,6 +131,11 @@
         </activity>
         <activity
             android:name="com.efei.android.module.list.ExportActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.EfeiActionBar" >
+        </activity>
+        <activity
+            android:name="com.efei.android.module.settings.about.AboutActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.EfeiActionBar" >
         </activity>

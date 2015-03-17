@@ -19,6 +19,7 @@ import com.efei.lib.android.common.EfeiApplication;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+@Deprecated
 public class RichText
 {
 	private static final char IMG_PLACE_HOLDER = 'F';

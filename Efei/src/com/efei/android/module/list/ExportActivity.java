@@ -188,9 +188,12 @@ public class ExportActivity extends ActionBarActivity
 					@Override
 					public void onPostExecute(RespExport result)
 					{
-						Toast.makeText(ExportActivity.this,
-								"导出成功，存放在" + Environment.getExternalStorageDirectory() + "/efei/download/目录下",
-								Toast.LENGTH_SHORT).show();
+						if (barExportDownload.isSelected())
+							Toast.makeText(ExportActivity.this,
+									"导出成功，存放在" + Environment.getExternalStorageDirectory() + "/efei/download/目录下",
+									Toast.LENGTH_SHORT).show();
+						else
+							Toast.makeText(ExportActivity.this, "导出成功，已经发送到" + email + "，请查收", Toast.LENGTH_SHORT).show();
 						finish();
 					}
 				}));
@@ -249,16 +252,19 @@ public class ExportActivity extends ActionBarActivity
 		public RespExport onBusinessLogic(IJob job) throws Exception
 		{
 			RespExport resp = IQueOrNoteLookUpService.Factory.getService().get0student$notes$export(has_answer, has_note, note_id_str, email);
-			InputStream is = NetUtils.getAsStream(resp.getFile_path(), null);
-			String download = Environment.getExternalStorageDirectory() + "/efei/download/";
-			File file = new File(download, resp.getFile_path().substring(resp.getFile_path().lastIndexOf("/")));
-			OutputStream os = FileUtils.openOutputStream(file);
-			int iLen = -1;
-			byte[] buffer = new byte[1024];
-			while (-1 != (iLen = is.read(buffer)))
-				os.write(buffer, 0, iLen);
-			is.close();
-			os.close();
+			if (TextUtils.isBlank(email))
+			{
+				InputStream is = NetUtils.getAsStream(resp.getFile_path(), null);
+				String download = Environment.getExternalStorageDirectory() + "/efei/download/";
+				File file = new File(download, resp.getFile_path().substring(resp.getFile_path().lastIndexOf("/")));
+				OutputStream os = FileUtils.openOutputStream(file);
+				int iLen = -1;
+				byte[] buffer = new byte[1024];
+				while (-1 != (iLen = is.read(buffer)))
+					os.write(buffer, 0, iLen);
+				is.close();
+				os.close();
+			}
 			return resp;
 		}
 	}

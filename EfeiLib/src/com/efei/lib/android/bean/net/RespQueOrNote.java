@@ -16,6 +16,8 @@ public class RespQueOrNote extends BaseRespBean
 	private String topic_str;
 	private String tag;
 	private long last_update_time;
+	
+	private String image_path;
 
 	void setLast_update_time(long last_update_time)
 	{
@@ -125,6 +127,16 @@ public class RespQueOrNote extends BaseRespBean
 	public void setTag(String tag)
 	{
 		this.tag = tag;
+	}
+
+	public String getImage_path()
+	{
+		return image_path;
+	}
+
+	void setImage_path(String image_path)
+	{
+		this.image_path = image_path;
 	}
 
 }

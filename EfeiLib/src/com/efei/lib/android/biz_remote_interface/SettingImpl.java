@@ -110,4 +110,11 @@ class SettingImpl extends BaseImpl implements ISettingService
 		return NetUtils.postObjectAsJson(API_URL, req, BaseRespBean.class);
 	}
 
+	@Override
+	public RespLatestVersion get0latest$version()
+	{
+		final String API_URL = "welcome/app_version";
+		return get(API_URL, null, RespLatestVersion.class);
+	}
+
 }

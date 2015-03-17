@@ -7,8 +7,8 @@ import java.util.List;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Paint.FontMetricsInt;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -21,7 +21,6 @@ import android.text.style.SubscriptSpan;
 import android.text.style.SuperscriptSpan;
 import android.text.style.UnderlineSpan;
 
-import com.efei.lib.android.common.Constants;
 import com.efei.lib.android.common.EfeiApplication;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -49,7 +48,7 @@ public final class UiUtils
 	 * equ_{name}*{width}*{height}：表示一个公式图片，其中name为该公式图片的文件名，width为图片宽度，height为图片高度。该图片的下载地址为“#{image server}/public/download/#{name}.png” <li>
 	 * math_{name}*{width}*{height}：和equ_{name}*{width}*{height}完全一致 <li>fig_{name}*{width}*{height}：表示一张图片，具体解释同上
 	 */
-	public static SpannableString richTextToSpannable(final String txt)
+	public static SpannableString richTextToSpannable(final String txt, String imagePath)
 	{
 		final StringBuilder sbTmp = new StringBuilder();
 		List<CharacterStyleInfo> csis = new ArrayList<CharacterStyleInfo>();
@@ -60,11 +59,11 @@ public final class UiUtils
 			if (TextUtils.isBlank(txtBy$))
 				continue;
 			if (txtBy$.startsWith(START_PROMPT_MATH))
-				parseImgAndConstructTmpText(sbTmp, csis, txtBy$, START_PROMPT_MATH);
+				parseImgAndConstructTmpText(sbTmp, csis, txtBy$, START_PROMPT_MATH, imagePath);
 			else if (txtBy$.startsWith(START_PROMPT_EQU))
-				parseImgAndConstructTmpText(sbTmp, csis, txtBy$, START_PROMPT_EQU);
+				parseImgAndConstructTmpText(sbTmp, csis, txtBy$, START_PROMPT_EQU, imagePath);
 			else if (txtBy$.startsWith(START_PROMPT_FIG))
-				parseImgAndConstructTmpText(sbTmp, csis, txtBy$, START_PROMPT_FIG);
+				parseImgAndConstructTmpText(sbTmp, csis, txtBy$, START_PROMPT_FIG, imagePath);
 			else if (txtBy$.startsWith(START_PROMPT_UND))
 			// parseStyleTextAndConstructTmpText(sbTmp, csis, txtBy$, new UnderlineSpan());
 			{
@@ -99,8 +98,10 @@ public final class UiUtils
 	 * sub_blabla：表示blabla是下标 <li>sup_blabla：表示blabla是上标 <li>ita_blabla：表示blabla是斜体 <li>
 	 * equ_{name}*{width}*{height}：表示一个公式图片，其中name为该公式图片的文件名，width为图片宽度，height为图片高度。该图片的下载地址为“#{image server}/public/download/#{name}.png” <li>
 	 * math_{name}*{width}*{height}：和equ_{name}*{width}*{height}完全一致 <li>fig_{name}*{width}*{height}：表示一张图片，具体解释同上
+	 * 
+	 * @param imagePath
 	 */
-	public static SpannableString richTextToSpannable(final List<String> lines)
+	public static SpannableString richTextToSpannable(final List<String> lines, String imagePath)
 	{
 		if (CollectionUtils.isEmpty(lines))
 			return new SpannableString("");
@@ -108,12 +109,13 @@ public final class UiUtils
 		for (String line : lines)
 			sb.append(line).append('\n');
 		sb.replace(sb.length() - 1, sb.length(), "");
-		return richTextToSpannable(sb.toString());
+		return richTextToSpannable(sb.toString(), imagePath);
 	}
 
-	private static void parseImgAndConstructTmpText(final StringBuilder newSb, List<CharacterStyleInfo> smis, String txtBy$, String startPrompt)
+	private static void parseImgAndConstructTmpText(final StringBuilder newSb, List<CharacterStyleInfo> smis, String txtBy$, String startPrompt,
+			String imagePath)
 	{
-		CharacterStyleInfo smi = parseImageSync(newSb.length(), txtBy$, startPrompt);
+		CharacterStyleInfo smi = parseImageSync(newSb.length(), txtBy$, startPrompt, imagePath);
 		smis.add(smi);
 		newSb.append(IMG_PLACE_HOLDER);
 	}
@@ -125,18 +127,18 @@ public final class UiUtils
 		newSb.append(realString);
 	}
 
-	private static CharacterStyleInfo parseImageSync(final int imgPos, String txtImage, String startPrompt)
+	private static CharacterStyleInfo parseImageSync(final int imgPos, String txtImage, String startPrompt, String imagePath)
 	{
 		String[] txtsByStar = txtImage.split("\\*");
 		String imageFile = txtsByStar[0].substring(startPrompt.length());
-		final String link = Constants.Net.IMAGE_SERVER_URL + URL_API_IMAGE + imageFile + "." + txtsByStar[1];
+		final String link = imagePath + imageFile + "." + txtsByStar[1];
 		Bitmap bmp = ImageLoader.getInstance().loadImageSync(link, new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).build());
 		BitmapDrawable bmpDrawable = new BitmapDrawable(EfeiApplication.getContext().getResources(), bmp);
 
 		final float fRadio = EfeiApplication.getContext().getResources().getDisplayMetrics().density;
 		bmpDrawable.setBounds(0, 0, (int) (Float.parseFloat(txtsByStar[2]) * fRadio), (int) (Float.parseFloat(txtsByStar[3]) * fRadio));
-		 ImageSpan img = new ImageSpan(bmpDrawable, ImageSpan.ALIGN_BOTTOM);
-//		ImageSpan img = new CenteredImageSpan(bmpDrawable);
+		ImageSpan img = new ImageSpan(bmpDrawable, ImageSpan.ALIGN_BOTTOM);
+		// ImageSpan img = new CenteredImageSpan(bmpDrawable);
 		return new CharacterStyleInfo(imgPos, img);
 	}
 
@@ -162,6 +164,7 @@ public final class UiUtils
 
 	}
 
+	@Deprecated
 	private static class CenteredImageSpan extends ImageSpan
 	{
 		public CenteredImageSpan(final Drawable drawable)
@@ -211,7 +214,7 @@ public final class UiUtils
 			b.draw(canvas);
 			canvas.restore();
 		}
-		
+
 		@Override
 		public int getSize(Paint paint, CharSequence text, int start, int end, FontMetricsInt fm)
 		{

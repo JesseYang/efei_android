@@ -17,7 +17,7 @@ import com.efei.lib.android.exception.EfeiException;
 import com.efei.lib.android.grammar.RichText;
 import com.efei.lib.android.utils.NetUtils;
 import com.j256.ormlite.dao.Dao;
-
+@Deprecated
 public class QuestionNoteRepo extends ABaseRepo<QuestionOrNote>
 {
 	private static final String TAG = QuestionNoteRepo.class.getSimpleName();
