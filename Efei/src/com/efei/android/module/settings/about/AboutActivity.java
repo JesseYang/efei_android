@@ -68,7 +68,7 @@ public class AboutActivity extends ActionBarActivity
 				} else
 				{
 					findViewById(R.id.iv_red_point).setVisibility(View.VISIBLE);
-					tvLatestVersion.setText("v" + curVersionName);
+					tvLatestVersion.setText("v" + result.getAndroid());
 					versionBar.setOnClickListener(new OnClickListener()
 					{
 						@Override

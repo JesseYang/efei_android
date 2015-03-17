@@ -24,12 +24,14 @@
         android:textSize="15dp" />
 
     <TextView
+        android:layout_marginLeft="41dp"
+        android:layout_marginRight="41dp"
         android:id="@+id/tvAdd"
-        android:layout_width="224dp"
+        android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_gravity="center"
         android:layout_marginTop="38dp"
-        android:background="@color/action_bar_blue"
+        android:background="@drawable/btn_round_blue"
         android:gravity="center"
         android:text="添加"
         android:textColor="@android:color/white"
