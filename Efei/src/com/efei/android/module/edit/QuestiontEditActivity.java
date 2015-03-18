@@ -22,6 +22,7 @@ import com.efei.android.module.account.LoginActivity;
 import com.efei.android.module.edit.TagTopicsEditActivity.EditContent;
 import com.efei.android.module.list.BizRunner_DeleteQue;
 import com.efei.android.module.list.ExportActivity;
+import com.efei.android.module.scan.ScanActivity;
 import com.efei.android.module.settings.teacher.ConfirmAddTeacherActivity;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
@@ -39,6 +40,7 @@ import com.efei.lib.android.utils.TextUtils;
 public class QuestiontEditActivity extends ActionBarActivity
 {
 	public static final String KEY_CREATE_QUE = "key_create_que";
+	public static final String KEY_WHO_START_ME = "key_who_start_me";
 	private QuestionOrNote2 queOrNote;
 	private EditText etSummary;
 
@@ -47,7 +49,10 @@ public class QuestiontEditActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setTitle("错题本");
+		if (ScanActivity.class.getName().equals(getIntent().getStringExtra(KEY_WHO_START_ME)))
+			actionBar.setTitle("扫一扫");
+		else
+			actionBar.setTitle("错题本");
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_edit);
 	}
@@ -186,7 +191,6 @@ public class QuestiontEditActivity extends ActionBarActivity
 		return super.onCreateOptionsMenu(menu);
 	}
 
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -212,8 +216,8 @@ public class QuestiontEditActivity extends ActionBarActivity
 			Editable text = etSummary.getText();
 			if (null != text && !TextUtils.isEmpty(text))
 				queOrNote.metaData.setSummary(text.toString());
-			Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_SaveQue(queOrNote, getIntent().getBooleanExtra(
-					KEY_CREATE_QUE, false)), uiCallback));
+			Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_SaveQue(queOrNote, getIntent().getBooleanExtra(KEY_CREATE_QUE,
+					false)), uiCallback));
 			return true;
 
 		default:

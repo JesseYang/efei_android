@@ -362,8 +362,9 @@ public class ScanActivity extends Activity
 				app.addTemporary(Constants.TMP_QUE, result);
 				Intent intent = new Intent(ScanActivity.this, QuestiontEditActivity.class);
 				intent.putExtra(QuestiontEditActivity.KEY_CREATE_QUE, !result.alreadyInServer);
+				intent.putExtra(QuestiontEditActivity.KEY_WHO_START_ME, ScanActivity.class.getName());
 				startActivity(intent);
-				finish();
+				// finish();
 			}
 		}
 
