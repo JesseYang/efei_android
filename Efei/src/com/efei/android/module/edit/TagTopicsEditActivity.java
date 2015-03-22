@@ -1,9 +1,11 @@
 package com.efei.android.module.edit;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -54,15 +56,24 @@ public class TagTopicsEditActivity extends ActionBarActivity
 			Executor.INSTANCE.execute(new JobAsyncTask<RespTopics_PinyinEntry>(new BizRunner_GetAutoCompleteTopics(queOrNote),
 					new IUICallback.Adapter<RespTopics_PinyinEntry>()
 					{
-						@Override
+						@SuppressLint("NewApi") @Override
 						public void onProgressUpdate(int percent, Object... params)
 						{
-							findViewById(R.id.pb_progress).setVisibility(View.GONE);
-							getSupportFragmentManager()
-									.beginTransaction()
-									.add(R.id.fl_container,
-											new TopicsEditFragment(queOrNote, (RespTopics_PinyinEntry) params[0]),
-											"topics").commitAllowingStateLoss();
+							if (Build.VERSION.SDK_INT >= 17 && isDestroyed())
+								return;
+							try
+							{
+								findViewById(R.id.pb_progress).setVisibility(View.GONE);
+								getSupportFragmentManager()
+										.beginTransaction()
+										.add(R.id.fl_container,
+												new TopicsEditFragment(queOrNote,
+														(RespTopics_PinyinEntry) params[0]), "topics")
+										.commitAllowingStateLoss();
+							} catch (Exception e)
+							{
+								e.printStackTrace();
+							}
 						}
 
 					}));

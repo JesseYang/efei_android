@@ -87,13 +87,14 @@ public final class NetUtils
 		}
 	}
 
-	private static Map<String, String> injectAuthKey(Map<String, String> params)
+	private static Map<String, String> injectAuthKeyAndAndroidVersion(Map<String, String> params)
 	{
 		Account defaultUser = ILoginService.Factory.getService().getDefaultUser();
 		final String authKey = null == defaultUser ? "" : defaultUser.getAuthKey();
 		if (null == params)
 			params = new HashMap<String, String>();
 		params.put("auth_key", authKey);
+		params.put("client", "android_%7B" + android.os.Build.VERSION.SDK_INT + "%7D");
 		return params;
 	}
 
@@ -170,7 +171,7 @@ public final class NetUtils
 
 	public static String delete(String strAPIUrl, Map<String, String> params) throws ClientProtocolException, IOException
 	{
-		params = injectAuthKey(params);
+		params = injectAuthKeyAndAndroidVersion(params);
 		final String url = encodeGet_DeleteUrl(strAPIUrl, params);
 		HttpClient client = newClient();
 		HttpDelete delete = new HttpDelete(url);
@@ -182,7 +183,7 @@ public final class NetUtils
 
 	public static String get(String strAPIUrl, Map<String, String> params) throws ClientProtocolException, IOException
 	{
-		params = injectAuthKey(params);
+		params = injectAuthKeyAndAndroidVersion(params);
 		final String url = encodeGet_DeleteUrl(strAPIUrl, params);
 		HttpClient client = newClient();
 		HttpGet get = new HttpGet(url);
@@ -194,7 +195,7 @@ public final class NetUtils
 
 	public static InputStream getAsStream(String strAPIUrl, Map<String, String> params) throws ClientProtocolException, IOException
 	{
-		params = injectAuthKey(params);
+		params = injectAuthKeyAndAndroidVersion(params);
 		final String url = encodeGet_DeleteUrl(strAPIUrl, params);
 		HttpClient client = newClient();
 		HttpGet get = new HttpGet(url);

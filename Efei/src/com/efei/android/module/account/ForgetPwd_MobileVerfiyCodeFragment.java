@@ -1,6 +1,7 @@
 package com.efei.android.module.account;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -125,9 +126,11 @@ final class ForgetPwd_MobileVerfiyCodeFragment extends Fragment
 				Executor.INSTANCE.execute(new JobAsyncTask<RespVerifyPwd>(new BizRunner_VerifyCode(account, verifyCode.toString()),
 						new IUICallback.Adapter<RespVerifyPwd>()
 						{
-							@Override
+							@SuppressLint("NewApi") @Override
 							public void onPostExecute(RespVerifyPwd result)
 							{
+								if (Build.VERSION.SDK_INT >= 17 && getActivity().isDestroyed())
+									return;
 								getActivity().getSupportFragmentManager()
 										.beginTransaction()
 										.replace(R.id.fl_fragment_container,

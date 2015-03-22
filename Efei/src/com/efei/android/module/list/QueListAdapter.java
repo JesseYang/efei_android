@@ -82,10 +82,10 @@ class QueListAdapter extends BaseAdapter
 
 	private void view_itemMap(final QuestionOrNote2 note, final QueViewHolder holder)
 	{
-		setTextContent(holder.tvTag, note.metaData.getTag());
-		setTextContent(holder.tvPoint, note.metaData.getTopic_str());
-		setTextContent(holder.tvNote, note.metaData.getSummary());
-		setTextContent(holder.tvQue, note.content);
+		setTextContent(holder.tvTag, note.metaData.getTag(), "标签");
+		setTextContent(holder.tvPoint, note.metaData.getTopic_str(), "知识点");
+		setTextContent(holder.tvNote, note.metaData.getSummary(), "总结");
+		setTextContent(holder.tvQue, note.content, "题目");
 
 		if (queListFragment.isSelectMode())
 		{
@@ -114,10 +114,10 @@ class QueListAdapter extends BaseAdapter
 		}
 	}
 
-	private void setTextContent(TextView tv, CharSequence text)
+	private void setTextContent(TextView tv, CharSequence text, CharSequence defaultString)
 	{
 		if (TextUtils.isEmpty(text))
-			return;
+			tv.setText(defaultString);
 		else
 			tv.setText(text);
 	}

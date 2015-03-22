@@ -1,5 +1,7 @@
 package com.efei.android.module.settings.me;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.efei.android.R;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
@@ -59,9 +60,11 @@ final class Mobile_PhoneCodeFragment extends Fragment
 				Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_ModifyMobile(mobile.toString()),
 						new IUICallback.Adapter<BaseRespBean>()
 						{
-							@Override
+							@SuppressLint("NewApi") @Override
 							public void onPostExecute(BaseRespBean result)
 							{
+								if (Build.VERSION.SDK_INT >= 17 && getActivity().isDestroyed())
+									return;
 								getActivity().getSupportFragmentManager()
 										.beginTransaction()
 										.replace(R.id.fl_fragment_container,

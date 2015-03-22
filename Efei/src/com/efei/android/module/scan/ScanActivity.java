@@ -106,8 +106,8 @@ public class ScanActivity extends Activity
 			}
 		});
 
-		View scanButton = findViewById(R.id.tv_scan_continue);
-		scanButton.setOnClickListener(new OnClickListener()
+		View scanContinue = findViewById(R.id.tv_scan_continue);
+		scanContinue.setOnClickListener(new OnClickListener()
 		{
 			public void onClick(View v)
 			{
@@ -124,7 +124,7 @@ public class ScanActivity extends Activity
 					QuestionOrNote2 queOrNote = (QuestionOrNote2) findViewById(R.id.tv_question_scan_result).getTag();
 					if (null == queOrNote)
 						return;
-					if (queOrNotes.containsKey(queOrNote.metaData.get_id()))
+					if (queOrNotes.containsKey(queOrNote.metaData.get_id()) || queOrNote.alreadyInServer)
 						Toast.makeText(ScanActivity.this, "该题已经添加！", Toast.LENGTH_SHORT).show();
 					queOrNotes.put(queOrNote.metaData.get_id(), queOrNote);
 
@@ -136,8 +136,8 @@ public class ScanActivity extends Activity
 			}
 		});
 
-		View viewCancel = findViewById(R.id.cancel);
-		viewCancel.setOnClickListener(new OnClickListener()
+		View scanCancel = findViewById(R.id.cancel);
+		scanCancel.setOnClickListener(new OnClickListener()
 		{
 
 			@Override
@@ -237,6 +237,7 @@ public class ScanActivity extends Activity
 	protected void onResume()
 	{
 		super.onResume();
+		previewing = true;
 		mCamera = getCameraInstance();
 
 		/* Instance barcode scanner */

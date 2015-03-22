@@ -208,7 +208,7 @@ public class ExportActivity extends ActionBarActivity
 	{
 		String res = "";
 		for (String id : queIds)
-			res += id;
+			res += (id + ",");
 		return res;
 	}
 

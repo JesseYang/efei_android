@@ -1,5 +1,7 @@
 package com.efei.android.module.settings.me;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.efei.android.R;
 import com.efei.android.module.Constants;
 import com.efei.lib.android.async.Executor;
@@ -61,9 +62,11 @@ final class Email_FillFragment extends Fragment
 				Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_ModifyEmail(email.toString()),
 						new IUICallback.Adapter<BaseRespBean>()
 						{
-							@Override
+							@SuppressLint("NewApi") @Override
 							public void onPostExecute(BaseRespBean result)
 							{
+								if (Build.VERSION.SDK_INT >= 17 && getActivity().isDestroyed())
+									return;
 								EfeiApplication app = (EfeiApplication) getActivity().getApplication();
 								app.addTemporary(Constants.KEY_EMAIL, email.toString());
 								

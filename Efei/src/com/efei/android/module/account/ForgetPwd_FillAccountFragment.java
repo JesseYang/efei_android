@@ -1,5 +1,7 @@
 package com.efei.android.module.account;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.efei.android.R;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IUICallback;
@@ -56,9 +57,11 @@ final class ForgetPwd_FillAccountFragment extends Fragment
 				Executor.INSTANCE.execute(new JobAsyncTask<BaseRespBean>(new BizRunner_SendAccountForPwd(account.toString()),
 						new IUICallback.Adapter<BaseRespBean>()
 						{
-							@Override
+							@SuppressLint("NewApi") @Override
 							public void onPostExecute(BaseRespBean result)
 							{
+								if (Build.VERSION.SDK_INT >= 17 && getActivity().isDestroyed())
+									return;
 								if (account.toString().contains("@"))
 								{
 									getActivity().getSupportFragmentManager()
