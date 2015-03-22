@@ -126,7 +126,8 @@ public class ScanActivity extends Activity
 						return;
 					if (queOrNotes.containsKey(queOrNote.metaData.get_id()) || queOrNote.alreadyInServer)
 						Toast.makeText(ScanActivity.this, "该题已经添加！", Toast.LENGTH_SHORT).show();
-					queOrNotes.put(queOrNote.metaData.get_id(), queOrNote);
+					if (!queOrNote.alreadyInServer)
+						queOrNotes.put(queOrNote.metaData.get_id(), queOrNote);
 
 					TextView tvQueNum = (TextView) findViewById(R.id.tv_scanned_que_num);
 					tvQueNum.setText("已扫描：" + queOrNotes.size() + "道题");
