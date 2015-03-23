@@ -11,13 +11,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.efei.android.R;
+import com.efei.android.module.Constants;
 import com.efei.android.module.account.LoginActivity;
 import com.efei.android.module.settings.about.AboutActivity;
 import com.efei.android.module.settings.feedback.FeedbackActivity;
 import com.efei.android.module.settings.me.SettingsMeActivity;
 import com.efei.android.module.settings.teacher.MyTeacherActivity;
+import com.efei.lib.android.biz_remote_interface.ISettingService.RespLatestVersion;
 import com.efei.lib.android.common.EfeiApplication;
 import com.efei.lib.android.engine.ILoginService;
+import com.efei.lib.android.utils.CommonUtils;
 
 public class SettingsFragment extends Fragment
 {
@@ -74,6 +77,17 @@ public class SettingsFragment extends Fragment
 				EfeiApplication.switchToActivity(AboutActivity.class);
 			}
 		});
+
+		EfeiApplication app = (EfeiApplication) getActivity().getApplication();
+		final RespLatestVersion version = app.removeTemporary(Constants.KEY_LATEST_VERSION);
+		app.addTemporary(Constants.KEY_LATEST_VERSION, version);
+		if (null != version)
+		{
+			String curVersion = CommonUtils.getCurrentApkVersion(getActivity());
+			final int visibility = version.getAndroid().equals(curVersion) ? View.GONE : View.VISIBLE;
+			view.findViewById(R.id.iv_red_point).setVisibility(visibility);
+		} else
+			view.findViewById(R.id.iv_red_point).setVisibility(View.GONE);
 
 		view.findViewById(R.id.ll_feedback).setOnClickListener(new OnClickListener()
 		{

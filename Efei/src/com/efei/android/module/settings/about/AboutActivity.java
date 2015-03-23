@@ -7,8 +7,6 @@ import java.io.OutputStream;
 import org.apache.commons.io.FileUtils;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,63 +18,56 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.efei.android.R;
+import com.efei.android.module.Constants;
 import com.efei.lib.android.async.Executor;
 import com.efei.lib.android.async.IBusinessCallback;
 import com.efei.lib.android.async.IJob;
 import com.efei.lib.android.async.IUICallback;
 import com.efei.lib.android.async.JobAsyncTask;
-import com.efei.lib.android.biz_remote_interface.ISettingService;
 import com.efei.lib.android.biz_remote_interface.ISettingService.RespLatestVersion;
+import com.efei.lib.android.common.EfeiApplication;
+import com.efei.lib.android.utils.CommonUtils;
 import com.efei.lib.android.utils.NetUtils;
 
 public class AboutActivity extends ActionBarActivity
 {
-	private String curVersionName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		PackageInfo pi;
-		try
-		{
-			pi = getPackageManager().getPackageInfo(getPackageName(), 0);
-			this.curVersionName = pi.versionName;
-		} catch (NameNotFoundException e)
-		{
-			e.printStackTrace();
-		}
 		getSupportActionBar().setTitle("关于易飞");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_about);
+
+		final String curVersionName = CommonUtils.getCurrentApkVersion(this);
 
 		final View versionBar = findViewById(R.id.ll_version);
 
 		TextView tvCurVersion = (TextView) findViewById(R.id.tv_cur_version);
 		tvCurVersion.setText("易飞网v" + curVersionName);
 
-		Executor.INSTANCE.execute(new JobAsyncTask<RespLatestVersion>(new Biz_GetLatestVersion(), new IUICallback.Adapter<RespLatestVersion>()
+		EfeiApplication app = (EfeiApplication) getApplication();
+		final RespLatestVersion latestVersion = app.removeTemporary(Constants.KEY_LATEST_VERSION);
+		app.addTemporary(Constants.KEY_LATEST_VERSION, latestVersion);
+
+		TextView tvLatestVersion = (TextView) findViewById(R.id.tv_latest_version);
+		if (null == latestVersion || latestVersion.getAndroid().equals(curVersionName))
 		{
-			@Override
-			public void onPostExecute(final RespLatestVersion result)
+			findViewById(R.id.iv_red_point).setVisibility(View.GONE);
+			tvLatestVersion.setText("已经是最新版本");
+		} else
+		{
+			findViewById(R.id.iv_red_point).setVisibility(View.VISIBLE);
+			tvLatestVersion.setText("v" + latestVersion.getAndroid());
+			versionBar.setOnClickListener(new OnClickListener()
 			{
-				TextView tvLatestVersion = (TextView) findViewById(R.id.tv_latest_version);
-				if (result.getAndroid().equals(curVersionName))
+				@Override
+				public void onClick(View v)
 				{
-					findViewById(R.id.iv_red_point).setVisibility(View.GONE);
-					tvLatestVersion.setText("已经是最新版本");
-				} else
-				{
-					findViewById(R.id.iv_red_point).setVisibility(View.VISIBLE);
-					tvLatestVersion.setText("v" + result.getAndroid());
-					versionBar.setOnClickListener(new OnClickListener()
-					{
-						@Override
-						public void onClick(View v)
-						{
-							Toast.makeText(AboutActivity.this, "开始下载新版本安装包……", Toast.LENGTH_SHORT).show();
-							Executor.INSTANCE.execute(new JobAsyncTask<File>(new Biz_DownloadLatestVersionApk(result
-									.getAndroid_url()), new IUICallback.Adapter<File>()
+					Toast.makeText(AboutActivity.this, "开始下载新版本安装包……", Toast.LENGTH_SHORT).show();
+					Executor.INSTANCE.execute(new JobAsyncTask<File>(new Biz_DownloadLatestVersionApk(latestVersion.getAndroid_url()),
+							new IUICallback.Adapter<File>()
 							{
 								public void onPostExecute(File result)
 								{
@@ -86,11 +77,9 @@ public class AboutActivity extends ActionBarActivity
 									startActivity(intent);
 								};
 							}));
-						}
-					});
 				}
-			}
-		}));
+			});
+		}
 
 	}
 
@@ -100,15 +89,6 @@ public class AboutActivity extends ActionBarActivity
 		if (android.R.id.home == item.getItemId())
 			finish();
 		return super.onOptionsItemSelected(item);
-	}
-
-	private static class Biz_GetLatestVersion implements IBusinessCallback<RespLatestVersion>
-	{
-		@Override
-		public RespLatestVersion onBusinessLogic(IJob job) throws Exception
-		{
-			return ISettingService.Factory.getService().get0latest$version();
-		}
 	}
 
 	private static class Biz_DownloadLatestVersionApk implements IBusinessCallback<File>

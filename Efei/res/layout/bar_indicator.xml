@@ -74,7 +74,7 @@
                 android:textSize="13dp" />
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/ll_setting"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -87,6 +87,7 @@
                 android:id="@+id/iv_setting"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:clickable="true"
                 android:scaleType="fitXY"
@@ -96,11 +97,22 @@
                 android:id="@+id/tv_setting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/iv_setting"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:text="设置"
                 android:textColor="#ff757372"
                 android:textSize="13dp" />
-        </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_red_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/iv_setting"
+                android:layout_toRightOf="@id/iv_setting"
+                android:src="@drawable/red_point"
+                android:visibility="gone" />
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

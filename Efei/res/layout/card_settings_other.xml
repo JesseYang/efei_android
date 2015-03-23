@@ -49,8 +49,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
             android:text="关于易飞"
             android:textSize="15dp" />
+
+        <ImageView
+            android:id="@+id/iv_red_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/red_point"
+            android:visibility="gone" />
 
         <View
             android:layout_width="0dp"

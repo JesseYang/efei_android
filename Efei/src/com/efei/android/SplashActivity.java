@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import com.efei.android.module.Constants;
 import com.efei.android.module.account.LoginActivity;
 import com.efei.lib.android.biz_remote_interface.ISettingService;
+import com.efei.lib.android.biz_remote_interface.ISettingService.RespLatestVersion;
 import com.efei.lib.android.biz_remote_interface.ISettingService.RespStudentInfo;
 import com.efei.lib.android.common.EfeiApplication;
 
@@ -53,10 +54,13 @@ public class SplashActivity extends Activity
 		{
 			try
 			{
-				ISettingService service = ISettingService.Factory.getService();
-				final RespStudentInfo studentInfo = service.get0student$students$info();
-				EfeiApplication app = (EfeiApplication) getApplication();
+				final EfeiApplication app = (EfeiApplication) getApplication();
+				
+				final RespStudentInfo studentInfo = ISettingService.Factory.getService().get0student$students$info();
 				app.addTemporary(Constants.KEY_EMAIL, studentInfo.getEmail());
+				
+				final RespLatestVersion latestVersion = ISettingService.Factory.getService().get0latest$version();
+				app.addTemporary(Constants.KEY_LATEST_VERSION, latestVersion);
 			} catch (Exception e)
 			{
 				e.printStackTrace();

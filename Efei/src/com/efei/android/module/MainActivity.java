@@ -10,7 +10,9 @@ import com.efei.android.R;
 import com.efei.android.module.list.QueListFragment;
 import com.efei.android.module.scan.ScanActivity;
 import com.efei.android.module.settings.SettingsFragment;
+import com.efei.lib.android.biz_remote_interface.ISettingService.RespLatestVersion;
 import com.efei.lib.android.common.EfeiApplication;
+import com.efei.lib.android.utils.CommonUtils;
 
 public class MainActivity extends ActionBarActivity
 {
@@ -29,13 +31,13 @@ public class MainActivity extends ActionBarActivity
 		barIndicator.init();
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu)
-//	{
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.que_list, menu);
-//		return true;
-//	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu)
+	// {
+	// // Inflate the menu; this adds items to the action bar if it is present.
+	// getMenuInflater().inflate(R.menu.que_list, menu);
+	// return true;
+	// }
 
 	private class IndicatorBar
 	{
@@ -63,7 +65,8 @@ public class MainActivity extends ActionBarActivity
 					uiRestore();
 					((TextView) viewBar.findViewById(R.id.tv_quelist)).setTextColor(0xff4388ff);
 					viewBar.findViewById(R.id.iv_quelist).setSelected(true);
-					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new QueListFragment()).commitAllowingStateLoss();
+					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new QueListFragment())
+							.commitAllowingStateLoss();
 				}
 			});
 			viewBar.findViewById(R.id.ll_setting).setOnClickListener(new OnClickListener()
@@ -76,11 +79,23 @@ public class MainActivity extends ActionBarActivity
 					uiRestore();
 					((TextView) viewBar.findViewById(R.id.tv_setting)).setTextColor(0xff4388ff);
 					viewBar.findViewById(R.id.iv_setting).setSelected(true);
-					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new SettingsFragment()).commitAllowingStateLoss();
+					getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment_container, new SettingsFragment())
+							.commitAllowingStateLoss();
 				}
 			});
 
 			viewBar.findViewById(R.id.ll_quelist).performClick();
+
+			EfeiApplication app = (EfeiApplication) getApplication();
+			final RespLatestVersion version = app.removeTemporary(Constants.KEY_LATEST_VERSION);
+			app.addTemporary(Constants.KEY_LATEST_VERSION, version);
+			if (null != version)
+			{
+				String curVersion = CommonUtils.getCurrentApkVersion(MainActivity.this);
+				final int visibility = version.getAndroid().equals(curVersion) ? View.GONE : View.VISIBLE;
+				viewBar.findViewById(R.id.iv_red_point).setVisibility(visibility);
+			} else
+				viewBar.findViewById(R.id.iv_red_point).setVisibility(View.GONE);
 		}
 
 		private void uiRestore()

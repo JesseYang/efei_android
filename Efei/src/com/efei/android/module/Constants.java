@@ -19,6 +19,8 @@ public final class Constants
 	public static final String KEY_FOR_SAVE_QUE = "login_for_save_que";
 
 	public static final String KEY_FOR_SAVE_QUE_LIST = "login_for_save_que_list";
-	
+
 	public static final String KEY_EMAIL = "key_email";
+
+	public static final String KEY_LATEST_VERSION = "key_version";
 }
