@@ -13,7 +13,7 @@ public final class Constants
 		}
 
 		// public static String HOST_URL = "http://dev.efei.org/";
-		public static String HOST_URL = "http://portal.efei.org/";
+		public static String HOST_URL = "http://efei.org/";
 		@Deprecated
 		public static String IMAGE_SERVER_URL = "http://dev.image.efei.org/";
 	}
