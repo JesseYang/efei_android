@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="最近"
+                android:text="全部时间"
                 android:textColor="#ff4388ff"
                 android:textSize="18dp" />
         </LinearLayout>

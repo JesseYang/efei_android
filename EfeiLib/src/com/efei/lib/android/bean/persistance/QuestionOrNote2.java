@@ -30,8 +30,17 @@ public class QuestionOrNote2
 			final char prefix = (char) ('A' + i);
 			content.add(prefix + "." + choices.get(i));
 		}
-		this.content = UiUtils.richTextToSpannable(content , metaData.getImage_path());
-		this.answer = UiUtils.richTextToSpannable(metaData.getAnswer_content() , metaData.getImage_path());
+		this.content = UiUtils.richTextToSpannable(content, metaData.getImage_path());
+
+		// if(-1 != respQueOrNote.getAnswer())
+		List<String> answer = new ArrayList<String>();
+		if (-1 != respQueOrNote.getAnswer())
+		{
+			final char ans_choice = (char) ('A' + respQueOrNote.getAnswer());
+			answer.add(ans_choice + "");
+		}
+		answer.addAll(metaData.getAnswer_content());
+		this.answer = UiUtils.richTextToSpannable(answer, metaData.getImage_path());
 		this.alreadyInServer = alreadyInServer;
 	}
 }

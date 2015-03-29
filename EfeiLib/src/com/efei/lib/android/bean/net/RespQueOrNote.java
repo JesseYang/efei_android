@@ -9,14 +9,14 @@ public class RespQueOrNote extends BaseRespBean
 	private String type;
 	private List<String> content;
 	private List<String> items;
-	// answer
+	private int answer;
 	private List<String> answer_content;
 	private String tag_set;
 	private String summary;
 	private String topic_str;
 	private String tag;
 	private long last_update_time;
-	
+
 	private String image_path;
 
 	void setLast_update_time(long last_update_time)
@@ -137,6 +137,16 @@ public class RespQueOrNote extends BaseRespBean
 	void setImage_path(String image_path)
 	{
 		this.image_path = image_path;
+	}
+
+	public int getAnswer()
+	{
+		return answer;
+	}
+
+	void setAnswer(int answer)
+	{
+		this.answer = answer;
 	}
 
 }
