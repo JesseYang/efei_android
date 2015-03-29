@@ -137,7 +137,8 @@ public final class UiUtils
 
 		final float fRadio = EfeiApplication.getContext().getResources().getDisplayMetrics().density;
 		bmpDrawable.setBounds(0, 0, (int) (Float.parseFloat(txtsByStar[2]) * fRadio), (int) (Float.parseFloat(txtsByStar[3]) * fRadio));
-		ImageSpan img = new ImageSpan(bmpDrawable, ImageSpan.ALIGN_BOTTOM);
+//		ImageSpan img = new ImageSpan(bmpDrawable, ImageSpan.ALIGN_BOTTOM);
+		ImageSpan img = new VerticalImageSpan(bmpDrawable);
 		// ImageSpan img = new CenteredImageSpan(bmpDrawable);
 		return new CharacterStyleInfo(imgPos, img);
 	}
@@ -232,6 +233,53 @@ public final class UiUtils
 			}
 
 			return rect.right;
+		}
+	}
+
+	/**
+	 * ´¹Ö±¾ÓÖÐµÄImageSpan
+	 * 
+	 * @author KenChung
+	 */
+	private static class VerticalImageSpan extends ImageSpan
+	{
+
+		public VerticalImageSpan(Drawable drawable)
+		{
+			super(drawable);
+		}
+
+		public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fontMetricsInt)
+		{
+			Drawable drawable = getDrawable();
+			Rect rect = drawable.getBounds();
+			if (fontMetricsInt != null)
+			{
+				Paint.FontMetricsInt fmPaint = paint.getFontMetricsInt();
+				int fontHeight = fmPaint.bottom - fmPaint.top;
+				int drHeight = rect.bottom - rect.top;
+
+				int top = drHeight / 2 - fontHeight / 4;
+				int bottom = drHeight / 2 + fontHeight / 4;
+
+				fontMetricsInt.ascent = -bottom;
+				fontMetricsInt.top = -bottom;
+				fontMetricsInt.bottom = top;
+				fontMetricsInt.descent = top;
+			}
+			return rect.right;
+		}
+
+		@Override
+		public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint)
+		{
+			Drawable drawable = getDrawable();
+			canvas.save();
+			int transY = 0;
+			transY = ((bottom - top) - drawable.getBounds().bottom) / 2 + top;
+			canvas.translate(x, transY);
+			drawable.draw(canvas);
+			canvas.restore();
 		}
 	}
 
